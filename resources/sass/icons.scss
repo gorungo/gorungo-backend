@@ -1,0 +1,15 @@
+// Variables
+@import "variables";
+
+.glyph-icon svg {
+  width:16px;
+  height:16px;
+}
+
+.si-glyph-primary {
+  fill: $primary;
+}
+
+.si-glyph * {
+  fill: red;
+}

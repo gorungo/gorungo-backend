@@ -1,0 +1,227 @@
+// Variables
+@import "variables";
+
+/*Индикатор загрузки*/
+
+.ds-loading {
+  position: fixed;
+  width: 220px;
+  height: 32px;
+  z-index: 11111;
+  background-image: url(/images/interface/loaders/page_loader.gif);
+  background-repeat: no-repeat;
+
+}
+.ds-img-loading {
+  position: absolute;
+  left: 42px;
+  top: 42px;
+  width: 32px;
+  height: 32px;
+  z-index: 11111;
+  background-image: url(/images/interface/loaders/loader.GIF);
+  background-repeat: no-repeat;
+}
+
+.ds-ava-img-loading{
+  background-image: url(/images/interface/loaders/loader.GIF);
+  background-repeat: no-repeat;
+}
+
+/*img uploader*/
+
+#pills-photo .picture_edit_wrap {
+  margin-top: 15px;
+  padding-top: 5px;
+  margin-bottom: 20px;
+}
+
+#photo-uploader-block .tmb_sml .del_btn {
+  right: 5px;
+  top: 5px;
+  padding-top: 10px;
+  width: 32px;
+  height: 44px;
+  position: absolute;
+  display: none;
+  background: #000000;
+  border-radius: 10px;
+}
+
+#photo-uploader-block .tmb_sml:hover .del_btn {
+  position: absolute;
+  display: block;
+  opacity: 0.5;
+}
+
+#photo-uploader-block .tmb_sml:hover .del_btn:hover {
+  position: absolute;
+  display: block;
+  opacity: 1;
+}
+
+#photo-uploader-block .tmb_sml .star_btn {
+  left: 5px;
+  top: 5px;
+  padding-top: 10px;
+  width: 32px;
+  height: 44px;
+  position: absolute;
+  display: none;
+  background: #1cd500;
+  border-radius: 10px;
+}
+
+#photo-uploader-block .tmb_sml:hover .star_btn {
+  position: absolute;
+  display: block;
+  opacity: 0.5;
+}
+
+#photo-uploader-block .tmb_sml:hover .star_btn:hover {
+  position: absolute;
+  display: block;
+  opacity: 1;
+}
+
+#photo-uploader-block .tmb_sml_in img.img-loader {
+  height: 30px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 1;
+}
+
+#photo-uploader-block .tmb_sml_in img.img-is-loading {
+  opacity: 0.2;
+}
+
+#photo-uploader-block .picture_edit {
+  overflow: hidden;
+}
+
+#photo-uploader-block .tmb_big {
+  height: 200px;
+  margin: 0;
+  text-align: center;
+}
+
+#photo-uploader-block .tmb_sml {
+  float: left;
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 3px;
+  border: 1px solid #f8f8f8;
+  position: relative;
+  text-align: center;
+  background-color: #f8f8f8;
+}
+
+#photo-uploader-block .tmb_sml_in {
+  overflow: hidden;
+}
+
+#photo-uploader-block .tmb_sml_in img {
+  height: 118px;
+}
+
+#photo-uploader-block .tmb_sml:hover {
+  border: 1px solid #0099ff;
+}
+
+#tab_photo_load_block {
+  border: 1px solid #e7e7e7;
+  border-left: 1px solid #0099ff;
+  padding: 10px;
+  margin: 3px;
+  background: white;
+}
+
+.msg_block {
+  padding: 12px;
+  text-align: center;
+  background: #0099ff;
+  margin-bottom: 24px;
+  color: white;
+}
+
+.blue_info_block {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.blue_info_block #img_star {
+  background: lightgreen;
+  vertical-align: middle;
+  padding: 3px;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+}
+
+/*img_viewer*/
+
+.item_details_tmb_sml {
+  overflow: hidden;
+  float: left;
+  display: block;
+  width: 88px;
+  height: 80px;
+  margin: 5px;
+  padding: 3px;
+  border: 1px solid #E4E4E4;
+  background: white;
+  text-align: center;
+}
+
+.item_wrap .item_details_tmb_sml:hover {
+  border: 1px solid #11a9eb;
+}
+
+/*------------fileupload-------------------------------------*/
+
+#photo-uploader-block .file-upload {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  width: 60%;
+  background: white;
+  border-radius: 2px !important;
+  border: 1px solid $primary;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  text-indent: 0;
+  color: $primary;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  text-decoration: none;
+  margin: 0 auto;
+  text-align: center;
+  white-space: nowrap;
+
+}
+#photo-uploader-block .file-upload:hover {
+  border: 1px solid $primary;
+
+}
+#photo-uploader-block .file-upload input[type=file] {
+  /* Позиционируем правый верхний край
+     input поверх нашего контейнера.
+     Правый верхний потому как именно там
+     у нас кнопка. */
+  position: absolute;
+  top: 0; right: 0;
+
+  /* Делаем input побольше, чтобы он точно
+     перекрыл контейнер. */
+  font-size: 200px;
+
+  /* Делаем input невидимым. По-другому нельзя,
+     иначе браузер не будет на него реагировать. */
+  opacity: 0;
+  filter: alpha(opacity=0);
+
+  /*  Украшательства: */
+  cursor: pointer;
+}

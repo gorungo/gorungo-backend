@@ -1,0 +1,77 @@
+// Variables
+@import "variables";
+
+.bg-white{
+  background-color: white;
+}
+
+.bg-gray{
+  background-color: $bg-gray;
+}
+
+
+/*окно результата операции*/
+
+.result_message {
+  text-align: center;
+  position: fixed;
+  display: none;
+  padding: 18px;
+  background: #8d7aff;
+  color: #fff;
+  font-size: 18px;
+  width: 90%;
+  z-index: 2000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 0 35px 5px rgba(44, 43, 45, 0.16);
+  -webkit-box-shadow: 0 0 35px 5px rgba(44, 43, 45, 0.16);
+  box-shadow: 0 0 35px 5px rgba(44, 43, 45, 0.16);
+}
+.res_msg_red{
+  background: #ff0069;
+  color: #ffffff;
+}
+.res_msg_green{
+  background: #0fbaae;
+  color: #ffffff;
+}
+
+.res_msg_modal{
+  background: #ffffff;
+  color: #666;
+
+}
+.result_message span {
+  font-size: 16px;
+
+}
+
+@media (min-width: 768px){
+  .result_message {
+    width: 50%;
+  }
+
+
+}
+
+.navbar-nav {
+  float: none;
+  text-align: center;
+}
+.navbar-nav li {
+  float: none;
+  display: inline-block;
+}
+.category-item{
+  padding: 5px;
+  display: inline-block;
+}
+#category-selector-block{
+  padding: 5px 0;
+}
+#category-selector-block .category-item .btn{
+  padding: 0 4px;
+}
+
