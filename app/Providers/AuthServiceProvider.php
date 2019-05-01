@@ -15,6 +15,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Action' => 'App\Policies\ActionPolicy',
+        'App\Idea' => 'App\Policies\IdeaPolicy',
+        'App\Category' => 'App\Policies\CategoryPolicy',
+        'App\Location' => 'App\Policies\LocationPolicy',
+
     ];
 
     /**
@@ -25,6 +30,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::before(function ($user, $ability) {
+            $user->hasRole('Super Admin') ? true : null;
+        });
 
         Passport::routes();
     }

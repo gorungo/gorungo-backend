@@ -6,10 +6,11 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable  implements MustVerifyEmail
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -28,4 +29,5 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
 }

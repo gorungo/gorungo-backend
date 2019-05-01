@@ -26,36 +26,44 @@ class IdeaController extends Controller
      * @param String $categoriesUrl
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $categoriesUrl = Null)
+    public function index(Request $request, $categoriesUrl = null)
     {
-        $categoriesArray = Null; 
-        $activeCategoryId = 0;
+        $categoriesArray = null;
+        $activeCategory = null;
+        $categories = null;
 
         $categoriesArray = explode('/', $categoriesUrl);
-        $activeCategory = last($categoriesArray);
+        $activeCategoryTitle = last($categoriesArray);
 
-        //$activeCategory = ($category3 !== Null) ? $category3 : Null;
-        //$activeCategory = ($category2 !== Null && !$activeCategory) ? $category2 : Null;
-        //$activeCategory = ($category1 !== Null && !$activeCategory) ? $category1 : Null;
+        //$activeCategoryTitle = ($category3 !== Null) ? $category3 : Null;
+        //$activeCategoryTitle = ($category2 !== Null && !$activeCategoryTitle) ? $category2 : Null;
+        //$activeCategoryTitle = ($category1 !== Null && !$activeCategoryTitle) ? $category1 : Null;
 
-        if ($activeCategory) {
-            $activeCategoryId = Category::where('slug', $activeCategory)->pluck('id')->first();
+        if ($activeCategoryTitle) {
 
-            if(!$activeCategoryId){
+            $activeCategory = Category::where('slug', $activeCategoryTitle)->first();
+
+            if(!$activeCategory){
                 abort('404');
             }
 
-            // get category childs for making links
-            if ($activeCategoryId !== 0){
-                $categories = Category::ChildCategory($activeCategoryId)->IsActive()->get();
+            // get category child for making links
+            if ($activeCategory){
+                $categories = Category::ChildCategory($activeCategory->id)->IsActive()->get();
+            }
+            if($categories->count() == 0){
+                $categories = Category::ChildCategory($activeCategory->parent_id)->IsActive()->get();
             }
 
+
+
         } else {
-            $categories = Category::MainCategory()->IsActive()->get();
+            //$categories = Category::MainCategory()->IsActive()->get();
+            $categories = Category::getMainCategories();
         }
 
         // get list of ideas
-        $ideas = $this->idea->itemsList($request, $activeCategoryId);
+        $ideas = Idea::itemsList($request, $activeCategory);
 
         return view('idea.index', compact(['ideas', 'categories', 'categoriesUrl']));
     }
@@ -67,18 +75,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        // getting categories
-        $categories = Category::get();
-
-
-        /*$breadcrumb_array = [
-            ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
-            ['title' => 'Товары', 'url' => route('products.list',[session('current_city_alias'),''])],
-            ['title' => 'Новый товар',  'url' => '#'],
-        ];*/
-
-
-        return view('idea.create' , compact(['categories', 'breadcrumb_array']));
+        return view('idea.edit' , ['idea']);
     }
 
     /**
@@ -107,13 +104,14 @@ class IdeaController extends Controller
      * Display the specified resource.
      *
      * @param  Category $category
-     * @param  Idea $item
+     * @param  String $itemSlug
      * @return \Illuminate\Http\Response
      */
     public function show( $category, $itemSlug)
     {
 
         $item = Idea::where('slug', $itemSlug)->first();
+        $ideaActions = $item->actionItemsList(4);
 
         if(!$item){
             abort('404');
@@ -125,7 +123,7 @@ class IdeaController extends Controller
             ['title' => 'Новый товар',  'url' => '#'],
         ];*/
 
-        return view('idea.show' , compact(['item', 'breadcrumb_array' ]));
+        return view('idea.show' , compact(['item', 'category', 'ideaActions', 'breadcrumb_array' ]));
     }
 
     /**
@@ -136,18 +134,7 @@ class IdeaController extends Controller
      */
     public function edit(Idea $idea)
     {
-        $item = $idea;
-        $tagInfo = $item->getTagInfo();
-
-
-        /*$breadcrumb_array = [
-            ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
-            ['title' => 'Товары', 'url' => route('products.list',[session('current_city_alias'),''])],
-            ['title' => 'Редактирование товара',  'url' => '#'],
-        ];*/
-
-
-        return view('idea.edit',  compact(['item' ,'tagInfo' , 'breadcrumb_array']));
+        return view('idea.edit',  compact(['idea']));
     }
 
     /**

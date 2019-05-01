@@ -2,6 +2,7 @@
 
 return[
     'title' => 'Actions',
+    'item_title' => 'Action',
 
     'create' => 'Add idea',
     'edit' => 'Edit idea',
@@ -9,6 +10,8 @@ return[
     'updated' => 'Idea was successfully updated',
     'not_created' => 'Idea was not created successfully',
     'not_updated' => 'Idea was not updated successfully',
+
+    'no_items' => 'No actions for idea',
 
     // request
 

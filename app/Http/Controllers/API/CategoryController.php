@@ -1,21 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Category as CategoryResource;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Category::all()->toJson();
+        return CategoryResource::collection(Category::lastChildren());
+    }
+
+    public function lastChildren()
+    {
+        return CategoryResource::collection(Category::lastChildren());
     }
 
     /**

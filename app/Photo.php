@@ -169,11 +169,6 @@ class Photo extends Model
 
             $img = Image::make($this->StoragePath);
 
-            // удаляем все файлы с префиксом tmb
-            //array_map('unlink', glob( public_path('storage/' . $this->getStoreDirectoryUrl(). "/tmb*.*")));
-
-
-            //Storage::disk('public')->delete($this->getStoreDirectoryUrl(). "/tmb*.*");
             array_map( 'unlink', glob( public_path( 'storage/' . $this->getStoreDirectoryUrl() ) . "/tmb*.*" ) );
 
             list($txt, $ext) = explode(".", $this->img_name);

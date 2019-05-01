@@ -1,4 +1,4 @@
-showInfoMessage = function (text, msg_type) {
+let showNotification = function (text, msg_type) {
 
     var auto_hide = true;
 
@@ -70,6 +70,29 @@ showInfoMessage = function (text, msg_type) {
     });
 
 
-}
+};
 
-module.exports.showInfoMessage = showInfoMessage;
+let showProgress = function() {
+    // show loading progress
+    var loading = $("<div>", {
+        "class": "ds-loading"
+    });
+    //выравним div по центру страницы
+    $(loading).css("top", (($(window).height() / 2))).css("left", ($(document).width() / 2) - 110);
+    //добавляем созданный div в конец документа
+    $("body").append(loading);
+};
+
+let hideProgress = function() {
+    // hide loading progress
+    $(".ds-loading").detach();
+};
+
+let showNoInternetNotification = function() {
+    this.showNotification('Нет связи с сетью, повторите попытку', 'red', 'center');
+};
+
+module.exports.showProgress = showProgress;
+module.exports.hideProgress = hideProgress;
+module.exports.showNotification = showNotification;
+module.exports.showNoInternetNotification = showNoInternetNotification;

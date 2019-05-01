@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Idea;
 use App\Page;
 use App\Action;
 use App\Category;
@@ -26,15 +27,49 @@ class ActionController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $categoriesUrl = null)
     {
-        $categoriesUrl = '';
         $page = new Page();
         $page->title = __('action.title');
 
+        $categoriesArray = null;
+        $activeCategory = null;
+        $categories = null;
+
+        $categoriesArray = explode('/', $categoriesUrl);
+        $activeCategoryTitle = last($categoriesArray);
+
+        //$activeCategoryTitle = ($category3 !== Null) ? $category3 : Null;
+        //$activeCategoryTitle = ($category2 !== Null && !$activeCategoryTitle) ? $category2 : Null;
+        //$activeCategoryTitle = ($category1 !== Null && !$activeCategoryTitle) ? $category1 : Null;
+
+        if ($activeCategoryTitle) {
+
+            $activeCategory = Category::where('slug', $activeCategoryTitle)->first();
+
+            if(!$activeCategory){
+                abort('404');
+            }
+
+            // get category child for making links
+            if ($activeCategory){
+                $categories = Category::ChildCategory($activeCategory->id)->IsActive()->get();
+            }
+            if($categories->count() == 0){
+                $categories = Category::ChildCategory($activeCategory->parent_id)->IsActive()->get();
+            }
+
+
+
+        } else {
+            //$categories = Category::MainCategory()->IsActive()->get();
+            $categories = Category::getMainCategories();
+        }
+
         // get list of actions
-        $items = $this->action->itemsList($request);
-        return view('action.index', compact(['page', 'items', 'categoriesUrl']));
+        $actions = $this->action->itemsList($request, $activeCategory);
+
+        return view('action.index', compact(['page', 'actions', 'categories']));
     }
 
     /**
@@ -42,42 +77,9 @@ class ActionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Idea $idea, Action $action)
     {
-        // getting categories
-        $categories = Category::get();
-
-
-        /*$breadcrumb_array = [
-            ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
-            ['title' => 'Товары', 'url' => route('products.list',[session('current_city_alias'),''])],
-            ['title' => 'Новый товар',  'url' => '#'],
-        ];*/
-
-
-        return view('idea.create' , compact(['categories', 'breadcrumb_array']));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  StoreIdea $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreIdea $request, Idea $idea)
-    {
-
-        $idea = $idea->createAndSync($request);
-
-        if($idea){
-
-            return redirect()->route('ideas.edit', $idea->slug )->with('status', __('idea.created'));
-
-        }else{
-
-            return redirect()->back()->withInput()->with('status', __('idea.not_created'));
-
-        }
+        return view('action.edit' , compact(['action', 'idea']));
     }
 
     /**
@@ -108,60 +110,14 @@ class ActionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Idea $idea
+     * @param  Action $action
      * @return \Illuminate\Http\Response
      */
-    public function edit(Idea $idea)
+    public function edit(Action $action)
     {
-        $item = $idea;
-        $tagInfo = $item->getTagInfo();
-
-
-        /*$breadcrumb_array = [
-            ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
-            ['title' => 'Товары', 'url' => route('products.list',[session('current_city_alias'),''])],
-            ['title' => 'Редактирование товара',  'url' => '#'],
-        ];*/
-
-
-        return view('idea.edit',  compact(['item' ,'tagInfo' , 'breadcrumb_array']));
+        return view('action.edit',  compact(['action']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  StoreIdea $request
-     * @param  Idea $idea
-     * @return \Illuminate\Http\Response
-     */
-    public function update(StoreIdea $request, Idea $idea)
-    {
-
-        $updateResult = $idea->updateAndSync($request);
-
-        if($updateResult){
-            // очищаем старый кэш
-            //Cache::forget('category-all');
-            //Cache::forget('category-widget');
-
-            return redirect()->back()->with('status', __('idea.updated'));
-
-        }else{
-            return redirect()->back()->with('status', __('idea.not_updated'));
-
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 
 
     /**

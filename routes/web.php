@@ -13,13 +13,13 @@
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
-
 /*
  * -------------------------------------------------------------------------
  */
 Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], function() {
 
     Auth::routes();
+    Auth::routes(['verify' => true]);
 
     //social login
 
@@ -36,11 +36,19 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     //------------------------------------------------------------------------------------------------------
 
     // actions crud routes ------------------------------------------------------------------------------------
-    Route::get('/actions/create', 'ActionController@create')->name('actions.create');
+    Route::get('/actions/create/{idea}', 'ActionController@create')->name('actions.create');
     Route::get('/actions/{action}/edit', 'ActionController@edit')->name('actions.edit');
     Route::post('/actions', 'ActionController@store')->name('actions.store');
     Route::patch('/actions/{action}', 'ActionController@update')->name('actions.update');
     Route::delete('/actions/{action}', 'ActionController@destroy')->name('actions.destroy');
+    //------------------------------------------------------------------------------------------------------
+
+    // place crud routes ------------------------------------------------------------------------------------
+    Route::get('/places/create', 'PlaceController@create')->name('places.create');
+    Route::get('/places/{place}/edit', 'PlaceController@edit')->name('places.edit');
+    Route::post('/places', 'PlaceController@store')->name('places.store');
+    Route::patch('/places/{place}', 'PlaceController@update')->name('places.update');
+    Route::delete('/places/{place}', 'PlaceController@destroy')->name('places.destroy');
     //------------------------------------------------------------------------------------------------------
 
 
@@ -54,25 +62,26 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         //Route::get('/home', 'HomeController@index')->name('home');
 
         // Actions show route
-        Route::get('ideas/{categories?}/{idea}/actions/{action}', 'IdeaActionController@show')
+        Route::get('ideas/{categories?}/-{idea}/actions/{action}', 'IdeaActionController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$', 'action' => '^[a-zA-Z0-9-_\/]+$'])
             ->name('actions.show');
 
         // idea index, show routes -----------------------------------------------------------------------------------------
-        Route::get('ideas/{categories?}/{idea}/actions', 'IdeaActionController@index')
+        Route::get('ideas/{categories?}/-{idea}/actions', 'IdeaActionController@index')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$'])
             ->name('ideas.actions_index');
-        Route::get('ideas/{categories?}/{idea}', 'IdeaController@show')
+        Route::get('ideas/{categories}/-{idea}', 'IdeaController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$'])
             ->name('ideas.show');
         Route::get('ideas/{categories?}', 'IdeaController@index')
             ->where('categories', '^[a-zA-Z0-9-_\/]+$')
             ->name('ideas.index');
+
         //------------------------------------------------------------------------------------------------------
 
 
         // idea index, show routes -----------------------------------------------------------------------------------------
-        Route::get('actions', 'ActionController@index')
+        Route::get('actions/{categories?}', 'ActionController@index')
             ->name('actions.index');
 
         Route::group(['prefix' => 'admin'], function () {

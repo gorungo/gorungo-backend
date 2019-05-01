@@ -1,14 +1,15 @@
 @extends ('layouts.app')
-@section('title', strip_tags($item->title))
+@section('title', strip_tags($idea->title))
 @section('header')
     @include('parts.header')
 @endsection
 @section('content')
-    <div class="container mt-4">
-        <h1>{{$item->title}}</h1>
-        <p>{!! $item->description !!}</p>
+    <div class="content-wrap bg-white py-4">
+        <div class="container">
+            @include('widgets.back_title_vs_img', ['breadCrumbs' => [
+                ['sectionTitle' => __('idea.title'), 'itemUrl'=> $idea->url, 'itemTitle'=> $idea->title, 'imgUrl' => $idea->TmbImgPath],
+            ]])
+        </div>
     </div>
-    <div class="container mt-4">
-        @include('action.listing')
-    </div>
+    @include('action.listing')
 @endsection

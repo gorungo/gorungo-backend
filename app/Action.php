@@ -2,17 +2,15 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use \Conner\Tagging\Taggable;
-
-use DB;
-use App\ActionDescription;
 use App\Traits\TagInfo;
-use App\Http\Requests\StoreIdea;
+use App\Http\Requests\StoreAction;
 use App\Http\Requests\UploadPhoto;
 
 class Action extends Model {
@@ -29,42 +27,60 @@ class Action extends Model {
 
     protected $fillable = [ 'author_id', 'idea_id', 'active', 'slug' ];
 
-    protected $with = [ 'localisedActionDescription' ];
+    protected $with = [ 'localisedActionDescription', 'actionPlaces' ];
 
 
 
     Public function getTitleAttribute() {
-        if ( $this->localisedActionDescription != null ) {
-            return $this->localisedActionDescription->title;
-        } else {
-            return '';
-        }
 
+            if($this->localisedActionDescription != null){
+                return $this->localisedActionDescription->title;
+            }else {
+                $actionDescription = $this->actionDescriptions()->first();
+                if($actionDescription){
+                    return $actionDescription->title;
+                }
+            }
+
+
+        return '';
     }
 
     Public function getIntroAttribute() {
-        if ( $this->localisedActionDescription != null ) {
-            return $this->localisedActionDescription->intro;
-        } else {
-            return '';
-        }
 
+            if($this->localisedActionDescription != null){
+                return $this->localisedActionDescription->intro;
+            }else{
+                $actionDescription = $this->actionDescriptions()->first();
+                if($actionDescription){
+                    return $actionDescription->intro;
+                }
+            }
+
+
+        return '';
     }
 
     Public function getDescriptionAttribute() {
-        if ( $this->localisedActionDescription != null ) {
-            return $this->localisedActionDescription->description;
-        } else {
-            return '';
-        }
 
+            if($this->localisedActionDescription != null){
+                return $this->localisedActionDescription->description;
+            }else {
+                $actionDescription = $this->actionDescriptions()->first();
+                if($actionDescription){
+                    return $actionDescription->description;
+                }
+            }
+
+
+        return '';
     }
 
     Public function getUrlAttribute() {
 
 
-        if ( $this->actionIdea->ideaMainCategory() != null ) {
-            return route( 'actions.show', [ $this->actionIdea->ideaMainCategory()->pathToCategory(),$this->actionIdea->slug, $this->slug ] );
+        if ( $this->actionIdea->ideaMainCategory != null ) {
+            return route( 'actions.show', [ $this->actionIdea->ideaMainCategory->pathToCategory(),$this->actionIdea->slug, $this->slug ] );
         } else {
             return '';
         }
@@ -81,7 +97,7 @@ class Action extends Model {
 
         if ( $this->thmb_file_name != null ) {
             //если есть картинка вакансии
-            $src = 'storage/images/idea/' . $this->id . '/' . htmlspecialchars( strip_tags( $this->thmb_file_name ) );
+            $src = 'storage/images/action/' . $this->id . '/' . htmlspecialchars( strip_tags( $this->thmb_file_name ) );
 
         } else {
             //если есть картинка вакансии
@@ -113,8 +129,29 @@ class Action extends Model {
      * Action idea
      * @return mixed
      */
-    public function actionIdea() {
-        return $this->belongsTo( 'App\Idea', 'idea_id','id');
+    public function actionIdea()
+    {
+        return $this->belongsTo( 'App\Idea', 'idea_id' );
+    }
+
+    public function actionCategories()
+    {
+        return $this->actionIdea->ideaCategories()->get();
+    }
+
+    public function actionDates()
+    {
+        return $this->hasMany('App\ActionDate');
+    }
+
+    public function actionPlace()
+    {
+        return $this->actionPlaces()->first();
+    }
+
+    public function actionPlaces()
+    {
+        return $this->belongsToMany('App\Place', 'action_place', 'action_id', 'place_id');
     }
 
     public function actionPhotos()
@@ -150,16 +187,18 @@ class Action extends Model {
 
     public function itemsList( Request $request) {
 
-        return self::WhereTags( MainFilter::getFiltersTagsArray() )
-            ->Sorting()
-            ->paginate();
-
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::remember( 'actions_' . LocaleMiddleware::getLocale() . '_' . request()->getQueryString(), 0, function () use ( $activeCategoryId ) {
+        return Cache::remember( 'actions_' . LocaleMiddleware::getLocale() . '_' . request()->getQueryString(), 1, function () {
             return self::WhereTags( MainFilter::getFiltersTagsArray() )
+                ->JoinDescription()
                 ->Sorting()
                 ->paginate();
         } );
+    }
+
+    private function generateSlug(String $title)
+    {
+        return str_slug($title);
     }
 
     public function createAndSync( StoreAction $request ){
@@ -170,16 +209,24 @@ class Action extends Model {
 
             $localeId = LocaleMiddleware::getLocaleId();
 
-            $storeData = $request->only( 'author_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug' );
-            $descriptionStoreData = $request->only( 'title', 'intro', 'description' );
+            $storeData = [
+                'author_id' => 1,
+                'idea_id' => $request->input('relationships.idea.id'),
+                'active' => $request->input('attributes.active'),
+                'slug' => $this->generateSlug($request->input('attributes.title')),
+            ];
 
-            $storeData['slug'] = str_slug($request->title);
-            $storeData['author_id'] = 1;
-
-            $descriptionStoreData['locale_id'] = $localeId;
+            $descriptionStoreData = [
+                'title' => $request->input('attributes.title'),
+                'intro' => $request->input('attributes.intro'),
+                'description' => $request->input('attributes.description'),
+                'locale_id' => $localeId,
+            ];
 
             $action = self::create($storeData);
             $action->localisedActionDescription()->create($descriptionStoreData);
+
+            $action->updateRelationships( $request );
 
             return $action;
 
@@ -194,16 +241,23 @@ class Action extends Model {
 
             $localeId = LocaleMiddleware::getLocaleId();
 
-            $valid_tags = [];
+            $storeData = [
+                'author_id' => 1,
+                'idea_id' => $request->input('relationships.idea.id'),
+                'active' => $request->input('attributes.active'),
+            ];
 
-            $storeData = $request->only( 'author_id', 'parent_id', 'active', 'order', 'slug' );
-            $descriptionStoreData = $request->only( 'title', 'intro', 'description' );
-
-            $storeData['author_id'] = 1;
-            $descriptionStoreData['locale_id'] = $localeId;
+            $descriptionStoreData = [
+                'title' => $request->input('attributes.title'),
+                'intro' => $request->input('attributes.intro'),
+                'description' => $request->input('attributes.description'),
+                'locale_id' => $localeId,
+            ];
 
             $this->update( $storeData );
-            $this->saveTags( $request );
+            $this->localisedActionDescription()->update($descriptionStoreData);
+            $this->updateRelationships( $request );
+
 
             return $this;
 
@@ -213,31 +267,68 @@ class Action extends Model {
 
     }
 
-    private function saveTags( StoreAction $request ) : void {
+    private function updateRelationships( StoreAction $request ) : void
+    {
+        //$this->saveTags( $request );
+        $this->savePlaces( $request );
+        $this->saveDates( $request );
+    }
 
-        // Составляем массив из тэгов, потом сохряняем
+    private function savePlaces(StoreAction $request) : void
+    {
+        $places = $request->input('relationships.places');
+        $placeIds = [];
 
-        if ( $request->tag != '' ) {
-            $tags = explode( ",", $request->tag );
-            foreach ( $tags as $tag ) {
-                if ( $tag != '' ) {
-                    $valid_tags[] = trim( $tag );
+        if(count($places)){
+            foreach($places as $place){
+                if($place['id'] != '') {
+                    $placeIds[] = $place['id'];
+                }
+            }
+
+            if(count($placeIds)){
+                $this->actionPlaces()->syncWithoutDetaching($placeIds);
+            }
+
+        }
+
+
+
+    }
+
+    private function saveDates(StoreAction $request) : void
+    {
+        $dates = $request->input('relationships.dates');
+
+        if($dates){
+            foreach($dates as $date){
+                if($date['id']!== null){
+                    $this->actionDates()->whereId($date['id'])->update([
+                        'start_datetime_utc'=>$date['attributes']['start_datetime_utc'],
+                        'end_datetime_utc'=>$date['attributes']['end_datetime_utc'],
+                        'time_zone_offset'=>$date['attributes']['time_zone_offset'],
+                        'is_all_day'=>$date['attributes']['is_all_day'],
+                        'duration'=>$date['attributes']['duration'],
+                        'is_recurring'=>$date['attributes']['is_recurring'],
+                        'recurrence_pattern'=>$date['attributes']['recurrence_pattern'],
+                    ]);
+                }else{
+                    $this->actionDates()->create([
+                        'start_datetime_utc'=>$date['attributes']['start_datetime_utc'],
+                        'end_datetime_utc'=>$date['attributes']['end_datetime_utc'],
+                        'time_zone_offset'=>$date['attributes']['time_zone_offset'],
+                        'is_all_day'=>$date['attributes']['is_all_day'],
+                        'duration'=>$date['attributes']['duration'],
+                        'is_recurring'=>$date['attributes']['is_recurring'],
+                        'recurrence_pattern'=>$date['attributes']['recurrence_pattern'],
+                    ]);
                 }
             }
 
         }
-
-        if ( $request->tag_extra ) {
-            foreach ( $request->tag_extra as $key => $tag ) {
-                $valid_tags[] = trim( $tag );
-            }
-
-        }
-
-        // save all tags
-        $this->retag($valid_tags);
-
     }
+
+
 
     public function uploadPhoto(UploadPhoto $request){
         $photo = New Photo();
@@ -246,6 +337,14 @@ class Action extends Model {
 
 
     // scopes
+
+    public function scopeJoinDescription($query)
+    {
+        return $query->join('action_descriptions', function ($join) {
+            $join->on('actions.id', '=', 'action_descriptions.action_id')
+                ->where('locale_id', LocaleMiddleware::getLocaleId());
+        })->select('actions.*', 'action_descriptions.title','action_descriptions.intro' );
+    }
 
     public function scopeIsActive( $query ) {
 

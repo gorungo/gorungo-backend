@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Photo;
 
 use App\Idea;
 use App\Photo;
 use App\Http\Requests\UploadPhoto;
 use App\Http\Requests\SetMainPhoto;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class IdeaPhotoController extends Controller
+class IdeaController extends Controller
 {
 
     protected $idea;

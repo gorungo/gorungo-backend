@@ -24,29 +24,22 @@ class StoreIdea extends FormRequest
     public function rules()
     {
         return [
-            'main_category_id' => 'required|integer',
-            'title' => 'required|min:3|max:100',
-            'intro' => 'required|min:3|max:199',
-            'description' => 'required|min:5',
-            'categories' => 'required|array',
-            'categories.*.id' => 'integer',
+            'attributes.title' => 'required|min:3|max:100',
+            'attributes.intro' => 'required|min:3|max:199',
+            'attributes.description' => 'required|min:5',
+            'attributes.active' => 'required|integer',
 
-            'active' => 'required|integer',
+            'relationships.categories' => 'required|array',
+            'relationships.categories.*.id' => 'required|numeric|exists:categories',
 
         ];
     }
+
     public function messages()
     {
-
         return [
-            'main_category_id.required' => __('category.main_category_id.required'),
-            'main_category_id.integer' => __('category.main_category_id.integer'),
-            'title.required' => __('category.title.required'),
-            'title.min' => __('category.title.min'),
-            'title.max' => __('category.title.max'),
-
-
-
+            'relationships.categories.required' => __('category.relationships.categories.required'),
         ];
     }
+
 }

@@ -1,7 +1,26 @@
 @import "variables";
 
+.card.list-item {
+
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.list-item a{
+  //color: #111;
+}
+
+
+.card.list-item:hover .img-wrap{
+  transform: scale(1.03, 1.03);
+  transition: transform 0.5s;
+}
+.list-item .card-body{
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .bg-gray .list-item{
-  background-color: white;
 }
 
 .bg-white .list-item{
@@ -26,14 +45,27 @@
 
 }
 
-.list-item .img-wrap{
+.list-item .img-wrap, .item-heading .img-wrap {
   text-align: center;
   height: 250px;
   overflow-y: hidden;
 
 }
 
-.list-item .img-wrap.img-center {
+.item-heading .img-wrap {
+  height: 120px;
+  border: none;
+}
+
+.item-heading .img-wrap{
+  border-radius: $border-radius-base*2;
+}
+
+.item-heading .card {
+  border: none;
+}
+
+.list-item .img-wrap.img-center,  .item-heading .img-wrap.img-center{
   position: relative;
 }
 
@@ -53,8 +85,7 @@
 }
 
 .list-item .img-wrap{
-  border-top-left-radius: $border-radius-base;
-  border-top-right-radius: $border-radius-base;
+  border-radius: $border-radius-base;
   background-color: $bg-gray;
   height: 160px;
 }

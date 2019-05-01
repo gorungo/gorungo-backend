@@ -8,7 +8,16 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-window.UI = require('./ui');
+window.userui = require('./userui');
+window.go = require('./go');
+
+import CKEditor from '@ckeditor/ckeditor5-vue';
+Vue.use( CKEditor );
+
+//vuex --------------------
+//import Vuex from 'vuex';
+//Vue.use(Vuex);
+//import store from './store';
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,7 +30,10 @@ window.UI = require('./ui');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('PhotoUploader', require('./components/photo/PhotoUploader.vue').default);
+Vue.component('ActionEditor', require('./components/action/ActionEditor.vue').default);
+Vue.component('PlaceEditor', require('./components/place/PlaceEditor.vue').default);
+Vue.component('IdeaEditor', require('./components/idea/IdeaEditor.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,13 +41,14 @@ Vue.component('PhotoUploader', require('./components/photo/PhotoUploader.vue').d
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+// version of api we use
+window.systemInfo = {
+    apiVersion: 'v1',
+};
 
-try {
 
-    window.photoUploader = new Vue({
-        el: '#photo-uploader-block'
-    });
+let app = new Vue({
+    el: '#app',
+    data: {}
+});
 
-}catch(e){
-    console.log(e)
-}

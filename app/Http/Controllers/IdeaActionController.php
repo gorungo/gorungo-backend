@@ -33,8 +33,7 @@ class IdeaActionController extends Controller
     {
         $categoriesUrl = $categories;
         $actions = $idea->actionItemsList();
-        $item = $idea;
-        return view('idea.actions_index', compact(['item', 'actions', 'categoriesUrl']));
+        return view('idea.actions_index', compact(['idea', 'actions', 'categories']));
     }
 
     /**
@@ -85,24 +84,18 @@ class IdeaActionController extends Controller
      *
      * @param  Category $category
      * @param  Idea $item
+     * @param  Action $action
      * @return \Illuminate\Http\Response
      */
-    public function show( $category, $itemSlug)
+    public function show( $categories, Idea $idea, Action $action)
     {
-
-        $item = Idea::where('slug', $itemSlug)->first();
-
-        if(!$item){
-            abort('404');
-        }
-
         /*$breadcrumb_array = [
             ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
             ['title' => 'Товары', 'url' => route('products.list',[session('current_city_alias'),''])],
             ['title' => 'Новый товар',  'url' => '#'],
         ];*/
 
-        return view('idea.show' , compact(['item', 'breadcrumb_array' ]));
+        return view('action.show' , compact(['idea', 'action', 'categories' , 'breadcrumb_array' ]));
     }
 
     /**

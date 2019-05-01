@@ -15,7 +15,14 @@ class CreatePlaceDescriptionsTable extends Migration
     {
         Schema::create('place_descriptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->integer('place_id')->unsigned();
+            $table->integer('locale_id')->unsigned()->lenght(2);
+            $table->string('title', 191);
+            $table->string('intro', 255);
+            $table->text('description');
+
+            $table->foreign('locale_id')->references('id')->on('locales')->onDelete('cascade');
+            $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
         });
     }
 

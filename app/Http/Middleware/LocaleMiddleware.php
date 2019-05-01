@@ -9,7 +9,6 @@ use App\Locale;
 class LocaleMiddleware
 {
     public static $mainLanguage = 'en'; //основной язык, который не должен отображаться в URl
-
     public static $languages = ['en', 'ru', 'ch']; // Указываем, какие языки будем использовать в приложении.
 
 
@@ -25,16 +24,12 @@ class LocaleMiddleware
 
         if(isset($request['locale']) && in_array($request['locale'], self::$languages)){
             return $request['locale'];
-
         }else{
 
             $segmentsURI = explode('/', $uri); //делим на части по разделителю "/"
 
-
             //Проверяем метку языка  - есть ли она среди доступных языков
             if (!empty($segmentsURI[0]) && in_array($segmentsURI[0], self::$languages)) {
-
-
                 if ($segmentsURI[0] != self::$mainLanguage) return $segmentsURI[0];
             }
         }
@@ -66,7 +61,11 @@ class LocaleMiddleware
         return 1;
     }
 
-    /*
+    public function isValidLocaleSymbol($localeSymbol){
+        return in_array($localeSymbol, self::$languages);
+    }
+
+    /**
     * Устанавливает язык приложения в зависимости от метки языка из URL
     */
     public function handle($request, Closure $next)
@@ -78,6 +77,14 @@ class LocaleMiddleware
         else App::setLocale(self::$mainLanguage);
 
         return $next($request); //пропускаем дальше - передаем в следующий посредник
+    }
+
+    /**
+     * Имя пользовательской локали из запроса
+     */
+    public function getUserLanguageFromRequest(){
+        // parsing string like this 'en-GB,en;q=0.8'
+        return explode(explode(request()->server('HTTP_ACCEPT_LANGUAGE'), ';')[0],',')[0];
     }
 
 }

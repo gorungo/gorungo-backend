@@ -16,6 +16,8 @@ return [
     'remove_category' => 'Remove category',
     'new_idea' => 'New idea',
     'edit_idea' => 'Edit idea',
+    'new_action' => 'New action',
+    'edit_action' => 'Edit action',
     'edit' => 'edit',
     'delete' => 'delete',
 

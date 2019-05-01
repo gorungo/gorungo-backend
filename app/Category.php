@@ -22,7 +22,7 @@ class Category extends Model
 
     protected $fillable = [ 'author_id', 'parent_id', 'active', 'order', 'slug'];
 
-    protected $with = ['localisedCategoryTitle', 'localisedCategoryDescription'];
+    protected $with = [];
 
     Public function getTitleAttribute(){
         if($this->localisedCategoryTitle != null) {
@@ -49,6 +49,10 @@ class Category extends Model
             return '';
         }
 
+    }
+
+    Public function getCategoryPathAttribute(){
+        return '';
     }
 
     /**
@@ -132,17 +136,29 @@ class Category extends Model
 
     public function categoryIdeas()
     {
-        return $this->belongsToMany('App\Idea');
+        return $this->belongsToMany('App\Idea')->using('App\Pivots\Category');
+    }
+
+    public function categoryActions()
+    {
+        return $this->hasManyThrough('App\Action', 'App\Idea');
     }
 
     public function categoryParent(){
         return $this->belongsTo('App\Category', 'parent_id');
 
     }
-    public function categoryChildrens(){
+    public function categoryChildren(){
         return $this->hasMany('App\Category', 'parent_id');
     }
 
+    public static function getMainCategories()
+    {
+        return Cache::remember('mainIdeaCategories', 10, function () {
+            return self::MainCategory()->with('localisedCategoryTitle')->IsActive()->get();
+        });
+
+    }
 
 
     /**
@@ -153,7 +169,7 @@ class Category extends Model
 
         $category = $this;
 
-        $path = Cache::remember('pathToCategory_' . $this->id, 1, function () use ($category){
+        $path = Cache::remember('pathToCategory_' . $this->id, 10, function () use ($category){
 
             $path = '';
 
@@ -161,11 +177,11 @@ class Category extends Model
 
                 $path = $path . $category->slug;
 
-                if(isset($category->parent)){
-                    $path =  $category->parent->slug . '/' . $path  ;
+                if($category->parent_id !== 0){
+                    $path =  $category->categoryParent->slug . '/' . $path  ;
 
-                    if(isset($category->parent->parent)){
-                        $path =  $category->parent->parent->slug . '/' . $path ;
+                    if($category->categoryParent->parent_id !== 0){
+                        $path =  $category->categoryParent()->categoryParent->slug . '/' . $path ;
                     }
                 }
 
@@ -174,14 +190,16 @@ class Category extends Model
             return $path;
         });
 
-
         return $path;
 
+    }
+    public static function lastChildren()
+    {
+        return Category::isActive()->whereDoesntHave('categoryChildren')->get();
     }
 
     public static function categoryChildrenJSON($category = null)
     {
-
 
         if($category == null){
             $result = Category::isActive()->MainCategory()->get();
@@ -199,87 +217,46 @@ class Category extends Model
         return response()->json(['type' => 'error']);
     }
 
-    public function scopeChildCategory($query, $parent_id){
+
+    public function scopeChildCategory($query, $parent_id)
+    {
         return $query->where('parent_id', $parent_id);
     }
 
-    public function CategoryFriends(){
+    public function scopeParentCategories($query, $parent_id)
+    {
+        return $query->where('parent_id', $parent_id);
+    }
 
+
+    public function CategoryFriends()
+    {
         return  Category::where('parent_id', $this->parent_id)->isActive()->get();
-
     }
 
-    /**
-     * Запрашиваем списки категорий для отображения в выборе категории на фронте
-     * @param Category $category
-     * @return array
-     */
-    public function fullCategoriesListing(Category $category){
-
-        $parenCategoryList1 = null;
-        $parenCategoryList2 = null;
-        $parenCategoryList3 = null;
-
-        $parenCategoryList = null;
-
-        $categorySelected3 = null;
-        $categorySelected2 = null;
-        $categorySelected1 = null;
-
-        $categorySelected = null;
-
-        if($category){
-            $parenCategoryList1 = $category->CategoryFriends();
-            $categorySelected1 = $category->id;
-        }
-
-        if(isset($category->parent_id) && $category->parent_id !== 0){
-            $parenCategoryList2 = $category->parent->CategoryFriends();
-            $categorySelected2 = $category->parent->id;
-        }
-
-        if(isset($category->parent->parent_id) && $category->parent->parent_id !== 0){
-            $parenCategoryList3 = $category->parent->parent->CategoryFriends();
-            $categorySelected3 = $category->parent->parent->id;
-        }
-
-        if($parenCategoryList3) $parenCategoryList[] = $parenCategoryList3;
-        if($parenCategoryList2) $parenCategoryList[] = $parenCategoryList2;
-        if($parenCategoryList1) $parenCategoryList[] = $parenCategoryList1;
-
-        if($categorySelected3) $categorySelected[] = $categorySelected3;
-        if($categorySelected2) $categorySelected[] = $categorySelected2;
-        if($categorySelected1) $categorySelected[] = $categorySelected1;
-
-
-        $result = ['parentCategoryList' => $parenCategoryList, 'categorySelected' => $categorySelected];
-
-        return ['type' => 'ok', 'data' => $result];
-
-    }
 
     public function allCategoryChildrenArray(){
 
         $subcategoryCashLifeTime = 10;
-        $needCashe = true;
+        $needCache = true;
 
         $categoriesId = [];
 
             $categoriesId[] = $this->id;
 
-            if(Cache::has('category_id_children_array_' . $this->id ) && $needCashe ){
+            if(Cache::has('category_id_children_array_' . $this->id ) && $needCache ){
                 $categories_id = Cache::get('category_id_children_array_' . $this->id);
             }else{
-                if(isset($this->categoryChildrens)){
+                if(isset($this->categoryChildren)){
 
-                    foreach($this->categoryChildrens as $children){
+                    foreach($this->categoryChildren as $children){
 
 
                         if(isset($children->id)) $categoriesId[] = $children->id ;
 
-                        if(isset($children->categoryChildrens)){
+                        if(isset($children->categoryChildren)){
 
-                            foreach($children->categoryChildrens as $children_children){
+                            foreach($children->categoryChildren as $children_children){
 
 
                                 if(isset($children_children->id)){
@@ -310,10 +287,10 @@ class Category extends Model
         $categories_id = [];
         $needCashe = true;
 
-        if(Cache::has('products_category_id_parent_array_' . $this->id) && $needCashe ){
-            $categories_id = Cache::get('products_category_id_parent_array_' . $this->id);
+        if(Cache::has('category_id_parent_array_' . $this->id) && $needCashe ){
+            $categories_id = Cache::get('category_id_parent_array_' . $this->id);
         }else{
-            if(count($this->parent)){
+            if($this->parent){
 
                 $parent = $this->parent;
                 $categories_id[] = $parent->id;
@@ -335,7 +312,7 @@ class Category extends Model
                 $categories_id[] = 0;
             }
 
-            Cache::put('products_category_id_parent_array_' . $this->id, $categories_id, 0);
+            Cache::put('category_id_parent_array_' . $this->id, $categories_id, 0);
         }
 
         return $categories_id;

@@ -30,13 +30,13 @@
 
 /*img uploader*/
 
-#pills-photo .picture_edit_wrap {
+#pills-photo .picture-edit-wrap {
   margin-top: 15px;
   padding-top: 5px;
   margin-bottom: 20px;
 }
 
-#photo-uploader-block .tmb_sml .del_btn {
+#edit-images-block .tmb-sml .del-btn {
   right: 5px;
   top: 5px;
   padding-top: 10px;
@@ -48,19 +48,19 @@
   border-radius: 10px;
 }
 
-#photo-uploader-block .tmb_sml:hover .del_btn {
+#edit-images-block .tmb-sml:hover .del-btn {
   position: absolute;
   display: block;
   opacity: 0.5;
 }
 
-#photo-uploader-block .tmb_sml:hover .del_btn:hover {
+#edit-images-block .tmb-sml:hover .del-btn:hover {
   position: absolute;
   display: block;
   opacity: 1;
 }
 
-#photo-uploader-block .tmb_sml .star_btn {
+#edit-images-block .tmb-sml .star-btn {
   left: 5px;
   top: 5px;
   padding-top: 10px;
@@ -72,19 +72,19 @@
   border-radius: 10px;
 }
 
-#photo-uploader-block .tmb_sml:hover .star_btn {
+#edit-images-block .tmb-sml:hover .star-btn {
   position: absolute;
   display: block;
   opacity: 0.5;
 }
 
-#photo-uploader-block .tmb_sml:hover .star_btn:hover {
+#edit-images-block .tmb-sml:hover .star-btn:hover {
   position: absolute;
   display: block;
   opacity: 1;
 }
 
-#photo-uploader-block .tmb_sml_in img.img-loader {
+#edit-images-block .tmb-sml-in img.img-loader {
   height: 30px;
   position: absolute;
   top: 40px;
@@ -92,21 +92,21 @@
   z-index: 1;
 }
 
-#photo-uploader-block .tmb_sml_in img.img-is-loading {
+#edit-images-block .tmb-sml-in img.img-is-loading {
   opacity: 0.2;
 }
 
-#photo-uploader-block .picture_edit {
+#edit-images-block .picture-edit {
   overflow: hidden;
 }
 
-#photo-uploader-block .tmb_big {
+#edit-images-block .tmb-big {
   height: 200px;
   margin: 0;
   text-align: center;
 }
 
-#photo-uploader-block .tmb_sml {
+#edit-images-block .tmb-sml {
   float: left;
   display: block;
   width: 120px;
@@ -118,24 +118,16 @@
   background-color: #f8f8f8;
 }
 
-#photo-uploader-block .tmb_sml_in {
+#edit-images-block .tmb-sml-in {
   overflow: hidden;
 }
 
-#photo-uploader-block .tmb_sml_in img {
+#edit-images-block .tmb-sml-in img {
   height: 118px;
 }
 
-#photo-uploader-block .tmb_sml:hover {
+#edit-images-block .tmb-sml:hover {
   border: 1px solid #0099ff;
-}
-
-#tab_photo_load_block {
-  border: 1px solid #e7e7e7;
-  border-left: 1px solid #0099ff;
-  padding: 10px;
-  margin: 3px;
-  background: white;
 }
 
 .msg_block {
@@ -180,7 +172,7 @@
 
 /*------------fileupload-------------------------------------*/
 
-#photo-uploader-block .file-upload {
+#edit-images-block .file-upload {
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -201,11 +193,11 @@
   white-space: nowrap;
 
 }
-#photo-uploader-block .file-upload:hover {
+#edit-images-block .file-upload:hover {
   border: 1px solid $primary;
 
 }
-#photo-uploader-block .file-upload input[type=file] {
+#edit-images-block .file-upload input[type=file] {
   /* Позиционируем правый верхний край
      input поверх нашего контейнера.
      Правый верхний потому как именно там

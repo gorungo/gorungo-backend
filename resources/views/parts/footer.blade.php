@@ -1,5 +1,5 @@
 <!--Footer-->
-<footer class="page-footer font-small unique-color-dark pt-0">
+<footer class="page-footer font-small unique-color-dark pt-0 mt-4">
 
     <div style="background-color: #6351ce;">
         <div class="container">

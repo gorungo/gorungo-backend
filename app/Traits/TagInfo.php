@@ -4,20 +4,14 @@ namespace App\Traits;
 
 use Conner\Tagging\Model\Tag;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\Tag as TagResource;
 
 
 trait TagInfo
 {
 
 
-    public function getTagInfo(){
-
-        // негруппированные тэги ч-з запятую
-        $simpleTagsText = '';
-
-        // item grouped tags
-        $itemSeasonsGroupTags = []; $itemAgeGroupTags = []; $itemDayTimeGroupTags = [];
-
+    public function getAllTags(){
         // season tags
         $tagsSeasonsGroup = Cache::remember('tagsSeasonsGroup', 10, function ()  {
             return  Tag::inGroup('seasonsgroup')->get();
@@ -33,6 +27,20 @@ trait TagInfo
             return  Tag::inGroup('daytimegroup')->get();
         });
 
+        return collect([
+            'tagsSeasonsGroup' => TagResource::collection($tagsSeasonsGroup),
+            'tagsAgeGroupGroup' => TagResource::collection($tagsAgeGroupGroup),
+            'tagsDayTimeGroup' => TagResource::collection($tagsDayTimeGroup),
+        ]);
+    }
+
+    public function getItemTags(){
+        // негруппированные тэги ч-з запятую
+        $simpleTagsText = '';
+
+        // item grouped tags
+        $itemSeasonsGroupTags = []; $itemAgeGroupTags = []; $itemDayTimeGroupTags = [];
+
         $tags = $this->tags;
 
         // загружаем тэги элемента и вносим их в группы
@@ -44,25 +52,20 @@ trait TagInfo
                 $simpleTagsText == '' ? $simpleTagsText = $tag->name : $simpleTagsText = $simpleTagsText . ',' . $tag->name ;
 
             }elseif($tag->tag_group_id == 1){
-                $itemSeasonsGroupTags[] = $tag->name;
+                $itemSeasonsGroupTags[] = $tag;
             }elseif($tag->tag_group_id == 2){
-                $itemAgeGroupTags[] = $tag->name;
+                $itemAgeGroupTags[] = $tag;
             }elseif($tag->tag_group_id == 3){
-                $itemDayTimeGroupTags[] = $tag->name;
+                $itemDayTimeGroupTags[] = $tag;
             }
         }
 
-        return collect([
-            'simpleTagsText' => $simpleTagsText,
-
-            'tagsSeasonsGroup' => $tagsSeasonsGroup,
-            'tagsAgeGroupGroup' => $tagsAgeGroupGroup,
-            'tagsDayTimeGroup' => $tagsDayTimeGroup,
-
-            'itemSeasonsGroupTags' => $itemSeasonsGroupTags,
-            'itemAgeGroupTags' => $itemAgeGroupTags,
-            'itemDayTimeGroupTags' => $itemDayTimeGroupTags,
-        ]);
+        return [
+            'tagsText' => $simpleTagsText,
+            'tagsSeasonsGroup' => TagResource::collection(collect($itemSeasonsGroupTags)),
+            'tagsAgeGroup' => TagResource::collection(collect($itemAgeGroupTags)),
+            'tagsDayTimeGroup' => TagResource::collection(collect($itemDayTimeGroupTags)),
+        ];
 
     }
 

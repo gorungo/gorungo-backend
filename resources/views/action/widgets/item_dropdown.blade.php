@@ -3,23 +3,23 @@
     <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="glyphicon glyphicon-option-horizontal"></span>
     </button>
-    <ul class="dropdown-menu" >
-        <li><a href ="{{route('actions.edit', $item->slug)}}"><span class="glyphicon glyphicon-pencil"></span> {{__('editor.edit_idea')}}</a></li>
-        <li role="separator" class="divider"></li>
+    <div class="dropdown-menu">
+        <a class="dropdown-item capitalize" href ="{{route('actions.edit', $item->slug)}}"><span class="glyphicon glyphicon-pencil"></span> {{__('editor.edit_action')}}</a>
+        <div class="dropdown-divider"></div>
 
         @if($item->status != 1)
-            <li><span href ="#" onclick="activate_item({{$item->id}},'ideas');"><span class="glyphicon glyphicon-play"></span> {{__('editor.activate')}}...</span></li>
+            <span class="dropdown-item capitalize" href ="#" onclick="activate_item({{$item->id}},'action');"><span class="glyphicon glyphicon-play"></span> {{__('editor.activate')}}...</span>
         @else
-            <li><span href ="#" onclick="deactivate_item({{$item->id}},'ideas');"><span class="glyphicon glyphicon-pause"></span> {{__('editor.deactivate')}}...</span></li>
+            <span class="dropdown-item capitalize" href ="#" onclick="deactivate_item({{$item->id}},'action');"><span class="glyphicon glyphicon-pause"></span> {{__('editor.deactivate')}}...</span>
         @endif
 
-        <li id="dropdown_delete_{{$item->id}}" class="noclose" onclick="show_dropdown_delete_confirm({{$item->id}});"><span class="glyphicon glyphicon-trash"></span> Удалить...</span></li>
-        <li style="display: none;" id="dropdown_delete_confirm_{{$item->id}}" onclick="document.frm_delete{{$item->id}}.submit()"><span><span class="glyphicon glyphicon-ok"></span> Да, удалить...</span></li>
+        <span class="dropdown-item" id="dropdown_delete_{{$item->id}}" class="noclose" onclick="show_dropdown_delete_confirm({{$item->id}});"><span class="glyphicon glyphicon-trash"></span> Удалить...</span></span>
+        <span class="dropdown-item" style="display: none;" id="dropdown_delete_confirm_{{$item->id}}" onclick="document.frm_delete{{$item->id}}.submit()"><span><span class="glyphicon glyphicon-ok"></span> Да, удалить...</span></span>
         <form action="/actions/{{$item->id}}" name="frm_delete{{$item->id}}" method="post" style="display:none;">
             {{csrf_field()}}
             {!! method_field('delete') !!}
         </form>
-    </ul>
+    </div>
 
 </div>
 

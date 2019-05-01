@@ -187,25 +187,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        /*
-         * Логер ошибок
-         */
+
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-
         Unisharp\Ckeditor\ServiceProvider::class,
-
-
-        /*
-         *
-         */
         Intervention\Image\ImageServiceProvider::class,
-
-
-        /*
-         * Тэги
-         */
-
         \Conner\Tagging\Providers\TaggingServiceProvider::class,
+        Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class,
+        Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+
+        Spatie\Permission\PermissionServiceProvider::class,
 
     ],
 

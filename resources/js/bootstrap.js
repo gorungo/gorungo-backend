@@ -1,8 +1,6 @@
 
 window._ = require('lodash');
 
-// version of api we use
-window.apiVersion = 'v1';
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

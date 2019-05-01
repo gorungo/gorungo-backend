@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark w-100">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark w-100 @if(isset($fixed) && $fixed) fixed-top @endif">
     <div class="row w-100">
         <div class="col-sm-4">
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ route('index') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="25px"/></a>
+            <a class="navbar-brand" href="{{ route('index') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
         </div>
         <div class="col-sm-4">
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
@@ -36,7 +36,7 @@
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                class="dropdown-item" href="#"
-                            >Logout</a>
+                            >{{__('auth.logout')}}</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>

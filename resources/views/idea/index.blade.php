@@ -8,7 +8,11 @@
 
 @section('header')
     @include('parts.header')
-    @include('parts.section_title', ['sectionTitile' => __('idea.title')])
+    @include('parts.section_title', [
+    'sectionTitile' => __('idea.title'),
+    'addItemURL' => route('ideas.create'),
+    'addItemTitle' => __('idea.create'),
+    ])
     @include('category.widgets.category_selector')
     @include('widgets.menu.main_filters')
 @endsection

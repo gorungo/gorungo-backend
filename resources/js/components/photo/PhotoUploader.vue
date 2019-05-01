@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="panel panel-default" :class="{dragging: isDragging}">
-            <div class="panel-body">
+        <div class="card" :class="{dragging: isDragging}">
+            <div class="card-body">
                 <div v-if="itemId > 0">
-                    <div class="picture_edit_wrap"
+                    <div class="picture-edit-wrap"
                          @dragover.prevent
                          @drop="onDrop"
                          @dragenter="onDragEnter"
@@ -14,19 +14,19 @@
                                 <span class="icomoon" style="font-size: 100px; color: #c4e7f9;"></span>
                                 <p>Перетащите cюда фотографии, либо нажмите кнопку "Добавить изображение"</p>
                             </div>
-                            <div class="tmb_sml" v-for="(file, index) in files">
-                                <div class="del_btn" v-on:click="deletePhoto(index)">
+                            <div class="tmb-sml" v-for="(file, index) in files">
+                                <div class="del-btn" v-on:click="deletePhoto(index)">
                                     <img src="/images/interface/icos/ico_del.png"/>
                                 </div>
-                                <div class="star_btn"  v-on:click="setMainPhoto(index)">
+                                <div class="star-btn"  v-on:click="setMainPhoto(index)">
                                     <img src="/images/interface/icos/ico_star.png">
                                 </div>
-                                <div class="tmb_sml_in">
+                                <div class="tmb-sml-in">
                                     <img :src="file.url" border=0 height="100%"/>
                                 </div>
                             </div>
-                            <div class="tmb_sml" v-for="(file, index) in imagesOrder">
-                                <div class="tmb_sml_in">
+                            <div class="tmb-sml" v-for="(file, index) in imagesOrder">
+                                <div class="tmb-sml-in">
                                     <img src="/images/interface/loaders/loader.gif" class="img-loader" height="50px"/>
                                     <img :src="file" class="img-is-loading" border=0 height="100%"/>
                                 </div>
@@ -40,7 +40,7 @@
                             <div class="progress-bar" role="progressbar" :style="{ width: fileProgress + '%'}"></div>
                         </div>
                         <hr v-if="!loading">
-                        <div class="file_upload bs">
+                        <div class="file-upload bs">
                             <span class="icomoon" style="font-size: 18px;"> </span> Добавить изображение
                             <input type="file" name="image" id="file_uploader" multiple="" accept="image/*" @change="fileInputChange" />
                         </div>
@@ -66,10 +66,12 @@
 </template>
 
 <script>
+
     export default {
 
         name: "PhotoUploader",
-        props: ['controller', 'itemId'],
+        props: ['type', 'itemId'],
+
 
         data: function() {
             return {
@@ -171,7 +173,7 @@
                 }).then(resp => {
 
                     if(resp.data.type === 'ok'){
-                        UI.showInfoMessage('Главное изображение установлено', 'green');
+                        userui.showNotification('Главное изображение установлено', 'green');
                     }
 
                 }).catch(error => {
@@ -192,10 +194,10 @@
                 }).then(resp => {
 
                     if(resp.data.type === 'ok'){
-                        UI.showInfoMessage('Изображение удалено');
+                        userui.showNotification('Изображение удалено');
                         this.files.splice(index,1);
                     }else{
-                        UI.showInfoMessage('Ошибка при удалении', 'red');
+                        userui.showNotification('Ошибка при удалении', 'red');
                     }
 
 
@@ -218,15 +220,15 @@
             },
 
             getFilesRequestUrl(){
-                return '/api/' + window.apiVersion + '/' + this.controller + '/' + this.itemId + '/photos';
+                return '/api/' + window.systemInfo.apiVersion + '/' + this.type.toLowerCase() + '/' + this.itemId + '/photos';
             },
 
             setMainImgRequestUrl(imgId){
-                return '/api/' + window.apiVersion + '/' + this.controller + '/' + this.itemId + '/photos/' + imgId + '/set_main';
+                return '/api/' + window.systemInfo.apiVersion + '/' + this.type.toLowerCase() + '/' + this.itemId + '/photos/' + imgId + '/set_main';
             },
 
             deleteImgRequestUrl(imgId){
-                return '/api/' + window.apiVersion + '/' + this.controller + '/' + this.itemId + '/photos/' + imgId;
+                return '/api/' + window.systemInfo.apiVersion + '/' + this.type.toLowerCase() + '/' + this.itemId + '/photos/' + imgId;
             },
 
             // drag and drop

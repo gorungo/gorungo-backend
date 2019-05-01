@@ -10,7 +10,7 @@
         <div class="col-sm-2 text-center">
             <div class="dropdown">
                 <button class="btn btn-link dropdown-toggle" type="button" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{MainFilter::getFilterTitle('season')}}
+                    <span class="filer-title">{{MainFilter::getFilterTitle('season')}}</span>
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownSeason">
@@ -25,7 +25,7 @@
         <div class="col-sm-2 text-center">
             <div class="dropdown">
                 <button class="btn btn-link dropdown-toggle" type="button" id="dropdownDayTime" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{MainFilter::getFilterTitle('daytime')}}
+                    <span class="filer-title">{{MainFilter::getFilterTitle('daytime')}}</span>
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownDayTime">
@@ -40,7 +40,7 @@
         <div class="col-sm-2 text-center">
             <div class="dropdown">
                 <button class="btn btn-link dropdown-toggle" type="button" id="dropdownPlace" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{MainFilter::getFilterTitle('distance')}}
+                    <span class="filer-title">{{MainFilter::getFilterTitle('distance')}}</span>
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownPlace">

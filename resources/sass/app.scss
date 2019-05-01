@@ -2,6 +2,16 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Rubik');
 
+@font-face {
+  font-family: museo-sans-100;
+  src: url('/fonts/MS100.otf');
+}
+
+@font-face {
+  font-family: museo-sans-700;
+  src: url('/fonts/MS700.otf');
+}
+
 // Variables
 @import 'variables';
 
@@ -24,3 +34,30 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+.search-list{
+  .input-cool{
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: unset;
+    border: none;
+  }
+  .input-cool:focus{
+    box-shadow: none;
+  }
+  .list-group-item{
+    padding: $list-group-item-padding-y 0;
+    cursor: pointer;
+
+    .btn {
+      padding: 0;
+    }
+  }
+  .list-group-item:hover{
+    padding-left: 15px;
+  }
+  .form-control{
+    padding: 0;
+  }
+}
+

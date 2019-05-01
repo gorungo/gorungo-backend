@@ -4,9 +4,14 @@ $body-bg: #f8fafc;
 $bg-gray: #f8f8f8;
 
 // Typography
-$font-family-sans-serif: "Rubik", sans-serif;
+$font-family-sans-serif: museo-sans-100, sans-serif;
+$font-family-base: museo-sans-100, sans-serif;
+$headings-font-family: museo-sans-700, sans-serif;
+
+$headings-font-weight: 700;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
 
 // Colors
 $blue: #3490dc;
@@ -20,4 +25,15 @@ $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
 
+
+$text-color: #111;
+
+$link-color: $blue;
+//$link-hover-color: $blue;
+$link-hover-decoration: none;
+//$headings-color: #111;
+
 $border-radius-base: 5px;
+$btn-border-radius: 1.5em;
+
+$grid-gutter-width: 50px;

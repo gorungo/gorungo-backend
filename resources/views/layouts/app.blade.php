@@ -20,9 +20,7 @@
 </div>
 <!-- Scripts -->
 <script src="{{ mix('js/app.js') }}"></script>
-<script src="{{ mix('js/UI.js') }}"></script>
-<script src="{{asset('js/iconwc.js')}}"></script>
-
+{{--<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>--}}
 
 @yield('scripts')
 @stack('scripts')
