@@ -36,6 +36,9 @@ class Action extends JsonResource
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
+                'url' => $this->url,
+                'edit_url' => $this->url,
+                
                 'slug' => $this->slug ? $this->slug : '',
                 'active' => $this->active ? $this->active : 0,
                 'url' => $this->id ? $this->url : '',

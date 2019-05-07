@@ -1,6 +1,6 @@
 @if($categories)
-<div class="container mt-4 mb-4">
-<div class="card">
+<div class="container">
+<div class="card mt-4 mb-4">
 <div class="card-header">{{str_plural(__('category.title'))}}
     @can('create', App\Category::class)<a class="float-right" href="{{route('category.create')}}">{{__('category.create')}}</a>@endcan
 </div>

@@ -2,14 +2,13 @@
 
 namespace App;
 
+use DB;
 use App\Http\Requests\StoreCategory;
 use App\Traits\PhotoTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\Cache;
-
-use DB;
 
 class Category extends Model
 {
@@ -154,7 +153,7 @@ class Category extends Model
 
     public static function getMainCategories()
     {
-        return Cache::remember('mainIdeaCategories', 10, function () {
+        return Cache::remember('mainIdeaCategories-'.LocaleMiddleware::getLocaleId(), 10, function () {
             return self::MainCategory()->with('localisedCategoryTitle')->IsActive()->get();
         });
 

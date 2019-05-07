@@ -11,8 +11,9 @@ return [
     */
 
     'name' => 'Gorungo',
-    'description' => '',
-    'copyrights' => '',
+    'description' => 'The sea of ideas how to spend time',
+    'full_description' => 'Spend time ideas find service',
+    'copyrights' => '© 2019 Copyright Gorungo',
 
 
 

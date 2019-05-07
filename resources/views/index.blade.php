@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="container">
-        @foreach($mainCategoryes as $category)
+        @foreach($mainCategories as $category)
             @if($category->localisedTitle !== null)
             <div class="col-md-3">
             {{$category->localisedTitle->title}}

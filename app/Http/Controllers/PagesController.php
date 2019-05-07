@@ -19,11 +19,14 @@ class PagesController extends Controller
     public function index(Request $request){
 
         // получаем список главных категорий
-        $mainCategoryes = Cache::remember('mainCategoryes_'.LocaleMiddleware::getLocale(), 10, function () {
+        $mainCategories = Cache::remember('mainCategories_'.LocaleMiddleware::getLocale(), 10, function () {
             return Category::MainCategory()->IsActive()->get();
         });
 
-        return view('index', compact(['mainCategoryes']));
+        if(!session()->has('prestart')){
+            return view('prestart');
+        }
+        return view('index', compact(['mainCategories']));
     }
 
     /**

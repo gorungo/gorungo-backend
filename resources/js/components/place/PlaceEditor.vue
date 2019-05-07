@@ -29,10 +29,11 @@
         </div>
         <div v-if="dataLoaded" class="mt-4">
             <div class="container">
+                <errors :errors="errors"></errors>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="edit-main-block" role="tabpanel" aria-labelledby="edit-main-block-tab">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <form id="frm_form" name="frm_form" method="post" autocomplete="off">
                                     <input type="hidden" name="city_id" :value="this.cityId"/>
                                     <h5>Описание</h5>
@@ -48,10 +49,18 @@
                                         <label for="frm_description">Описание<span title="Обязательное поле" class="required-star">*</span></label>
                                         <textarea class="form-control" placeholder="Расскажите что-нибудь о месте" name="description" id="frm_description" rows="6" v-model="item.attributes.description"></textarea>
                                     </div>
-                                    <hr>
+                                </form>
+                            </div>
+                            <div class="col-sm-5">
+                                <div v-if="item.relationships.address">
+                                    <h5>Адрес</h5>
+                                    <div class="form-group">
+                                        <label for="frm_postal_code">Почтовый код<span title="Обязательное поле" class="required-star">*</span></label>
+                                        <input id="frm_postal_code" name="postal_code" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.country_code" />
+                                    </div>
                                     <div class="form-group">
                                         <label for="frm_country">Страна<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_country" name="country" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.coutry" />
+                                        <input id="frm_country" name="country" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.country_code" />
                                     </div>
                                     <div class="form-group">
                                         <label for="frm_city">Город<span title="Обязательное поле" class="required-star">*</span></label>
@@ -61,24 +70,26 @@
                                         <label for="frm_address">Адрес<span title="Обязательное поле" class="required-star">*</span></label>
                                         <input id="frm_address" name="address" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.address" />
                                     </div>
-                                    <div>
-                                        <span class="text-secondary">(<span class="required-star">*</span>) отмечены необходимые поля</span>
-                                    </div>
-                                    <hr/>
-                                    <div class="clearfix mt-4">
-                                        <div v-if="errors" class="form-group text-left">
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    <li v-for="error in errors">{{error[0]}}</li>
-                                                </ul>
-                                            </div>
+                                </div>
+                                <div>
+                                    <hr>
+                                    <h5>Координаты места</h5>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label for="frm_coordinates_lat">Широта<span title="Обязательное поле" class="required-star">*</span></label>
+                                            <input id="frm_coordinates_lat" name="coordinates_lat" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.coordinates.coordinates[0]" />
                                         </div>
+                                        <div class="col">
+                                            <label for="frm_coordinates_lat">Долгота<span title="Обязательное поле" class="required-star">*</span></label>
+                                            <input id="frm_coordinates_lng" name="coordinates_lng" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.coordinates.coordinates[1]" />
+                                        </div>
+
                                     </div>
-
-                                </form>
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-
+                            <div class="col-12">
+                                <hr>
+                                <span class="text-secondary">(<span class="required-star">*</span>) отмечены необходимые поля</span>
                             </div>
                         </div>
                     </div>
@@ -99,6 +110,7 @@
     import Editable from '../../mixins/Editable.js';
 
     import PhotoUploader from '../photo/PhotoUploader.vue';
+    import YandexMap from "../YandexMap";
 
     export default {
 
@@ -108,6 +120,7 @@
         mixins: [ Editable ],
 
         components: {
+            YandexMap,
             PhotoUploader
         },
 

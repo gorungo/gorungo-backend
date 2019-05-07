@@ -2687,6 +2687,97 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/YandexMap.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/YandexMap.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "YandexMap",
+  props: ["place", "search"],
+  data: function data() {
+    return {
+      myMap: null,
+      ymaps: null
+    };
+  },
+  created: function created() {//this.initialiseMapObject();
+  },
+  mounted: function mounted() {},
+  methods: {
+    initialiseMapObject: function () {
+      var _initialiseMapObject = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var result;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.ymaps = window.ymaps;
+                _context.next = 3;
+                return this.$nextTick();
+
+              case 3:
+                this.ymaps.ready(init);
+
+                if (this.search) {
+                  result = this.ymaps.geoQuery(this.ymaps.geocode(this.search));
+                  result.then(function () {
+                    this.addSearchResultsToMap(result);
+                  }, function () {
+                    alert('Произошла ошибка.');
+                  });
+                }
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function initialiseMapObject() {
+        return _initialiseMapObject.apply(this, arguments);
+      }
+
+      return initialiseMapObject;
+    }(),
+    init: function init() {
+      this.myMap = new this.ymaps.Map('map', {
+        center: [43.1056200, 131.8735300],
+        zoom: 9
+      });
+    },
+    addSearchResultsToMap: function addSearchResultsToMap(result) {
+      result.addToMap(myMap);
+    }
+  },
+  computed: {}
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/action/ActionEditor.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/action/ActionEditor.vue?vue&type=script&lang=js& ***!
@@ -2878,7 +2969,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../LocaleSelector.vue */ "./resources/js/components/LocaleSelector.vue");
 /* harmony import */ var _ExtendedTagSelector_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ExtendedTagSelector.vue */ "./resources/js/components/ExtendedTagSelector.vue");
 /* harmony import */ var _CategorySelector_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../CategorySelector.vue */ "./resources/js/components/CategorySelector.vue");
-//
 //
 //
 //
@@ -3404,6 +3494,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_Editable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Editable.js */ "./resources/js/mixins/Editable.js");
 /* harmony import */ var _photo_PhotoUploader_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../photo/PhotoUploader.vue */ "./resources/js/components/photo/PhotoUploader.vue");
+/* harmony import */ var _YandexMap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../YandexMap */ "./resources/js/components/YandexMap.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3503,11 +3605,13 @@ __webpack_require__.r(__webpack_exports__);
 // MIXINGS
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PlaceEditor",
   props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
   mixins: [_mixins_Editable_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
   components: {
+    YandexMap: _YandexMap__WEBPACK_IMPORTED_MODULE_2__["default"],
     PhotoUploader: _photo_PhotoUploader_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
@@ -41733,6 +41837,45 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "card card-body", attrs: { id: "map-block" } },
+      [
+        _c("div", { staticClass: "map-cap" }),
+        _vm._v(" "),
+        _c("div", { staticStyle: { height: "400px" }, attrs: { id: "map" } })
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/action/ActionEditor.vue?vue&type=template&id=f5f29abe&scoped=true&":
 /*!**********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/action/ActionEditor.vue?vue&type=template&id=f5f29abe&scoped=true& ***!
@@ -42284,309 +42427,309 @@ var render = function() {
     _vm._v(" "),
     _vm.dataLoaded
       ? _c("div", { staticClass: "mt-4" }, [
-          _c("div", { staticClass: "container" }, [
-            _c(
-              "div",
-              { staticClass: "clearfix mt-4" },
-              [_c("errors", { attrs: { errors: _vm.errors } })],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "tab-content" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "tab-pane fade show active",
-                  attrs: {
-                    id: "edit-main-block",
-                    role: "tabpanel",
-                    "aria-labelledby": "edit-main-block-tab"
-                  }
-                },
-                [
-                  _c(
-                    "form",
-                    {
-                      attrs: {
-                        id: "frm_form",
-                        name: "frm_form",
-                        method: "post",
-                        autocomplete: "off"
-                      }
-                    },
-                    [
-                      _c("input", {
-                        attrs: { type: "hidden", name: "city_id" },
-                        domProps: { value: this.cityId }
-                      }),
-                      _vm._v(" "),
-                      _c("h5", [_vm._v("Активность")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "col-sm-12" }, [
-                          _c("div", { staticClass: "row panel" }, [
-                            _c("div", { staticClass: "col-sm-6" }, [
-                              _c("div", { staticClass: "row form-group" }, [
-                                _c("div", { staticClass: "col-sm-4 col-6" }, [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.item.attributes.active,
-                                        expression: "item.attributes.active"
-                                      }
-                                    ],
-                                    staticClass: "radio",
-                                    attrs: {
-                                      type: "radio",
-                                      name: "active",
-                                      id: "active_0",
-                                      value: "0"
-                                    },
-                                    domProps: {
-                                      checked: _vm._q(
-                                        _vm.item.attributes.active,
-                                        "0"
-                                      )
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        return _vm.$set(
-                                          _vm.item.attributes,
-                                          "active",
+          _c(
+            "div",
+            { staticClass: "container" },
+            [
+              _c("errors", { attrs: { errors: _vm.errors } }),
+              _vm._v(" "),
+              _c("div", { staticClass: "tab-content" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "tab-pane fade show active",
+                    attrs: {
+                      id: "edit-main-block",
+                      role: "tabpanel",
+                      "aria-labelledby": "edit-main-block-tab"
+                    }
+                  },
+                  [
+                    _c(
+                      "form",
+                      {
+                        attrs: {
+                          id: "frm_form",
+                          name: "frm_form",
+                          method: "post",
+                          autocomplete: "off"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          attrs: { type: "hidden", name: "city_id" },
+                          domProps: { value: this.cityId }
+                        }),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v("Активность")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c("div", { staticClass: "row panel" }, [
+                              _c("div", { staticClass: "col-sm-6" }, [
+                                _c("div", { staticClass: "row form-group" }, [
+                                  _c("div", { staticClass: "col-sm-4 col-6" }, [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.item.attributes.active,
+                                          expression: "item.attributes.active"
+                                        }
+                                      ],
+                                      staticClass: "radio",
+                                      attrs: {
+                                        type: "radio",
+                                        name: "active",
+                                        id: "active_0",
+                                        value: "0"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.item.attributes.active,
                                           "0"
                                         )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.item.attributes,
+                                            "active",
+                                            "0"
+                                          )
+                                        }
                                       }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    {
-                                      staticStyle: { "margin-right": "12px" },
-                                      attrs: {
-                                        dusk: "active_0",
-                                        for: "active_0"
-                                      }
-                                    },
-                                    [_vm._v(" Черновик")]
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "col-sm-4 col-6" }, [
-                                  _c("input", {
-                                    directives: [
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
                                       {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.item.attributes.active,
-                                        expression: "item.attributes.active"
-                                      }
-                                    ],
-                                    staticClass: "radio",
-                                    attrs: {
-                                      type: "radio",
-                                      name: "active",
-                                      id: "active_1",
-                                      value: "1"
-                                    },
-                                    domProps: {
-                                      checked: _vm._q(
-                                        _vm.item.attributes.active,
-                                        "1"
-                                      )
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        return _vm.$set(
-                                          _vm.item.attributes,
-                                          "active",
+                                        staticStyle: { "margin-right": "12px" },
+                                        attrs: {
+                                          dusk: "active_0",
+                                          for: "active_0"
+                                        }
+                                      },
+                                      [_vm._v(" Черновик")]
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-sm-4 col-6" }, [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.item.attributes.active,
+                                          expression: "item.attributes.active"
+                                        }
+                                      ],
+                                      staticClass: "radio",
+                                      attrs: {
+                                        type: "radio",
+                                        name: "active",
+                                        id: "active_1",
+                                        value: "1"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.item.attributes.active,
                                           "1"
                                         )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.item.attributes,
+                                            "active",
+                                            "1"
+                                          )
+                                        }
                                       }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    {
-                                      attrs: {
-                                        dsk: "active_1",
-                                        for: "active_1"
-                                      }
-                                    },
-                                    [_vm._v(" Опубликовать")]
-                                  )
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      {
+                                        attrs: {
+                                          dsk: "active_1",
+                                          for: "active_1"
+                                        }
+                                      },
+                                      [_vm._v(" Опубликовать")]
+                                    )
+                                  ])
                                 ])
                               ])
                             ])
                           ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("hr"),
-                      _vm._v(" "),
-                      _vm.item !== null
-                        ? _c("category-selector", {
-                            on: { change: _vm.categoryChanged },
-                            model: {
-                              value: _vm.item.relationships.categories,
-                              callback: function($$v) {
-                                _vm.$set(
-                                  _vm.item.relationships,
-                                  "categories",
-                                  $$v
-                                )
-                              },
-                              expression: "item.relationships.categories"
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("hr"),
-                      _vm._v(" "),
-                      _c("h5", [_vm._v("Описание идеи")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _vm._m(1),
+                        ]),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.item.attributes.title,
-                              expression: "item.attributes.title"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            id: "frm_title",
-                            name: "title",
-                            placeholder: "",
-                            type: "text",
-                            maxlength: "100"
-                          },
-                          domProps: { value: _vm.item.attributes.title },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.item.attributes,
-                                "title",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _vm._m(2),
+                        _c("hr"),
                         _vm._v(" "),
-                        _c("textarea", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.item.attributes.intro,
-                              expression: "item.attributes.intro"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            placeholder: "",
-                            name: "intro",
-                            id: "frm_intro",
-                            rows: "6"
-                          },
-                          domProps: { value: _vm.item.attributes.intro },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _vm.item !== null
+                          ? _c("category-selector", {
+                              on: { change: _vm.categoryChanged },
+                              model: {
+                                value: _vm.item.relationships.categories,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.item.relationships,
+                                    "categories",
+                                    $$v
+                                  )
+                                },
+                                expression: "item.relationships.categories"
                               }
-                              _vm.$set(
-                                _vm.item.attributes,
-                                "intro",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "form-group" },
-                        [
-                          _vm._m(3),
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("h5", [_vm._v("Описание идеи")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm._m(1),
                           _vm._v(" "),
-                          _c("ckeditor", {
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.item.attributes.title,
+                                expression: "item.attributes.title"
+                              }
+                            ],
+                            staticClass: "form-control",
                             attrs: {
-                              editor: _vm.editor,
-                              config: _vm.editorConfig,
-                              id: "frm_description"
+                              id: "frm_title",
+                              name: "title",
+                              placeholder: "",
+                              type: "text",
+                              maxlength: "100"
                             },
-                            model: {
-                              value: _vm.item.attributes.description,
-                              callback: function($$v) {
+                            domProps: { value: _vm.item.attributes.title },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
                                 _vm.$set(
                                   _vm.item.attributes,
-                                  "description",
-                                  $$v
+                                  "title",
+                                  $event.target.value
                                 )
-                              },
-                              expression: "item.attributes.description"
+                              }
                             }
                           })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm._m(4),
-                      _vm._v(" "),
-                      _c("hr"),
-                      _vm._v(" "),
-                      _vm.item
-                        ? _c("extended-tag-selector", {
-                            model: {
-                              value: _vm.item.relationships.tags,
-                              callback: function($$v) {
-                                _vm.$set(_vm.item.relationships, "tags", $$v)
-                              },
-                              expression: "item.relationships.tags"
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.item.attributes.intro,
+                                expression: "item.attributes.intro"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              placeholder: "",
+                              name: "intro",
+                              id: "frm_intro",
+                              rows: "6"
+                            },
+                            domProps: { value: _vm.item.attributes.intro },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.item.attributes,
+                                  "intro",
+                                  $event.target.value
+                                )
+                              }
                             }
                           })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "tab-pane fade",
-                  attrs: {
-                    id: "edit-images-block",
-                    role: "tabpanel",
-                    "aria-labelledby": "edit-images-block-tab"
-                  }
-                },
-                [
-                  _c("photo-uploader", {
-                    attrs: { type: this.item.type, "item-id": _vm.item.id }
-                  })
-                ],
-                1
-              )
-            ])
-          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _vm._m(3),
+                            _vm._v(" "),
+                            _c("ckeditor", {
+                              attrs: {
+                                editor: _vm.editor,
+                                config: _vm.editorConfig,
+                                id: "frm_description"
+                              },
+                              model: {
+                                value: _vm.item.attributes.description,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.item.attributes,
+                                    "description",
+                                    $$v
+                                  )
+                                },
+                                expression: "item.attributes.description"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _vm._m(4),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _vm.item
+                          ? _c("extended-tag-selector", {
+                              model: {
+                                value: _vm.item.relationships.tags,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.item.relationships, "tags", $$v)
+                                },
+                                expression: "item.relationships.tags"
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "tab-pane fade",
+                    attrs: {
+                      id: "edit-images-block",
+                      role: "tabpanel",
+                      "aria-labelledby": "edit-images-block-tab"
+                    }
+                  },
+                  [
+                    _c("photo-uploader", {
+                      attrs: { type: this.item.type, "item-id": _vm.item.id }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ],
+            1
+          )
         ])
       : _vm._e()
   ])
@@ -43016,323 +43159,453 @@ var render = function() {
     _vm._v(" "),
     _vm.dataLoaded
       ? _c("div", { staticClass: "mt-4" }, [
-          _c("div", { staticClass: "container" }, [
-            _c("div", { staticClass: "tab-content" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "tab-pane fade show active",
-                  attrs: {
-                    id: "edit-main-block",
-                    role: "tabpanel",
-                    "aria-labelledby": "edit-main-block-tab"
-                  }
-                },
-                [
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-sm-6" }, [
-                      _c(
-                        "form",
-                        {
-                          attrs: {
-                            id: "frm_form",
-                            name: "frm_form",
-                            method: "post",
-                            autocomplete: "off"
-                          }
-                        },
-                        [
-                          _c("input", {
-                            attrs: { type: "hidden", name: "city_id" },
-                            domProps: { value: this.cityId }
-                          }),
-                          _vm._v(" "),
-                          _c("h5", [_vm._v("Описание")]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(1),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.attributes.title,
-                                  expression: "item.attributes.title"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                id: "frm_title",
-                                name: "title",
-                                placeholder: "",
-                                type: "text",
-                                maxlength: "100"
-                              },
-                              domProps: { value: _vm.item.attributes.title },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.attributes,
-                                    "title",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(2),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.attributes.intro,
-                                  expression: "item.attributes.intro"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                id: "frm_intro",
-                                name: "intro",
-                                placeholder: "",
-                                type: "text",
-                                maxlength: "100"
-                              },
-                              domProps: { value: _vm.item.attributes.intro },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.attributes,
-                                    "intro",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(3),
-                            _vm._v(" "),
-                            _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.attributes.description,
-                                  expression: "item.attributes.description"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                placeholder: "Расскажите что-нибудь о месте",
-                                name: "description",
-                                id: "frm_description",
-                                rows: "6"
-                              },
-                              domProps: {
-                                value: _vm.item.attributes.description
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.attributes,
-                                    "description",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("hr"),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(4),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.relationships.address.coutry,
-                                  expression:
-                                    "item.relationships.address.coutry"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                id: "frm_country",
-                                name: "country",
-                                placeholder: "",
-                                type: "text",
-                                maxlength: "100"
-                              },
-                              domProps: {
-                                value: _vm.item.relationships.address.coutry
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.relationships.address,
-                                    "coutry",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(5),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.relationships.address.city,
-                                  expression: "item.relationships.address.city"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                id: "frm_city",
-                                name: "city",
-                                placeholder: "",
-                                type: "text",
-                                maxlength: "100"
-                              },
-                              domProps: {
-                                value: _vm.item.relationships.address.city
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.relationships.address,
-                                    "city",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-group" }, [
-                            _vm._m(6),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.item.relationships.address.address,
-                                  expression:
-                                    "item.relationships.address.address"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                id: "frm_address",
-                                name: "address",
-                                placeholder: "",
-                                type: "text",
-                                maxlength: "100"
-                              },
-                              domProps: {
-                                value: _vm.item.relationships.address.address
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.item.relationships.address,
-                                    "address",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _vm._m(7),
-                          _vm._v(" "),
-                          _c("hr"),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "clearfix mt-4" }, [
-                            _vm.errors
-                              ? _c(
-                                  "div",
-                                  { staticClass: "form-group text-left" },
-                                  [
-                                    _c(
-                                      "div",
-                                      { staticClass: "alert alert-danger" },
-                                      [
-                                        _c(
-                                          "ul",
-                                          _vm._l(_vm.errors, function(error) {
-                                            return _c("li", [
-                                              _vm._v(_vm._s(error[0]))
-                                            ])
-                                          }),
-                                          0
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                )
-                              : _vm._e()
-                          ])
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-sm-6" })
-                  ])
-                ]
-              ),
+          _c(
+            "div",
+            { staticClass: "container" },
+            [
+              _c("errors", { attrs: { errors: _vm.errors } }),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "tab-pane fade",
-                  attrs: {
-                    id: "edit-images-block",
-                    role: "tabpanel",
-                    "aria-labelledby": "edit-images-block-tab"
-                  }
-                },
-                [
-                  _c("photo-uploader", {
-                    attrs: { type: this.item.type, "item-id": _vm.item.id }
-                  })
-                ],
-                1
-              )
-            ])
-          ])
+              _c("div", { staticClass: "tab-content" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "tab-pane fade show active",
+                    attrs: {
+                      id: "edit-main-block",
+                      role: "tabpanel",
+                      "aria-labelledby": "edit-main-block-tab"
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-7" }, [
+                        _c(
+                          "form",
+                          {
+                            attrs: {
+                              id: "frm_form",
+                              name: "frm_form",
+                              method: "post",
+                              autocomplete: "off"
+                            }
+                          },
+                          [
+                            _c("input", {
+                              attrs: { type: "hidden", name: "city_id" },
+                              domProps: { value: this.cityId }
+                            }),
+                            _vm._v(" "),
+                            _c("h5", [_vm._v("Описание")]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(1),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.item.attributes.title,
+                                    expression: "item.attributes.title"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "frm_title",
+                                  name: "title",
+                                  placeholder: "",
+                                  type: "text",
+                                  maxlength: "100"
+                                },
+                                domProps: { value: _vm.item.attributes.title },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes,
+                                      "title",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(2),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.item.attributes.intro,
+                                    expression: "item.attributes.intro"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "frm_intro",
+                                  name: "intro",
+                                  placeholder: "",
+                                  type: "text",
+                                  maxlength: "100"
+                                },
+                                domProps: { value: _vm.item.attributes.intro },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes,
+                                      "intro",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(3),
+                              _vm._v(" "),
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.item.attributes.description,
+                                    expression: "item.attributes.description"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  placeholder: "Расскажите что-нибудь о месте",
+                                  name: "description",
+                                  id: "frm_description",
+                                  rows: "6"
+                                },
+                                domProps: {
+                                  value: _vm.item.attributes.description
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes,
+                                      "description",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-5" }, [
+                        _vm.item.relationships.address
+                          ? _c("div", [
+                              _c("h5", [_vm._v("Адрес")]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(4),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.item.relationships.address
+                                          .country_code,
+                                      expression:
+                                        "item.relationships.address.country_code"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "frm_postal_code",
+                                    name: "postal_code",
+                                    placeholder: "",
+                                    type: "text",
+                                    maxlength: "100"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.item.relationships.address
+                                        .country_code
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.item.relationships.address,
+                                        "country_code",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(5),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.item.relationships.address
+                                          .country_code,
+                                      expression:
+                                        "item.relationships.address.country_code"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "frm_country",
+                                    name: "country",
+                                    placeholder: "",
+                                    type: "text",
+                                    maxlength: "100"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.item.relationships.address
+                                        .country_code
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.item.relationships.address,
+                                        "country_code",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(6),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.item.relationships.address.city,
+                                      expression:
+                                        "item.relationships.address.city"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "frm_city",
+                                    name: "city",
+                                    placeholder: "",
+                                    type: "text",
+                                    maxlength: "100"
+                                  },
+                                  domProps: {
+                                    value: _vm.item.relationships.address.city
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.item.relationships.address,
+                                        "city",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(7),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.item.relationships.address.address,
+                                      expression:
+                                        "item.relationships.address.address"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "frm_address",
+                                    name: "address",
+                                    placeholder: "",
+                                    type: "text",
+                                    maxlength: "100"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.item.relationships.address.address
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.item.relationships.address,
+                                        "address",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c("h5", [_vm._v("Координаты места")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c("div", { staticClass: "col" }, [
+                              _vm._m(8),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.item.attributes.coordinates
+                                        .coordinates[0],
+                                    expression:
+                                      "item.attributes.coordinates.coordinates[0]"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "frm_coordinates_lat",
+                                  name: "coordinates_lat",
+                                  placeholder: "",
+                                  type: "text",
+                                  maxlength: "100"
+                                },
+                                domProps: {
+                                  value:
+                                    _vm.item.attributes.coordinates
+                                      .coordinates[0]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes.coordinates
+                                        .coordinates,
+                                      0,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col" }, [
+                              _vm._m(9),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.item.attributes.coordinates
+                                        .coordinates[1],
+                                    expression:
+                                      "item.attributes.coordinates.coordinates[1]"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "frm_coordinates_lng",
+                                  name: "coordinates_lng",
+                                  placeholder: "",
+                                  type: "text",
+                                  maxlength: "100"
+                                },
+                                domProps: {
+                                  value:
+                                    _vm.item.attributes.coordinates
+                                      .coordinates[1]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes.coordinates
+                                        .coordinates,
+                                      1,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(10)
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "tab-pane fade",
+                    attrs: {
+                      id: "edit-images-block",
+                      role: "tabpanel",
+                      "aria-labelledby": "edit-images-block-tab"
+                    }
+                  },
+                  [
+                    _c("photo-uploader", {
+                      attrs: { type: this.item.type, "item-id": _vm.item.id }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ],
+            1
+          )
         ])
       : _vm._e()
   ])
@@ -43440,6 +43713,19 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "frm_postal_code" } }, [
+      _vm._v("Почтовый код"),
+      _c(
+        "span",
+        { staticClass: "required-star", attrs: { title: "Обязательное поле" } },
+        [_vm._v("*")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "frm_country" } }, [
       _vm._v("Страна"),
       _c(
@@ -43479,7 +43765,35 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
+    return _c("label", { attrs: { for: "frm_coordinates_lat" } }, [
+      _vm._v("Широта"),
+      _c(
+        "span",
+        { staticClass: "required-star", attrs: { title: "Обязательное поле" } },
+        [_vm._v("*")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "frm_coordinates_lat" } }, [
+      _vm._v("Долгота"),
+      _c(
+        "span",
+        { staticClass: "required-star", attrs: { title: "Обязательное поле" } },
+        [_vm._v("*")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12" }, [
+      _c("hr"),
+      _vm._v(" "),
       _c("span", { staticClass: "text-secondary" }, [
         _vm._v("("),
         _c("span", { staticClass: "required-star" }, [_vm._v("*")]),
@@ -57724,6 +58038,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/YandexMap.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/YandexMap.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./YandexMap.vue?vue&type=template&id=00926850&scoped=true& */ "./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true&");
+/* harmony import */ var _YandexMap_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./YandexMap.vue?vue&type=script&lang=js& */ "./resources/js/components/YandexMap.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _YandexMap_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "00926850",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/YandexMap.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/YandexMap.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/YandexMap.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_YandexMap_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./YandexMap.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/YandexMap.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_YandexMap_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./YandexMap.vue?vue&type=template&id=00926850&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/YandexMap.vue?vue&type=template&id=00926850&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_YandexMap_vue_vue_type_template_id_00926850_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/action/ActionEditor.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/action/ActionEditor.vue ***!
@@ -58173,7 +58556,7 @@ __webpack_require__.r(__webpack_exports__);
       cityId: 4741,
       locale: 'en',
       // item info ----------------------------
-      type: 'actions',
+      type: '',
       item: null,
       // --------------------------------------
       dataLoaded: false,
@@ -58279,16 +58662,22 @@ __webpack_require__.r(__webpack_exports__);
         _this2.loading = true;
         _this2.errors = null;
 
-        if (resp.status === 200) {
+        if (resp.status === 200 || resp.status === 201) {
           if (resp.data.data.id !== null) {
-            _this2.updateBrowserUrl(resp.data.data.edit_url);
+            if (resp.data.data.attributes.edit_url) {
+              _this2.updateBrowserUrl(resp.data.data.attributes.edit_url);
+            }
 
             if (_this2.itemId === null) {
-              _this2.item.id = resp.data.data.item.id;
-              _this2.item.url = resp.data.data.item.url;
+              _this2.item.id = resp.data.data.id;
+              _this2.item.attributes.url = resp.data.data.attributes.url;
+              _this2.item.attributes.edit_url = resp.data.data.attributes.edit_url;
             }
 
             _this2.loading = false;
+
+            _this2.afterSave();
+
             userui.showNotification('Успешно сохранено', 'green');
           } else {
             userui.showNoInternetNotification();
@@ -58347,6 +58736,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return saveMethod;
     },
+    afterSave: function afterSave() {},
     getBrowserLocale: function getBrowserLocale() {
       return document.documentElement.lang;
     }

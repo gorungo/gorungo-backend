@@ -13,7 +13,7 @@ export default {
             locale: 'en',
 
             // item info ----------------------------
-            type: 'actions',
+            type: '',
             item: null,
 
             // --------------------------------------
@@ -145,18 +145,22 @@ export default {
                 this.loading = true;
                 this.errors = null;
 
-                if (resp.status === 200) {
+                if (resp.status === 200 || resp.status === 201) {
 
                     if(resp.data.data.id !== null ){
 
-                        this.updateBrowserUrl(resp.data.data.edit_url);
+                        if(resp.data.data.attributes.edit_url){
+                            this.updateBrowserUrl(resp.data.data.attributes.edit_url);
+                        }
 
                         if(this.itemId === null){
-                            this.item.id = resp.data.data.item.id;
-                            this.item.url = resp.data.data.item.url;
+                            this.item.id = resp.data.data.id;
+                            this.item.attributes.url = resp.data.data.attributes.url;
+                            this.item.attributes.edit_url = resp.data.data.attributes.edit_url;
                         }
 
                         this.loading = false;
+                        this.afterSave();
 
                         userui.showNotification('Успешно сохранено', 'green');
                     }else{
@@ -232,6 +236,10 @@ export default {
             }
 
             return saveMethod;
+        },
+
+        afterSave(){
+
         },
 
         getBrowserLocale: function() {

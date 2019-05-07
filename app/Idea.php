@@ -112,6 +112,10 @@ class Idea extends Model
         }
     }
 
+    public function getIsPublishedAttribute(){
+        return $this->active == 1;
+    }
+
     public function ideaActions()
     {
         return $this->hasMany('App\Action');

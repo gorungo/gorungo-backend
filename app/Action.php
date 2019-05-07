@@ -111,6 +111,10 @@ class Action extends Model {
         return $src;
     }
 
+    public function getIsPublishedAttribute(){
+        return $this->active == 1;
+    }
+
 
     /**
      * Get the route key for the model.

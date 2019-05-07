@@ -31,9 +31,8 @@
 
         <div v-if="dataLoaded" class="mt-4">
             <div class="container">
-                <div class="clearfix mt-4">
-                    <errors :errors="errors"></errors>
-                </div>
+                <errors :errors="errors"></errors>
+
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="edit-main-block" role="tabpanel" aria-labelledby="edit-main-block-tab">
                         <form id="frm_form" name="frm_form" method="post" autocomplete="off">

@@ -21,7 +21,7 @@ class Address extends JsonResource
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
-                'country' => $this->title,
+                'country_code' => $this->country_code,
                 'city' => $this->city,
                 'postal_code' => $this->postal_code,
                 'address' => $this->address,

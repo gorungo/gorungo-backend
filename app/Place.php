@@ -36,6 +36,11 @@ class Place extends Model
         'coordinates',
     ];
 
+    public function placeType()
+    {
+        return $this->belongsTo('App\PlaceType', 'place_type_id');
+    }
+
     public function placeActions()
     {
         return $this->belongsToMany('App\Action', 'action_place');
@@ -43,7 +48,7 @@ class Place extends Model
 
     public function placeAddress()
     {
-        return $this->belongsTo('App\Address', 'address_id');
+        return $this->hasOne('App\Address');
     }
 
     public function placePhotos()
@@ -61,7 +66,17 @@ class Place extends Model
     {
         return $this
             ->hasOne('App\PlaceDescription', 'place_id', 'id')
-            ->where('place_id', LocaleMiddleware::getLocaleId());
+            ->where('locale_id', LocaleMiddleware::getLocaleId());
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('places.show', [$this->id]);
+    }
+
+    public function getEditUrlAttribute()
+    {
+        return route('places.edit', [$this->id]);
     }
 
     Public function getTitleAttribute()
@@ -103,11 +118,6 @@ class Place extends Model
         return '';
     }
 
-    Public function getUrlAttribute()
-    {
-        return route('locations.show', [$this->id]);
-    }
-
     /**
      * Get path to tmb img of category item
      * @return string
@@ -146,8 +156,6 @@ class Place extends Model
                     $request->input('attributes.coordinates.coordinates')[1],
                     $request->input('attributes.coordinates.coordinates')[0]
                 ),
-
-                'address_id' => $request->input('attributes.address_id'),
             ];
 
             $descriptionStoreData = [
@@ -192,10 +200,10 @@ class Place extends Model
             $this->localisedPlaceDescription()->update($descriptionStoreData);
             $this->updateRelationships( $request );
 
-
             return $this;
 
         } );
+
 
         return $updateResult;
 

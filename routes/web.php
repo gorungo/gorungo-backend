@@ -28,29 +28,67 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
 
     // idea crud routes ------------------------------------------------------------------------------------
-    Route::get('/ideas/create', 'IdeaController@create')->name('ideas.create');
-    Route::get('/ideas/{idea}/edit', 'IdeaController@edit')->name('ideas.edit');
-    Route::post('/ideas', 'IdeaController@store')->name('ideas.store');
-    Route::patch('/ideas/{idea}', 'IdeaController@update')->name('ideas.update');
-    Route::delete('/ideas/{idea}', 'IdeaController@destroy')->name('ideas.destroy');
+    Route::get('/ideas/create', 'IdeaController@create')
+        ->middleware(['auth','can:create,App\Idea'])
+        ->name('ideas.create');
+    Route::get('/ideas/{idea}/edit', 'IdeaController@edit')
+        ->middleware(['auth','can:update,idea'])
+        ->name('ideas.edit');
+    Route::post('/ideas', 'IdeaController@store')
+        ->middleware(['auth','can:update,idea'])
+        ->name('ideas.store');
+    Route::patch('/ideas/{idea}', 'IdeaController@update')
+        ->middleware(['auth','can:update,idea'])
+        ->name('ideas.update');
+    Route::delete('/ideas/{idea}', 'IdeaController@destroy')
+        ->middleware(['auth','can:delete,idea'])
+        ->name('ideas.destroy');
     //------------------------------------------------------------------------------------------------------
 
     // actions crud routes ------------------------------------------------------------------------------------
-    Route::get('/actions/create/{idea}', 'ActionController@create')->name('actions.create');
-    Route::get('/actions/{action}/edit', 'ActionController@edit')->name('actions.edit');
-    Route::post('/actions', 'ActionController@store')->name('actions.store');
-    Route::patch('/actions/{action}', 'ActionController@update')->name('actions.update');
-    Route::delete('/actions/{action}', 'ActionController@destroy')->name('actions.destroy');
+    Route::get('/actions/create/{idea}', 'ActionController@create')
+        ->middleware(['auth','can:create,App\Action'])
+        ->name('actions.create');
+    Route::get('/actions/{action}/edit', 'ActionController@edit')
+        ->middleware(['auth','can:update,action'])
+        ->name('actions.edit');
+    Route::post('/actions', 'ActionController@store')
+        ->middleware(['auth','can:update,action'])
+        ->name('actions.store');
+    Route::patch('/actions/{action}', 'ActionController@update')
+        ->middleware(['auth','can:update,action'])
+        ->name('actions.update');
+    Route::delete('/actions/{action}', 'ActionController@destroy')
+        ->middleware(['auth','can:delete,action'])
+        ->name('actions.destroy');
     //------------------------------------------------------------------------------------------------------
 
     // place crud routes ------------------------------------------------------------------------------------
-    Route::get('/places/create', 'PlaceController@create')->name('places.create');
-    Route::get('/places/{place}/edit', 'PlaceController@edit')->name('places.edit');
-    Route::post('/places', 'PlaceController@store')->name('places.store');
-    Route::patch('/places/{place}', 'PlaceController@update')->name('places.update');
-    Route::delete('/places/{place}', 'PlaceController@destroy')->name('places.destroy');
+    Route::get('/places/create', 'PlaceController@create')
+        ->middleware(['auth','can:create,App\Place'])
+        ->name('places.create');
+    Route::get('/places/{place}/edit', 'PlaceController@edit')
+        ->middleware(['auth','can:update,place'])
+        ->name('places.edit');
+    Route::get('/places/{place}', 'PlaceController@edit')
+        ->middleware(['auth','can:view,place'])
+        ->name('places.show');
+    Route::post('/places', 'PlaceController@store')
+        ->middleware(['auth','can:update,place'])
+        ->name('places.store');
+    Route::patch('/places/{place}', 'PlaceController@update')
+        ->middleware(['auth','can:update,place'])
+        ->name('places.update');
+    Route::delete('/places/{place}', 'PlaceController@destroy')
+        ->middleware(['auth','can:delete,place'])
+        ->name('places.destroy');
     //------------------------------------------------------------------------------------------------------
 
+    // profile
+
+    Route::get('/users/{user}/profile', 'ProfileController@edit')
+        ->middleware(['auth','can:updateProfile,user'])
+        ->name('profile.edit');
 
     // routes with city
 
@@ -64,6 +102,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         // Actions show route
         Route::get('ideas/{categories?}/-{idea}/actions/{action}', 'IdeaActionController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$', 'action' => '^[a-zA-Z0-9-_\/]+$'])
+            ->middleware('can:view,action')
+            ->middleware(['auth','can:viewUnpublished,action'])
             ->name('actions.show');
 
         // idea index, show routes -----------------------------------------------------------------------------------------
@@ -145,13 +185,3 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

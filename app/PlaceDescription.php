@@ -10,7 +10,7 @@ class PlaceDescription extends Model
 
     protected $fillable = ['locale_id', 'title', 'intro', 'description'];
 
-    protected $touches = ['place'];
+    protected $touches = [];
 
     public $timestamps = false;
 

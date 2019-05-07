@@ -8,9 +8,14 @@ use App\Locale;
 
 class LocaleMiddleware
 {
-    public static $mainLanguage = 'en'; //основной язык, который не должен отображаться в URl
+    public static $mainLanguage = 'ru'; //основной язык, который не должен отображаться в URl
     public static $languages = ['en', 'ru', 'ch']; // Указываем, какие языки будем использовать в приложении.
 
+
+    public function __construct()
+    {
+        self::$mainLanguage = config('app.locale');
+    }
 
     /*
      * Проверяет наличие корректной метки языка в текущем URL

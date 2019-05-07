@@ -4,14 +4,18 @@
         <span class="glyphicon glyphicon-option-horizontal"></span>
     </button>
     <div class="dropdown-menu">
+        @can('update', $item)
         <a class="dropdown-item capitalize" href ="{{route('actions.edit', $item->slug)}}"><span class="glyphicon glyphicon-pencil"></span> {{__('editor.edit_action')}}</a>
         <div class="dropdown-divider"></div>
+        @endcan
 
+        @hasanyrole('moderator|super-admin')
         @if($item->status != 1)
             <span class="dropdown-item capitalize" href ="#" onclick="activate_item({{$item->id}},'action');"><span class="glyphicon glyphicon-play"></span> {{__('editor.activate')}}...</span>
         @else
             <span class="dropdown-item capitalize" href ="#" onclick="deactivate_item({{$item->id}},'action');"><span class="glyphicon glyphicon-pause"></span> {{__('editor.deactivate')}}...</span>
         @endif
+        @endhasanyrole
 
         <span class="dropdown-item" id="dropdown_delete_{{$item->id}}" class="noclose" onclick="show_dropdown_delete_confirm({{$item->id}});"><span class="glyphicon glyphicon-trash"></span> Удалить...</span></span>
         <span class="dropdown-item" style="display: none;" id="dropdown_delete_confirm_{{$item->id}}" onclick="document.frm_delete{{$item->id}}.submit()"><span><span class="glyphicon glyphicon-ok"></span> Да, удалить...</span></span>

@@ -23,6 +23,9 @@ class Idea extends JsonResource
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
+                'url' => $this->url,
+                'edit_url' => $this->url,
+
                 'slug' => $this->id ? $this->slug : '',
                 'active' => $this->id ? $this->active : 1,
                 'main_category_id' => $this->id ? $this->main_category_id : null,

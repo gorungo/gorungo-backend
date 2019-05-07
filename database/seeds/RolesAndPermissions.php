@@ -86,6 +86,7 @@ class RolesAndPermissions extends Seeder
         $role = Role::create(['name' => 'explorer']);
         $role->givePermissionTo([
             'view articles',
+            'view actions',
             'view ideas',
             'view places',
             'view own profiles',
