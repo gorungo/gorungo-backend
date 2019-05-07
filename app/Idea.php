@@ -134,6 +134,7 @@ class Idea extends Model
 
     public function localisedIdeaDescription()
     {
+        //dd(LocaleMiddleware::getLocaleId());
         return $this
             ->hasOne('App\IdeaDescription', 'idea_id', 'id')
             ->where('locale_id', LocaleMiddleware::getLocaleId());

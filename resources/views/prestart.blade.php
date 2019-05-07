@@ -36,7 +36,7 @@
 <body>
 <div class="container">
     <div class="logo-placer">
-        <img class="logo"  src="/images/main_logo.svg" alt="gorungo logo"/>
+        <img class="logo"  src="/images/interface/logo/main_logo.svg" alt="gorungo logo"/>
         <p>Coming soon</p>
     </div>
 

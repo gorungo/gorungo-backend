@@ -14,7 +14,7 @@ class LocaleMiddleware
 
     public function __construct()
     {
-        self::$mainLanguage = config('app.locale');
+
     }
 
     /*
@@ -57,6 +57,12 @@ class LocaleMiddleware
 
         if($locale){
             $key = array_search($locale, self::$languages);
+
+            if($key !== Null){
+                return $key + 1;
+            }
+        }else{
+            $key = array_search(self::$mainLanguage, self::$languages);
 
             if($key !== Null){
                 return $key + 1;

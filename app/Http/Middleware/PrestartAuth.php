@@ -17,8 +17,8 @@ class PrestartAuth
     public function handle($request, Closure $next)
     {
 
-        if($request->getRequestUri() !=='/prestart'){
-            session()->put('prestart', 'prestart');
+        if ($request->getRequestUri() == '/prestart'){
+            session(['prestart'=>'prestart']);
         }
 
         if ($request->getRequestUri() !=='/' && !session()->has('prestart')) {

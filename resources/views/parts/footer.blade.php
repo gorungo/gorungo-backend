@@ -16,7 +16,7 @@
                     <!--Facebook-->
                     <a href="#"><i class="fab fa-facebook text-white mr-lg-4"></i></a>
                     <!--Instagram-->
-                    <a href="https://instagram.com/gorungo.net"><i class="fab fa-instagram text-white mr-lg-4"></i></a>
+                    <a href="https://instagram.com/gorungo.ru"><i class="fab fa-instagram text-white mr-lg-4"></i></a>
                     <!--Vk-->
                     <a href="#"><i class="fab fa-vk text-white mr-lg-4"></i></a>
                 </div>
