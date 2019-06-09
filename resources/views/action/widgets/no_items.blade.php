@@ -1,0 +1,1 @@
+<h5>{{__('action.no_items')}}</h5>
