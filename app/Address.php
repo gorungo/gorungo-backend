@@ -9,14 +9,15 @@ class Address extends Model
 {
     protected $table = 'addresses';
     protected $perPage = 60;
-    public $timestamps = false;
     protected $guarded = [];
+
+    public $timestamps = false;
 
 
     Public function getLocalityAttribute() {
         if ( $this->addressDescriptions()->count() ) {
-            if($this->localizedLocalityDescription != null){
-                return $this->localizedLocalityDescription->locality;
+            if($this->localisedAddressDescription != null){
+                return $this->localisedAddressDescription->locality;
             }else if($this->addressDescriptions()->first()){
                 return $this->addressDescriptions()->first()->locality;
             }
@@ -31,8 +32,8 @@ class Address extends Model
 
     Public function getIntroAttribute() {
         if ( $this->addressDescriptions()->count() ) {
-            if($this->localizedAddressDescription != null){
-                return $this->localizedAddressDescription->intro;
+            if($this->localisedAddressDescription != null){
+                return $this->localisedAddressDescription->intro;
             }else if($this->addressDescriptions()->first()){
                 return $this->addressDescriptions()->first()->intro;
             }
@@ -43,8 +44,8 @@ class Address extends Model
 
     Public function getDescriptionAttribute() {
         if ( $this->addressDescriptions()->count() ) {
-            if($this->localizedAddressDescription != null){
-                return $this->localizedAddressDescription->description;
+            if($this->localisedAddressDescription != null){
+                return $this->localisedAddressDescription->description;
             }else if($this->addressDescriptions()->first()){
                 return $this->addressDescriptions()->first()->description;
             }
@@ -58,7 +59,7 @@ class Address extends Model
     }
 
 
-    public function localizedAddressDescription() {
+    public function localisedAddressDescription() {
         return $this
             ->hasOne( 'App\AddressDescription', 'address_id', 'id' )
             ->where( 'locale_id', LocaleMiddleware::getLocaleId() );

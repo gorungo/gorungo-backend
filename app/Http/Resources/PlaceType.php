@@ -28,7 +28,9 @@ class PlaceType extends JsonResource
                 'slug' => $this->slug,
             ],
 
-            'relationships' => [],
+            'relationships' => [
+                'place_type_groups' => null,
+            ],
         ];
     }
 }

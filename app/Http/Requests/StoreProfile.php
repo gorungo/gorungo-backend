@@ -24,22 +24,17 @@ class StoreProfile extends FormRequest
     public function rules()
     {
         return [
-            'attributes.title' => 'required|min:3|max:100',
-            'attributes.intro' => 'required|min:3|max:199',
-            'attributes.description' => 'required|min:5',
-            'attributes.active' => 'required|integer',
+            'attributes.name' => 'required|min:3|max:100',
+            'attributes.description' => 'required|min:5|max:500',
+            'attributes.site' => 'required|min:3|max:100',
+            'attributes.phone' => 'required|min:3|max:20',
+            'attributes.sex' => 'required|numeric|min:0|max:3',
 
-            'relationships.categories' => 'required|array',
-            'relationships.categories.*.id' => 'required|numeric|exists:categories',
+            'relationships.user.attributes.name' => 'required|min:3|max:20',
+            'relationships.user.attributes.email' => 'required|email|min:3|max:20',
 
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'relationships.categories.required' => __('category.relationships.categories.required'),
-        ];
-    }
 
 }

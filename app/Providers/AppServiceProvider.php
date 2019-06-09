@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
             'Idea' => 'App\Idea',
             'Photo' => 'App\Photo',
             'Action' => 'App\Action',
+            'Place' => 'App\Place',
+            'Helper' => 'App\Helper',
 
             // 'как-храним' => 'класс',
         ]);

@@ -9,6 +9,8 @@ class ProfileController extends Controller
 {
     public function edit(Request $request, User $user)
     {
-
+        return view('profile.edit' , compact(['user']));
     }
+
+
 }

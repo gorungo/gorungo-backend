@@ -27,7 +27,7 @@ class IdeaController extends Controller
 
     public function index(Idea $idea)
     {
-        return response()->json(['files' => $idea->ideaPhotos()->get()]);
+        return response()->json(['files' => $idea->photos()->get()]);
     }
 
     /**

@@ -26,10 +26,17 @@ class StorePlace extends FormRequest
         return [
             'attributes.coordinates' => 'required|array',
             'relationships.address' => 'sometimes|nullable|array',
+            'relationships.placeType.id' => 'required',
 
             'attributes.title' => 'required|min:3|max:100',
             'attributes.intro' => 'required|min:3|max:199',
             'attributes.description' => 'required|min:5',
+
+            'relationships.address.postal_code' => 'sometimes|min:3|max:10',
+            'relationships.address.country' => 'sometimes|min:3|max:100',
+            'relationships.address.region' => 'sometimes|min:3|max:100',
+            'relationships.address.city' => 'sometimes|min:3|max:100',
+            'relationships.address.address' => 'sometimes|min:3|max:100',
         ];
     }
     public function messages()

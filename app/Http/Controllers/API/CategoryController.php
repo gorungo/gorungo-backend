@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Category as CategoryResource;
 
@@ -26,22 +26,22 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return CategoryResource
      */
-    public function create()
+    public function create(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  StoreCategory $request
+     * @return CategoryResource
      */
-    public function store(Request $request)
+    public function store(StoreCategory $request, Category $category)
     {
-        //
+        return new CategoryResource($category->createAndSync($request));
     }
 
     /**
@@ -58,24 +58,23 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Category $category
+     * @return CategoryResource
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  StoreCategory $request
+     * @return CategoryResource
      */
-    public function update(Request $request, $id)
+    public function update(StoreCategory $request, Category $category)
     {
-        //
+        return new CategoryResource($category->updateAndSync($request));
     }
 
     /**

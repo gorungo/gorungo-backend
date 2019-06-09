@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use \Conner\Tagging\Taggable;
+use App\Traits\Imageble;
 use App\Traits\TagInfo;
 use App\Http\Requests\StoreAction;
 use App\Http\Requests\UploadPhoto;
@@ -18,6 +19,7 @@ class Action extends Model {
     use SoftDeletes;
     use Taggable;
     use TagInfo;
+    use Imageble;
 
     protected $table = 'actions';
 
@@ -79,7 +81,7 @@ class Action extends Model {
     Public function getUrlAttribute() {
 
 
-        if ( $this->actionIdea->ideaMainCategory != null ) {
+        if ( $this->actionIdea && $this->actionIdea->ideaMainCategory ) {
             return route( 'actions.show', [ $this->actionIdea->ideaMainCategory->pathToCategory(),$this->actionIdea->slug, $this->slug ] );
         } else {
             return '';
@@ -96,12 +98,14 @@ class Action extends Model {
         $defaultTmb = 'images/interface/placeholders/idea.png';
 
         if ( $this->thmb_file_name != null ) {
-            //если есть картинка вакансии
+            //если есть картинка
             $src = 'storage/images/action/' . $this->id . '/' . htmlspecialchars( strip_tags( $this->thmb_file_name ) );
 
-        } else {
+        } else if ($this->actionPlaces()->first()->thmb_file_name){
             //если есть картинка вакансии
-            $src = $defaultTmb;
+            $src = $this->actionPlaces()->first()->TmbImgPath;
+        } else if ($this->actionIdea()->thmb_file_name){
+             $src = $this->actionIdea()->TmbImgPath;
         }
 
         if ( !file_exists( $src ) ) {
@@ -158,11 +162,6 @@ class Action extends Model {
         return $this->belongsToMany('App\Place', 'action_place', 'action_id', 'place_id');
     }
 
-    public function actionPhotos()
-    {
-        return $this->morphMany('App\Photo', 'item');
-    }
-
     public function actionDescriptions() {
         return $this->hasMany( 'App\ActionDescription', 'action_id', 'id' );
     }
@@ -195,6 +194,7 @@ class Action extends Model {
         return Cache::remember( 'actions_' . LocaleMiddleware::getLocale() . '_' . request()->getQueryString(), 1, function () {
             return self::WhereTags( MainFilter::getFiltersTagsArray() )
                 ->JoinDescription()
+                ->DateFilter()
                 ->Sorting()
                 ->paginate();
         } );
@@ -332,14 +332,6 @@ class Action extends Model {
         }
     }
 
-
-
-    public function uploadPhoto(UploadPhoto $request){
-        $photo = New Photo();
-        return $photo->createAndStore($request, $this);
-    }
-
-
     // scopes
 
     public function scopeJoinDescription($query)
@@ -362,6 +354,23 @@ class Action extends Model {
 
     public function scopeWhereTags( $query, Array $tags ) {
         return $query->withAllTags( $tags );
+    }
+
+    public function scopeDateFilter($query){
+        return $query->inFuture()->inProgress();
+    }
+
+    public function scopeInFuture($query){
+        return $query->whereHas('actionDates', function($query){
+            $query->whereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND (TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND (`end_datetime_utc` is not null))")
+                ->orWhereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND `end_datetime_utc` is null");
+        })->orDoesntHave('actionDates');
+    }
+
+    public function scopeInProgress($query){
+        return $query->orWhereHas('actionDates', function($query){
+            $query->whereRaw("TO_DAYS(NOW()) > TO_DAYS(`start_datetime_utc`) AND TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND TO_DAYS(`start_datetime_utc`) != TO_DAYS(`end_datetime_utc`)");
+        })->orDoesntHave('actionDates');
     }
 
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Requests\UploadPhoto;
+use App\Traits\Imageble;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ class Idea extends Model
     use SoftDeletes;
     use Taggable;
     use TagInfo;
+    use Imageble;
 
     protected $table = 'ideas';
 
@@ -119,11 +121,6 @@ class Idea extends Model
     public function ideaActions()
     {
         return $this->hasMany('App\Action');
-    }
-
-    public function ideaPhotos()
-    {
-        return $this->morphMany('App\Photo', 'item');
     }
 
     public function ideaDescriptions()
@@ -352,12 +349,6 @@ class Idea extends Model
         if (count($validTags)) $this->retag($validTags);
 
 
-    }
-
-    public function uploadPhoto(UploadPhoto $request)
-    {
-        $photo = New Photo();
-        return $photo->createAndStore($request, $this);
     }
 
 

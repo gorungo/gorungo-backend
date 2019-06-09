@@ -6,10 +6,6 @@
   border-color: transparent;
 }
 
-.list-item a{
-  //color: #111;
-}
-
 
 .card.list-item:hover .img-wrap{
   transform: scale(1.03, 1.03);
@@ -32,7 +28,7 @@
 }
 
 .list-item .img-wrap{
-  background-color: $body-bg;
+  background-color: $default-item-bg;
 }
 .bg-gray .list-item .caption{
   padding: 0 20px;

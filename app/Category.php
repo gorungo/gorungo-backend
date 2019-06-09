@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Http\Requests\StoreIdea;
 use DB;
 use App\Http\Requests\StoreCategory;
-use App\Traits\PhotoTrait;
+use App\Traits\Imageble;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
@@ -13,44 +14,49 @@ use Illuminate\Support\Facades\Cache;
 class Category extends Model
 {
     use SoftDeletes;
-    use PhotoTrait;
+    use Imageble;
+
 
     protected $table = 'categories';
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = [ 'author_id', 'parent_id', 'active', 'order', 'slug'];
+    protected $fillable = ['author_id', 'parent_id', 'active', 'order', 'slug'];
 
     protected $with = [];
 
-    Public function getTitleAttribute(){
-        if($this->localisedCategoryTitle != null) {
+    Public function getTitleAttribute()
+    {
+        if ($this->localisedCategoryTitle != null) {
             return $this->localisedCategoryTitle->title;
-        }else{
+        } else {
             return '';
         }
 
     }
 
-    Public function getIntroAttribute(){
-        if($this->localisedCategoryTitle != null){
+    Public function getIntroAttribute()
+    {
+        if ($this->localisedCategoryTitle != null) {
             return $this->localisedCategoryTitle->intro;
-        }else{
+        } else {
             return '';
         }
 
     }
 
-    Public function getDescriptionAttribute(){
-        if($this->localisedCategoryDescription != null){
+    Public function getDescriptionAttribute()
+    {
+        if ($this->localisedCategoryDescription != null) {
             return $this->localisedCategoryDescription->description;
-        }else{
+        } else {
             return '';
         }
 
     }
 
-    Public function getCategoryPathAttribute(){
+    Public function getCategoryPathAttribute()
+    {
         return '';
     }
 
@@ -58,19 +64,20 @@ class Category extends Model
      * Get path to tmb img of category item
      * @return string
      */
-    Public function getTmbImgPathAttribute(){
+    Public function getTmbImgPathAttribute()
+    {
 
         $defaultTmb = 'images/interface/icons/category_tmb_placeholder.png';
 
-        if($this->thmb_img != ''){
+        if ($this->thmb_img != '') {
             //если есть картинка вакансии
             $src = 'storage/images/category/' . $this->id . '/' . htmlspecialchars(strip_tags($this->tmb_img));
-        }else{
+        } else {
             //если есть картинка вакансии
             $src = $defaultTmb;
         }
 
-        if(!file_exists($src)){
+        if (!file_exists($src)) {
             $src = $defaultTmb;
         }
 
@@ -84,7 +91,11 @@ class Category extends Model
      */
     public function getRouteKeyName()
     {
-        return 'slug';
+        if (request()->is('api/*')) {
+            return 'id';
+        } else {
+            return 'slug';
+        }
     }
 
     public function categoryAuthor()
@@ -100,7 +111,8 @@ class Category extends Model
 
     public function localisedCategoryTitle()
     {
-        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')->where('locale_id', LocaleMiddleware::getLocaleId());
+        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')
+            ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
 
@@ -111,15 +123,20 @@ class Category extends Model
 
     public function localisedCategoryDescription()
     {
-        return $this->hasOne('App\CategoryDescription', 'category_id', 'id')->where('locale_id', LocaleMiddleware::getLocaleId());
+        return $this->hasOne('App\CategoryDescription', 'category_id', 'id')
+            ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
-    public function hasLocaleName($localeName){
-        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')->where('locale_id', LocaleMiddleware::getLocaleId($localeName))->count();
+    public function hasLocaleName($localeName)
+    {
+        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')
+            ->where('locale_id', LocaleMiddleware::getLocaleId($localeName))->count();
     }
 
-    public function hasLocaleId($localeId){
-        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')->where('locale_id', $localeId)->count();
+    public function hasLocaleId($localeId)
+    {
+        return $this->hasOne('App\CategoryTitle', 'category_id', 'id')
+            ->where('locale_id', $localeId)->count();
 
     }
 
@@ -130,7 +147,8 @@ class Category extends Model
 
     public function localisedCategoryMetas()
     {
-        return $this->hasMany('App\CategoryMeta', 'category_id', 'id')->where('locale_id', LocaleMiddleware::getLocaleId());
+        return $this->hasMany('App\CategoryMeta', 'category_id', 'id')
+            ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
     public function categoryIdeas()
@@ -143,20 +161,28 @@ class Category extends Model
         return $this->hasManyThrough('App\Action', 'App\Idea');
     }
 
-    public function categoryParent(){
+    public function categoryParent()
+    {
         return $this->belongsTo('App\Category', 'parent_id');
 
     }
-    public function categoryChildren(){
+
+    public function categoryChildren()
+    {
         return $this->hasMany('App\Category', 'parent_id');
     }
 
     public static function getMainCategories()
     {
-        return Cache::remember('mainIdeaCategories-'.LocaleMiddleware::getLocaleId(), 10, function () {
+        return Cache::tags(['category', 'mainIdeaCategories'])->remember('mainIdeaCategories-' . LocaleMiddleware::getLocaleId(), 1, function () {
             return self::MainCategory()->with('localisedCategoryTitle')->IsActive()->get();
         });
 
+    }
+
+    private function generateSlug(String $title)
+    {
+        return str_slug($title);
     }
 
 
@@ -164,23 +190,24 @@ class Category extends Model
      * returns category path with subcategories
      * @return string
      */
-    public function pathToCategory(){
+    public function pathToCategory()
+    {
 
         $category = $this;
 
-        $path = Cache::remember('pathToCategory_' . $this->id, 10, function () use ($category){
+        $path = Cache::tags(['category'])->remember('pathToCategory_' . $this->id, 10, function () use ($category) {
 
             $path = '';
 
-            if($category->id ){
+            if ($category->id) {
 
                 $path = $path . $category->slug;
 
-                if($category->parent_id !== 0){
-                    $path =  $category->categoryParent->slug . '/' . $path  ;
+                if ($category->parent_id !== 0) {
+                    $path = $category->categoryParent->slug . '/' . $path;
 
-                    if($category->categoryParent->parent_id !== 0){
-                        $path =  $category->categoryParent()->categoryParent->slug . '/' . $path ;
+                    if ($category->categoryParent->parent_id !== 0) {
+                        $path = $category->categoryParent()->categoryParent->slug . '/' . $path;
                     }
                 }
 
@@ -192,6 +219,7 @@ class Category extends Model
         return $path;
 
     }
+
     public static function lastChildren()
     {
         return Category::isActive()->whereDoesntHave('categoryChildren')->get();
@@ -200,16 +228,16 @@ class Category extends Model
     public static function categoryChildrenJSON($category = null)
     {
 
-        if($category == null){
+        if ($category == null) {
             $result = Category::isActive()->MainCategory()->get();
 
-        }else{
+        } else {
             $result = Category::isActive()->ChildCategory($category->id)->get();
 
         }
 
 
-        if(count($result)){
+        if (count($result)) {
             return response()->json($result);
         }
 
@@ -230,50 +258,51 @@ class Category extends Model
 
     public function CategoryFriends()
     {
-        return  Category::where('parent_id', $this->parent_id)->isActive()->get();
+        return Category::where('parent_id', $this->parent_id)->isActive()->get();
     }
 
 
-    public function allCategoryChildrenArray(){
+    public function allCategoryChildrenArray()
+    {
 
         $subcategoryCashLifeTime = 10;
         $needCache = true;
 
         $categoriesId = [];
 
-            $categoriesId[] = $this->id;
+        $categoriesId[] = $this->id;
 
-            if(Cache::has('category_id_children_array_' . $this->id ) && $needCache ){
-                $categories_id = Cache::get('category_id_children_array_' . $this->id);
-            }else{
-                if(isset($this->categoryChildren)){
+        if (Cache::tags(['category'])->has('category_id_children_array_' . $this->id) && $needCache) {
+            $categories_id = Cache::tags(['category'])->get('category_id_children_array_' . $this->id);
+        } else {
+            if (isset($this->categoryChildren)) {
 
-                    foreach($this->categoryChildren as $children){
-
-
-                        if(isset($children->id)) $categoriesId[] = $children->id ;
-
-                        if(isset($children->categoryChildren)){
-
-                            foreach($children->categoryChildren as $children_children){
+                foreach ($this->categoryChildren as $children) {
 
 
-                                if(isset($children_children->id)){
+                    if (isset($children->id)) $categoriesId[] = $children->id;
 
-                                    $categoriesId[] = $children_children->id ;
-                                }
+                    if (isset($children->categoryChildren)) {
 
+                        foreach ($children->categoryChildren as $children_children) {
+
+
+                            if (isset($children_children->id)) {
+
+                                $categoriesId[] = $children_children->id;
                             }
+
                         }
-
-
                     }
-                }else{
-                    $categoriesId[] = $this->id;
-                }
 
-                Cache::put('category_id_children_array_' . $this->id, $categoriesId, $subcategoryCashLifeTime);
+
+                }
+            } else {
+                $categoriesId[] = $this->id;
             }
+
+            Cache::tags(['category'])->put('category_id_children_array_' . $this->id, $categoriesId, $subcategoryCashLifeTime);
+        }
 
 
         return $categoriesId;
@@ -281,37 +310,38 @@ class Category extends Model
 
     }
 
-    public function allCategoryParentArray(){
+    public function allCategoryParentArray()
+    {
 
         $categories_id = [];
         $needCashe = true;
 
-        if(Cache::has('category_id_parent_array_' . $this->id) && $needCashe ){
-            $categories_id = Cache::get('category_id_parent_array_' . $this->id);
-        }else{
-            if($this->parent){
+        if (Cache::tags(['category','category_id_parent_array'])->has('category_id_parent_array_' . $this->id) && $needCashe) {
+            $categories_id = Cache::tags(['category', 'category_id_parent_array'])->get('category_id_parent_array_' . $this->id);
+        } else {
+            if ($this->parent) {
 
                 $parent = $this->parent;
                 $categories_id[] = $parent->id;
 
-                if(isset($parent->parent)){
+                if (isset($parent->parent)) {
 
-                    $categories_id[] = $parent->parent->id ;
-
-                }
-
-                if(isset($parent->parent->parent)){
-
-                    $categories_id[] = $parent->parent->parent->id ;
+                    $categories_id[] = $parent->parent->id;
 
                 }
 
+                if (isset($parent->parent->parent)) {
 
-            }else{
+                    $categories_id[] = $parent->parent->parent->id;
+
+                }
+
+
+            } else {
                 $categories_id[] = 0;
             }
 
-            Cache::put('category_id_parent_array_' . $this->id, $categories_id, 0);
+            Cache::tags(['category','category_id_parent_array'])->put('category_id_parent_array_' . $this->id, $categories_id, 0);
         }
 
         return $categories_id;
@@ -319,132 +349,130 @@ class Category extends Model
 
     }
 
-    /**
-     * Creating a new category and storing in database
-     * @param StoreCategory $request
-     * @return null
-     */
-    public function createAndStore(StoreCategory $request){
+    public function createAndSync(StoreCategory $request)
+    {
 
-        $localeId = LocaleMiddleware::getLocaleId();
+        $createResult = DB::transaction(function () use ($request) {
 
-        $categoryStoreData = $request->only( 'author_id', 'parent_id', 'active', 'order', 'slug' );
-        $categoryTitleStoreData = $request->only( 'title', 'intro' );
-        $categoryDescriptionStoreData = $request->only( 'description' );
+            $categoriesId = []; // ids of categories of idea item
 
-        $categoryStoreData['parent_id'] = 0;
+            $localeId = LocaleMiddleware::getLocaleId();
 
-        // выбираем категорию для сохранения из подкатегорий
-        if($request->has('category_id_3') && $request->category_id_3 != '0'){
-            $categoryStoreData['parent_id'] = $request->category_id_3;
+            $parenCategoryId = $request->input('attributes.categoryParent.id');
 
-        }elseif($request->has('category_id_2') && $request->category_id_2 != '0'){
-            $categoryStoreData['parent_id'] = $request->category_id_2;
+            $storeData = [
+                'author_id' => Auth()->user()->id,
+                'parent_id' => $parenCategoryId !== null ? $parenCategoryId : 0,
+                'active' => $request->input('attributes.active'),
+                'order' => $request->input('attributes.order'),
+                'slug' => $this->generateSlug($request->input('attributes.title')),
+            ];
 
-        }elseif($request->has('category_id_1') && $request->category_id_1 != '0'){
-            $categoryStoreData['parent_id'] = $request->category_id_1;
+            $titleStoreData = [
+                'title' => $request->input('attributes.title'),
+                'intro' => $request->input('attributes.intro'),
+                'locale_id' => $localeId,
+            ];
 
-        }
+            $descriptionStoreData = [
+                'description' => $request->input('attributes.description'),
+                'locale_id' => $localeId,
+            ];
 
-        $categoryStoreData['author_id'] = 1;
-        $categoryStoreData['slug'] = str_slug($request->title);
+            $category = self::create($storeData);
+            $category->localisedCategoryTitle()->create($titleStoreData);
+            $category->localisedCategoryDescription()->create($descriptionStoreData);
 
-        $categoryTitleStoreData['locale_id'] = $localeId;
-        $categoryDescriptionStoreData['locale_id'] = $localeId;
-
-
-        $newCategory = DB::transaction(function () use ($categoryStoreData, $categoryTitleStoreData, $categoryDescriptionStoreData) {
-
-            // saving new catgory data with transaction
-
-            $newCategory = Category::create($categoryStoreData);
-
-            if($newCategory){
-                $newCategory->localisedCategoryTitle()->create($categoryTitleStoreData);
-                $newCategory->localisedCategoryDescription()->create($categoryDescriptionStoreData);
-
-            }else{
-                return null;
-            }
-
-            return $newCategory;
-
-        });
-
-        return null;
-
-    }
-
-    /**
-     * Updating category data
-     * @param StoreCategory $request
-     * @return mixed
-     */
-    function updateAndStore(StoreCategory $request){
-
-        $localeId = LocaleMiddleware::getLocaleId();
-
-        $categoryStoreData = $request->only( 'author_id', 'parent_id', 'active', 'order', 'slug' );
-        $categoryTitleStoreData = $request->only( 'title', 'intro' );
-        $categoryDescriptionStoreData = $request->only( 'description' );
-
-        // выбираем категорию для сохранения из подкатегорий
-        if($request->has('category_id_3') && $request->category_id_3 != '0' && $this->id != $request->category_id_3 ){
-            $categoryStoreData['parent_id'] = $request->category_id_3;
-
-        }elseif($request->has('category_id_2') && $request->category_id_2 != '0' && $this->id != $request->category_id_2 ){
-            $categoryStoreData['parent_id'] = $request->category_id_2;
-
-        }elseif($request->has('category_id_1') && $request->category_id_1 != '0' && $this->id != $request->category_id_1  ){
-            $categoryStoreData['parent_id'] = $request->category_id_1;
-
-        }
-
-        $categoryStoreData['author_id'] = 1;
-        //$categoryStoreData['slug'] = str_slug($request->title);
-
-        $categoryTitleStoreData['locale_id'] = $localeId;
-        $categoryDescriptionStoreData['locale_id'] = $localeId;
-
-        $category = $this;
-
-        $updateResult = DB::transaction(function () use ($category, $categoryStoreData, $categoryTitleStoreData, $categoryDescriptionStoreData) {
-
-            // saving new catgory data with transaction
-
-            $this->update($categoryStoreData);
-
-            if(isset($this->localisedCategoryTitle()->first()->title)){
-                $this->localisedCategoryTitle()->update($categoryTitleStoreData);
-                $this->localisedCategoryDescription()->update($categoryDescriptionStoreData);
-            }else{
-                $this->localisedCategoryTitle()->create($categoryTitleStoreData);
-                $this->localisedCategoryDescription()->create($categoryDescriptionStoreData);
-            }
-
+            $category->updateRelationships($request);
 
             return $category;
 
         });
 
+        $this->clearAllCache();
+
+        return $createResult;
+    }
+
+    public function updateAndSync(StoreCategory $request)
+    {
+
+        $updateResult = DB::transaction(function () use ($request) {
+
+            $localeId = LocaleMiddleware::getLocaleId();
+            $parenCategoryId = $request->input('attributes.categoryParent.id');
+
+            $storeData = [
+                'author_id' => Auth()->user()->id,
+                'parent_id' => $parenCategoryId !== null ? $parenCategoryId : 0,
+                'active' => $request->input('attributes.active'),
+                'order' => $request->input('attributes.order'),
+            ];
+
+            $titleStoreData = [
+                'title' => $request->input('attributes.title'),
+                'intro' => $request->input('attributes.intro'),
+                'locale_id' => $localeId,
+            ];
+
+            $descriptionStoreData = [
+                'description' => $request->input('attributes.description'),
+                'locale_id' => $localeId,
+            ];
+
+            $this->update($storeData);
+
+            if ($this->localisedCategoryTitle()->where('locale_id', $localeId)->get()) {
+                $this->localisedCategoryTitle()->update($titleStoreData);
+            } else {
+                $this->localisedCategoryTitle()->create($titleStoreData);
+            }
+
+            if ($this->localisedCategoryDescription()->where('locale_id', $localeId)->first()) {
+                $this->localisedCategoryDescription()->update($descriptionStoreData);
+            } else {
+                $this->localisedCategoryDescription()->create($descriptionStoreData);
+            }
+
+            //$this->updateRelationships($request);
+
+            return $this;
+
+        });
+
+        $this->clearAllCache();
         return $updateResult;
 
     }
 
+    private function updateRelationships(StoreCategory $request): void
+    {
+        //$this->saveCategories($request);
+        //$this->saveTags($request);
+    }
+
     // scopes
 
-    public function scopeMainCategory($query){
+    public function scopeMainCategory($query)
+    {
         return $query->where('parent_id', '0');
     }
 
-    public function scopeWhereParentSlug($query, $parentSlug){
+    public function scopeWhereParentSlug($query, $parentSlug)
+    {
 
         $parentId = Category::where('slug', $parentSlug)->where('active', '1')->first();
         return $query->where('parent_id', $parentId);
     }
 
-    public function scopeIsActive($query){
+    public function scopeIsActive($query)
+    {
         return $query->where('active', '1');
+    }
+
+    public function clearAllCache()
+    {
+        Cache::tags('category')->flush();
     }
 
 

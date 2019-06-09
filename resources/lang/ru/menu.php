@@ -11,14 +11,6 @@ return [
     |
     */
 
-    'ideas' => 'Идеи',
-    'ideas_description' => 'Море идей о том, как провести время',
-    'actions' => 'Действия',
-    'actions_description' => 'Бери и действуй',
-    'checkpoints' => 'Точки',
-    'checkpoints_description' => 'Описание точек',
-
-
     //season filter
     'season_' => 'Любой сезон',
     'season_spring' => 'Весной',

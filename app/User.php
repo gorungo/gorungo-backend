@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,5 +30,13 @@ class User extends Authenticatable  implements MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function profile(){
+        return $this->hasOne('App\Profile');
+    }
+
+    public static function startingPoint(){
+        return new Point('131.9233817', '43.1159235');
+    }
 
 }

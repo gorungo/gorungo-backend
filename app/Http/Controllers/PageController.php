@@ -14,14 +14,13 @@ use Auth;
 
 
 
-class PagesController extends Controller
+class PageController extends Controller
 {
     public function index(Request $request){
 
         // получаем список главных категорий
-        $mainCategories = Cache::remember('mainCategories_'.LocaleMiddleware::getLocale(), 10, function () {
-            return Category::MainCategory()->IsActive()->get();
-        });
+
+        $mainCategories = Category::getMainCategories();
 
         if(!session()->has('prestart')){
             return view('prestart');

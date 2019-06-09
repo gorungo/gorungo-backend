@@ -29,7 +29,7 @@ class PlaceController extends Controller
      */
     public function index(Request $request)
     {
-        return view('idea.index', [
+        return view('place.index', [
             'places' => Place::itemsList($request),
         ]);
     }
@@ -73,15 +73,12 @@ class PlaceController extends Controller
      * @param  String $itemSlug
      * @return \Illuminate\Http\Response
      */
-    public function show( $category, $itemSlug)
+    public function show( Place $place)
     {
 
-        $item = Idea::where('slug', $itemSlug)->first();
-        $ideaActions = $item->actionItemsList(4);
+        $item = $place;
 
-        if(!$item){
-            abort('404');
-        }
+        $placeActions = $place->actions;
 
         /*$breadcrumb_array = [
             ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
@@ -89,7 +86,7 @@ class PlaceController extends Controller
             ['title' => 'Новый товар',  'url' => '#'],
         ];*/
 
-        return view('idea.show' , compact(['item', 'category', 'ideaActions', 'breadcrumb_array' ]));
+        return view('place.show' , compact(['item', 'category', 'placeActions', 'breadcrumb_array' ]));
     }
 
     /**

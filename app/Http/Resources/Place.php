@@ -3,10 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Resources\Address as AddressResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Address;
-use App\Http\Resources\Address as AddressResource;
 use App\Http\Resources\PlaceType as PlaceTypeResource;
+use App\PlaceType;
 
 class Place extends JsonResource
 {
@@ -27,17 +28,25 @@ class Place extends JsonResource
             'attributes' => [
                 'title' => $this->title,
                 'url' => $this->url,
+                'place_type_id' => $this->place_type_id,
+
                 'edit_url' => $this->editUrl,
                 'description' => $this->description,
                 'intro' => $this->intro,
                 'coordinates' =>$this->id ? $this->coordinates : [
                     'coordinates' => [null,null]
                 ],
+
+                'rating' => $this->rating ?? 0,
             ],
 
             'relationships' => [
-                'place_type' => new PlaceTypeResource($this->placeType),
-                'address' => $this->placeAddress ? $this->placeAddress : new AddressResource(new Address),
+                'placeType' => new PlaceTypeResource($this->placeType) ?? null,
+                'address' => $this->placeAddress ? new AddressResource($this->placeAddress) : new AddressResource(new Address),
+            ],
+
+            'meta' => [
+                'allPlaceTypes' => PlaceTypeResource::collection(PlaceType::all()),
             ],
         ];
     }

@@ -21,10 +21,13 @@ class Address extends JsonResource
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
-                'country_code' => $this->country_code,
-                'city' => $this->city,
                 'postal_code' => $this->postal_code,
-                'address' => $this->address,
+                'country_code' => $this->country_code ?? 'RU',
+
+                'country' => $this->localisedAddressDescription->country ?? 'Россия',
+                'region' => $this->localisedAddressDescription->region ?? 'Приморский край',
+                'city' => $this->localisedAddressDescription->city ?? '',
+                'address' => $this->localisedAddressDescription->address ?? '',
             ],
 
             'relationships' => [

@@ -1,6 +1,7 @@
 <template>
     <div id="place-selector" class="place-selector">
-        <h5>Категории</h5>
+        <h5 v-if="isSingleCategoryMode">Главная категория</h5>
+        <h5 v-else>Категории</h5>
         <!-- Place selector -->
         <div class="row">
             <div class="col-sm-3" v-for="(category, index) in categories">
@@ -14,7 +15,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <span v-on:click="showSelectorWindow()" class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
+                <span v-if="canAddCategory" v-on:click="showSelectorWindow()" class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
             </div>
         </div>
         <!-- Modal -->
@@ -76,7 +77,11 @@
 
 //------PROPERTIES-----------------------------------------------------------------------------------------------
 
-        props: ['categories', 'locale'],
+        props: {
+            categories: Array,
+            locale: String,
+            isSingleCategoryMode: Boolean,
+        },
 
 //------METHODS-----------------------------------------------------------------------------------------------
 
@@ -98,6 +103,19 @@
         computed:{
             noSearchResults(){
                 return !this.loading && !this.foundPlaces.length && this.searchTitle.length >= this.searchMinimum;
+            },
+            canAddCategory(){
+                if(this.isSingleCategoryMode){
+                    if(this.categories.length === 0) {
+                        return true
+                    }
+                }else{
+                    if(this.categories.length < 10) {
+                        return true
+                    }
+                }
+
+                return false;
             }
         },
 
@@ -151,7 +169,7 @@
 
             closeSelectorWindow: function(){
                 $('#categorySelectorModal').modal('hide');
-            }
+            },
 
         },
 

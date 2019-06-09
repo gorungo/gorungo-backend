@@ -1,7 +1,7 @@
 <!--Footer-->
 <footer class="page-footer font-small unique-color-dark pt-0 mt-4">
 
-    <div style="background-color: #6351ce;">
+    <div style="background-color: #c2c9d0;">
         <div class="container">
             <!--Grid row-->
             <div class="row py-4 d-flex align-items-center">

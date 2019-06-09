@@ -22,6 +22,8 @@ class User extends JsonResource
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
+                'name' => $this->name,
+                'email' => $this->email,
                 'displayName' => $this->displayName,
             ],
 

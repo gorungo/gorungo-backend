@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 class ActionController extends Controller
 {
 
+    protected $page;
     protected $action;
 
     public function __construct(Action $action)

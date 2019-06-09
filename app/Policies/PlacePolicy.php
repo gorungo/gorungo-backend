@@ -17,9 +17,22 @@ class PlacePolicy
      * @param  \App\Place  $place
      * @return mixed
      */
+    public function list(User $user)
+    {
+        return true;
+        return $user->hasPermissionTo('view places');
+    }
+
+    /**
+     * Determine whether the user can view the place.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Place  $place
+     * @return mixed
+     */
     public function view(User $user, Place $place)
     {
-        //
+        return $user->hasPermissionTo('edit places');
     }
 
     /**

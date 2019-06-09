@@ -37,11 +37,10 @@ class Action extends JsonResource
 
             'attributes' => [
                 'url' => $this->url,
-                'edit_url' => $this->url,
+                'edit_url' => $this->editUrl,
                 
                 'slug' => $this->slug ? $this->slug : '',
                 'active' => $this->active ? $this->active : 0,
-                'url' => $this->id ? $this->url : '',
                 'main_category_id' => $this->id ? $this->main_category_id : null,
 
                 // localized information

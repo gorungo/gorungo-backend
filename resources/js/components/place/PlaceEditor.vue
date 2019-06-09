@@ -35,7 +35,8 @@
                         <div class="row">
                             <div class="col-sm-7">
                                 <form id="frm_form" name="frm_form" method="post" autocomplete="off">
-                                    <input type="hidden" name="city_id" :value="this.cityId"/>
+                                    <place-type-selector v-model="item.relationships.placeType" :all-place-types="item.meta.allPlaceTypes"></place-type-selector>
+                                    <hr>
                                     <h5>Описание</h5>
                                     <div class="form-group">
                                         <label for="frm_title">Заголовок<span title="Обязательное поле" class="required-star">*</span></label>
@@ -56,19 +57,23 @@
                                     <h5>Адрес</h5>
                                     <div class="form-group">
                                         <label for="frm_postal_code">Почтовый код<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_postal_code" name="postal_code" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.country_code" />
+                                        <input id="frm_postal_code" name="postal_code" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.attributes.postal_code" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="frm_country">Страна<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_country" name="country" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.country_code" />
+                                        <input id="frm_country" name="country" class="form-control" placeholder="Например, Россия" type="text" maxlength="100" v-model="item.relationships.address.attributes.country" required/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm_city">Город<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_city" name="city" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.city" />
+                                        <label for="frm_region">Регион</label>
+                                        <input id="frm_region" name="region" class="form-control" placeholder="Например, Приморский край" type="text" maxlength="100" v-model="item.relationships.address.attributes.region" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm_address">Адрес<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_address" name="address" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.relationships.address.address" />
+                                        <label for="frm_city">Город или населенный пункт</label>
+                                        <input id="frm_city" name="city" class="form-control" placeholder="Например, Владивосток" type="text" maxlength="100" v-model="item.relationships.address.attributes.city" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="frm_address">Адрес</label>
+                                        <input id="frm_address" name="address" class="form-control" placeholder="Например, ул. Горная, 4 кв. 3" type="text" maxlength="100" v-model="item.relationships.address.attributes.address" />
                                     </div>
                                 </div>
                                 <div>
@@ -111,6 +116,7 @@
 
     import PhotoUploader from '../photo/PhotoUploader.vue';
     import YandexMap from "../YandexMap";
+    import PlaceTypeSelector from "./PlaceTypeSelector";
 
     export default {
 
@@ -120,6 +126,7 @@
         mixins: [ Editable ],
 
         components: {
+            PlaceTypeSelector,
             YandexMap,
             PhotoUploader
         },
@@ -146,7 +153,6 @@
         },
 
         methods: {
-
 
         }
     }

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark w-100 @if(isset($fixed) && $fixed) fixed-top @endif">
+<nav class="navbar navbar-expand-md shadow-sm navbar-dark bg-dark w-100 @if(isset($fixed) && $fixed) fixed-top @endif">
     <div class="row w-100">
         <div class="col-sm-4">
             <!-- Branding Image -->
@@ -8,13 +8,13 @@
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item @if(Route::currentRouteName() == 'ideas.index') active @endif">
-                        <a class="nav-link" href="{{route('ideas.index')}}">{{__('menu.ideas')}}</a>
+                        <a class="nav-link" href="{{route('ideas.index')}}">{{__('idea.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'actions.index') active @endif">
-                        <a class="nav-link" href="{{route('actions.index')}}">{{__('menu.actions')}}</a>
+                        <a class="nav-link" href="{{route('actions.index')}}">{{__('action.title')}}</a>
                     </li>
-                    <li class="nav-item @if(Route::currentRouteName() == 'checkpoints.index') active @endif">
-                        <a class="nav-link" href="#contact">{{__('menu.checkpoints')}}</a>
+                    <li class="nav-item @if(Route::currentRouteName() == 'places.index') active @endif">
+                        <a class="nav-link" href="{{route('places.index')}}">{{__('place.title')}}</a>
                     </li>
                 </ul>
 
@@ -27,16 +27,16 @@
             <ul class="navbar-nav float-right">
                 <!-- Authentication Links -->
                 @guest
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">{{__('auth.login')}}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">{{__('auth.register')}}</a></li>
                 @else
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
+                            <a href="{{ route('profile.edit', Auth()->User()) }}" class="dropdown-item profile" >{{__('profile.title')}}</a>
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                               class="dropdown-item" href="#"
-                            >{{__('auth.logout')}}</a>
+                               class="dropdown-item" >{{__('auth.logout')}}</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>

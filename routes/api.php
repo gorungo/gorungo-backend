@@ -24,6 +24,23 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('/login', 'AuthController@login');
         Route::post('/register', 'AuthController@register');
 
+        // profiles
+        Route::get('/profiles/create', 'API\ProfileController@create')
+            ->name('api.profiles.create');
+        Route::get('/profiles/{profile}/edit', 'API\ProfileController@edit')
+            ->middleware(['can:update,profile'])
+            ->name('api.profiles.edit');
+        Route::post('/profiles', 'API\ProfileController@store')
+            ->name('api.profiles.store')
+            ->middleware(['can:update,profile'])
+            ->name('api.profiles.edit');
+        Route::patch('/profiles/{profile}', 'API\ProfileController@update')
+            ->middleware(['can:update,profile'])
+            ->name('api.profiles.update');
+        Route::delete('/profiles/{profile}', 'API\ProfileController@destroy')
+            ->name('api.profiles.destroy');
+
+
         // actions
         Route::get('/actions/create', 'API\ActionController@create')->name('api.actions.create');
         Route::get('/actions/{action}/edit', 'API\ActionController@edit')->name('api.actions.edit');
@@ -48,11 +65,18 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/places/{place}', 'API\PlaceController@destroy')->name('api.places.destroy');
 
 
-        Route::get('categories', 'API\CategoryController@index')->name('category.index');
-        Route::get('categories/children', 'API\CategoryController@lastChildren')->name('category.last_children');
-        Route::get('categories/{category}', 'API\CategoryController@show')->name('category.show');
-        Route::get('categories/{categoryId}/fullcategorieslisting', 'Api\CategoryController@fullCategoriesListing')->name('category.fullcategorieslisting');
-        Route::get('categories/{categoryId}/child', 'API\CategoryController@child')->name('category.child');
+        // categories
+        Route::get('/categories/create', 'API\CategoryController@create')->name('api.category.create');
+        Route::get('/categories/{category}/edit', 'API\CategoryController@edit')->name('api.category.edit');
+        Route::post('/categories', 'API\CategoryController@store')->name('api.category.store');
+        Route::patch('/categories/{category}', 'API\CategoryController@update')->name('api.category.update');
+        Route::delete('/categories/{category}', 'API\CategoryController@destroy')->name('api.category.destroy');
+
+        Route::get('/categories', 'API\CategoryController@index')->name('api.category.index');
+        Route::get('/categories/children', 'API\CategoryController@lastChildren')->name('api.category.last_children');
+        Route::get('/categories/{category}', 'API\CategoryController@show')->name('api.category.show');
+        Route::get('/categories/{categoryId}/fullcategorieslisting', 'Api\CategoryController@fullCategoriesListing')->name('api.category.fullcategorieslisting');
+        Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
 
 
         /*
@@ -98,6 +122,50 @@ Route::group(['prefix' => 'v1'], function() {
         //Delete item main photos
         Route::delete('/ideas/{idea}/photos/{photo}', 'API\Photo\IdeaController@destroy')
             ->name('api.ideas.photos_destroy');
+
+        /*
+         * -------------------------------------------------------------------------
+         * PLACES PHOTOS ROUTING
+         * -------------------------------------------------------------------------
+         */
+
+        //Get listing of photos
+        Route::get('/places/{place}/photos', "API\Photo\PlaceController@index")
+            ->name('api.ideas.photos_index');
+
+        //Upload photo
+        Route::post('/places/{place}/photos', 'API\Photo\PlaceController@upload')
+            ->name('api.ideas.photos_upload');
+
+        //Set item main photos
+        Route::patch('/places/{place}/photos/{photo}/set_main', 'API\Photo\PlaceController@setMain')
+            ->name('api.ideas.photos_set_main');
+
+        //Delete item main photos
+        Route::delete('/places/{place}/photos/{photo}', 'API\Photo\PlaceController@destroy')
+            ->name('api.ideas.photos_destroy');
+
+        /*
+         * -------------------------------------------------------------------------
+         * PROFILES PHOTOS ROUTING
+         * -------------------------------------------------------------------------
+         */
+
+        //Get listing of photos
+        Route::get('/profiles/{profile}/photos', "API\Photo\ProfileController@index")
+            ->name('api.profiles.photos_index');
+
+        //Upload photo
+        Route::post('/profiles/{profile}/photos', 'API\Photo\ProfileController@upload')
+            ->name('api.profiles.photos_upload');
+
+        //Set item main photos
+        Route::patch('/profiles/{profile}/photos/{photo}/set_main', 'API\Photo\ProfileController@setMain')
+            ->name('api.profiles.photos_set_main');
+
+        //Delete item main photos
+        Route::delete('/profiles/{profile}/photos/{photo}', 'API\Photo\ProfileController@destroy')
+            ->name('api.profiles.photos_destroy');
 
 
         /*

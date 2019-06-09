@@ -133,7 +133,7 @@ return [
 
     'reserved_words' => [],
 
-    'controllers' => ['categories', 'ideas', 'photos', 'locations', 'actions'],
+    'controllers' => ['categories', 'ideas', 'photos', 'places', 'actions'],
 
     /*
     |--------------------------------------------------------------------------
@@ -196,6 +196,10 @@ return [
         Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
+        CyrildeWit\EloquentViewable\EloquentViewableServiceProvider::class,
+        Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
+        //Jenssegers\Agent\AgentServiceProvider::class,
+        Orangehill\Iseed\IseedServiceProvider::class,
 
     ],
 
@@ -247,6 +251,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'MainFilter' => App\MainFilter::class,
+        'Helper' => App\Helper::class,
 
     ],
 

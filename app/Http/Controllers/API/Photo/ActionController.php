@@ -26,7 +26,7 @@ class ActionController extends Controller
 
     public function index(Action $action)
     {
-        return response()->json(['files' => $action->actionPhotos()->get()]);
+        return response()->json(['files' => $action->photos()->get()]);
     }
 
     /**

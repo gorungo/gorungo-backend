@@ -7,8 +7,8 @@ use App\Action;
 use App\Http\Resources\Action as ActionResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreAction;
-use App\Http\Middleware\LocaleMiddleware;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UploadPhoto;
+
 
 class ActionController extends Controller
 {
@@ -101,7 +101,7 @@ class ActionController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getPhotosListJson(){
-        return response()->json($this->idea->ideaPhotos()->isActive()->get());
+        return response()->json($this->action->ideaPhotos()->isActive()->get());
     }
 
     /**
@@ -112,8 +112,8 @@ class ActionController extends Controller
      */
     public function uploadPhoto(UploadPhoto $request, $itemId){
 
-        $idea = Idea::where('id', $itemId)->first();
-        if($idea) return response()->json($idea->uploadPhoto($request));
+        $action = Action::where('id', $itemId)->first();
+        if($action) return response()->json($action->uploadPhoto($request));
 
         return response()->json(['type' => 'error', 'itemId' => $itemId]);
     }

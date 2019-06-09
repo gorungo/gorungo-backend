@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\LocaleMiddleware;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +31,11 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     Route::get('/login/{provider}', 'SocialController@redirectToProvider');
     Route::get('/login/{provider}/callback', 'SocialController@handleProviderCallback');
+
+    //pages
+    Route::get('/policies', 'PageController@policies')->name('policies');
+    Route::get('/confidential', 'PageController@confidential')->name('confidential');
+
 
 
     // idea crud routes ------------------------------------------------------------------------------------
@@ -68,13 +75,15 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     //------------------------------------------------------------------------------------------------------
 
     // place crud routes ------------------------------------------------------------------------------------
+    Route::get('/places', 'PlaceController@index')
+        ->name('places.index');
     Route::get('/places/create', 'PlaceController@create')
         ->middleware(['auth','can:create,App\Place'])
         ->name('places.create');
     Route::get('/places/{place}/edit', 'PlaceController@edit')
         ->middleware(['auth','can:update,place'])
         ->name('places.edit');
-    Route::get('/places/{place}', 'PlaceController@edit')
+    Route::get('/places/{place}', 'PlaceController@show')
         ->middleware(['auth','can:view,place'])
         ->name('places.show');
     Route::post('/places', 'PlaceController@store')
@@ -98,16 +107,14 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     Route::group(['prefix' => App\Http\Middleware\LocationMiddleware::getLocation()], function () {
 
-        Route::get('/', 'PagesController@index')->name('index');
+        Route::get('/', 'PageController@index')->name('index');
 
         //Route::get('/posts', 'PostController@getPosts')->name('posts');
         //Route::get('/home', 'HomeController@index')->name('home');
 
         // Actions show route
-        Route::get('ideas/{categories?}/-{idea}/actions/{action}', 'IdeaActionController@show')
+        Route::get('ideas/{categories}/-{idea}/actions/{action}', 'IdeaActionController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$', 'action' => '^[a-zA-Z0-9-_\/]+$'])
-            ->middleware('can:view,action')
-            ->middleware(['auth','can:viewUnpublished,action'])
             ->name('actions.show');
 
         // idea index, show routes -----------------------------------------------------------------------------------------
@@ -137,18 +144,31 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     // pages routes
 
-    //Route::get('/info/{alias?}', "PagesController@show_info")->where(['alias' =>'rules|confidential-policy|rules'])->name('pages.show');
+    //Route::get('/info/{alias?}', "PagesController@show_info")->where(['alias' =>'rules|confidential-policy|rules'])->name('page.show');
 
 
     // category routes
 
-    Route::get('category', 'CategoryController@create')->name('category.index');
-    Route::get('category/create', 'CategoryController@create')->name('category.create');
-    Route::get('category/{category}/edit', 'CategoryController@edit')->name('category.edit');
-    Route::get('category/{category}', 'CategoryController@show')->name('category.show');
-    Route::post('category', 'CategoryController@store')->name('category.store');
-    Route::patch('category/{category}', 'CategoryController@update')->name('category.update');
-    Route::delete('category/{category}', 'CategoryController@destroy')->name('category.destroy');
+    Route::get('category', 'CategoryController@index')
+        ->name('category.index');
+    Route::get('category/create', 'CategoryController@create')
+        ->middleware(['auth','can:create,App\Category'])
+        ->name('category.create');
+    Route::get('category/{category}/edit', 'CategoryController@edit')
+        ->middleware(['auth','can:update,category'])
+        ->name('category.edit');
+    Route::get('category/{category}', 'CategoryController@show')
+        ->middleware(['auth','can:view,category'])
+        ->name('category.show');
+    Route::post('category', 'CategoryController@store')
+        ->middleware(['auth','can:update,category'])
+        ->name('category.store');
+    Route::patch('category/{category}', 'CategoryController@update')
+        ->middleware(['auth','can:update,category'])
+        ->name('category.update');
+    Route::delete('category/{category}', 'CategoryController@destroy')
+        ->middleware(['auth','can:delete,category'])
+        ->name('category.destroy');
 
 
 });

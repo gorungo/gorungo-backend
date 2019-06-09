@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="profile-editor">
         <div class="w-100">
             <div class="card">
                 <div class="card-body">
@@ -11,107 +11,93 @@
                             <div v-if="loading" dusk="loading" class="spinner-border float-right" role="status" aria-hidden="true"></div>
                             <button v-else class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">Сохранить</button>
                         </div>
-                        <div class="col-12 col-md-12">
-                            <div class="d-flex justify-content-center">
-                                <ul class="nav nav-pills">
-                                    <li role="presentation" id="tab_main"class="active">
-                                        <a class="nav-link active" id="edit-main-block-tab" data-toggle="tab" href="#edit-main-block" role="tab" aria-controls="profile" aria-selected="true"><span class="glyphicon glyphicon-pencil"> </span>Основное</a>
-                                    </li>
-                                    <li role="presentation" id="tab_photo">
-                                        <a class="nav-link" id="edit-images-block-tab" data-toggle="tab" href="#edit-images-block" role="tab" aria-controls="profile" aria-selected="false"><span class="glyphicon glyphicon-picture"> </span>Изображения</a>
-                                    </li>
-                                </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-11">
+                    <div class="mt-4">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Профиль</a>
+                                    <a class="nav-link" id="v-pills-password-tab" data-toggle="pill" href="#v-pills-password" role="tab" aria-controls="v-pills-password" aria-selected="false">Пароль</a>
+                                </div>
+                            </div>
+                            <div class="col-8 card card-body">
+                                <div class="tab-content" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                        <div v-if="item">
+                                            <div class="form-group row">
+                                                <div class="col-md-4 col-form-label text-md-right">
+                                                    <div id="profile-photo">
+                                                        <img :src="item.attributes.imageUrl"  style="height:32px;"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div>Фото профиля</div>
+                                                    <div class="file-upload bs">
+                                                        <a>сменить</a>
+                                                        <input type="file" name="image" id="file_uploader" accept="image/*" @change="fileInputChange" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="name" class="col-md-4 col-form-label text-md-right">Имя</label>
+                                                <div class="col-md-8">
+                                                    <input id="name" type="text" class="form-control" name="name" v-model="item.attributes.name" required autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="name" class="col-md-4 col-form-label text-md-right">Имя пользователя</label>
+                                                <div class="col-md-8">
+                                                    <input id="username" type="text" class="form-control" name="username" v-model="item.relationships.user.attributes.name" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="site" class="col-md-4 col-form-label text-md-right">Эл. адрес</label>
+                                                <div class="col-md-8">
+                                                    <input id="email" type="text" class="form-control" v-model="item.relationships.user.attributes.email" name="email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="site" class="col-md-4 col-form-label text-md-right">Сайт</label>
+                                                <div class="col-md-8">
+                                                    <input id="site" type="text" class="form-control" v-model="item.attributes.site" name="site">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="site" class="col-md-4 col-form-label text-md-right">Телефон</label>
+                                                <div class="col-md-8">
+                                                    <input id="phone" type="text" class="form-control" v-model="item.attributes.phone" name="site">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="sex" class="col-md-4 col-form-label text-md-right">Пол</label>
+                                                <div class="col-md-8">
+                                                    <select id="sex" class="form-control" name="sex" v-model="item.attributes.sex"  required>
+                                                        <option value="0">Не выбрано</option>
+                                                        <option value="1">Мужской</option>
+                                                        <option value="2">Женский</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-password" role="tabpanel" aria-labelledby="v-pills-password-tab">
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <div v-if="dataLoaded" class="mt-4">
-            <div class="container">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="edit-main-block" role="tabpanel" aria-labelledby="edit-main-block-tab">
-                        <form id="frm_form" name="frm_form" method="post" autocomplete="off">
-                            <input type="hidden" name="city_id" :value="this.cityId"/>
-
-                            <h5>Активность</h5>
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="row panel">
-                                        <div class="col-sm-6">
-                                            <div class="row form-group">
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_0"
-                                                           value="0" v-model="item.attributes.active"/>
-                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> Черновик</label>
-                                                </div>
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_1"
-                                                           value="1"  v-model="item.attributes.active"/>
-                                                    <label dsk="active_1" for="active_1"> Опубликовать</label>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr/>
-                            <place-selector
-                                    v-if="item !== null"
-                                    :locale = "locale"
-                                    :places = "item.relationships.places"
-                            ></place-selector>
-                            <date-selector
-                                    v-if="item !== null && item.relationships.dates !== undefined"
-                                    :locale = "locale"
-                                    v-model = "item.relationships.dates"
-                            ></date-selector>
-                            <hr/>
-                            <h5>Описание действия</h5>
-                            <div class="form-group">
-                                <label for="frm_title">Заголовок<span title="Обязательное поле" class="required-star">*</span></label>
-                                <input id="frm_title" name="title" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.title" />
-                            </div>
-                            <div class="form-group">
-                                <label for="frm_intro">Короткое описание<span title="Обязательное поле" class="required-star">*</span></label>
-                                <textarea class="form-control" placeholder="" name="intro" id="frm_intro" rows="6" v-model="item.attributes.intro"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="frm_description">Полное описание<span title="Обязательное поле" class="required-star">*</span></label>
-                                <textarea class="form-control" placeholder="" name="description" id="frm_description" rows="6" v-model="item.attributes.description"></textarea>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">(<span class="required-star">*</span>) отмечены необходимые поля</span>
-                            </div>
-                            <hr/>
-                            <div class="clearfix mt-4">
-                                <div v-if="errors" class="form-group text-left">
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            <li v-for="error in errors">{{error[0]}}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="edit-images-block" role="tabpanel" aria-labelledby="edit-images-block-tab">
-                        <photo-uploader
-                                :type="this.item.type"
-                                :item-id="item.id"
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+
 </template>
 
 <script>
@@ -138,27 +124,24 @@
         data(){
             return{
                 type: 'profiles',
-
+                fileProgress: 0,
+                filesOrder: [],
+                fileCurrent: '',
+                files: [],
             }
         },
 
         computed: {
 
-
             actionTitle(){
                 if(this.dataLoaded){
                     if(!this.item.id) {
-                        return 'Новый профиль пользователя'
+                        return 'Профиля пользователя'
                     }else{
-                        return 'Редактирование профиля пользователя';
+                        return 'Профиля пользователя';
                     }
                 }
             },
-
-            ideaId(){
-                return this.propIdeaId;
-            }
-
         },
 
         methods: {
@@ -168,6 +151,67 @@
                     locale: this.locale,
                     idea_id: this.ideaId,
                 }
+            },
+            async fileInputChange(){
+
+                let files = Array.from(event.target.files);
+
+                this.filesOrder = files.slice();
+
+                files.forEach(file => this.addImage(file));
+
+                for( let file of files){
+                    await this.uploadFile(file);
+                }
+
+            },
+
+            async uploadFile(file){
+
+                let form = new FormData();
+                form.append('image', file);
+
+                this.loading = true;
+
+                await axios.post(this.getFilesRequestUrl(), form, {
+                    onUploadProgress: (itemUpload)=>{
+
+                        this.fileProgress = Math.round((itemUpload.loaded / itemUpload.total) * 100);
+                        this.fileCurrent = file.name + ' ' + this.fileProgress;
+
+                    }
+                }).then(resp => {
+                    if (resp.status === 200 || resp.status === 201) {
+                        this.fileProgress = 0;
+                        this.item.attributes.imageUrl = resp.data.file;
+                    }
+
+                    this.loading = false;
+
+                }).catch(error => {
+                    this.loading = false;
+                }).finally(()=>{
+                    this.loading = false;
+                })
+            },
+            addImage(file){
+
+                if(!file.type.match('image.*')){
+                    console.log('${file.name} is not an image');
+                    return;
+                }
+
+                this.filesOrder.push(file);
+
+                const reader = new FileReader();
+                reader.onload = (e) =>this.imagesOrder.push(e.target.result);
+
+                reader.readAsDataURL(file);
+
+            },
+
+            getFilesRequestUrl(){
+                return '/api/' + window.systemInfo.apiVersion + '/' + this.type.toLowerCase() + '/' + this.itemId + '/photos';
             },
 
         }

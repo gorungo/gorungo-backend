@@ -133,7 +133,7 @@
         computed: {
 
 
-            actionTitle: function(){
+            documentTitle: function(){
                 if(this.dataLoaded){
                     if(!this.item.id) {
                         return 'Новая идея'

@@ -24,7 +24,13 @@ class StoreCategory extends FormRequest
     public function rules()
     {
         return [
-            //
+            'attributes.title' => 'required|min:3|max:100',
+            'attributes.intro' => 'required|min:3|max:199',
+            'attributes.description' => 'required|min:5',
+            'attributes.active' => 'required|integer',
+
+            'relationships.categoryParent.id' => 'sometimes|numeric|exists:categories,id',
+
         ];
     }
 }

@@ -8,7 +8,7 @@ class AddressDescription extends Model
 {
     protected $table = 'address_descriptions';
     protected $guarded = [];
-    protected $touches = ['address'];
+
 
     public $timestamps = false;
 

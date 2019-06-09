@@ -15,7 +15,13 @@ return [
 
     'register' => 'register',
     'login' => 'login',
+    'login_slogan' => 'Welcome to life',
     'logout' => 'logout',
+    'email_address' => 'email',
+    'password' => 'password',
+    'remember_me' => 'remember me',
+    'forgot_your_password' => 'forgot your password',
+
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',

@@ -18,19 +18,16 @@
                     </div>
                 </div>
                 <div class="col-sm-8">
-                    <h1 class="mt-4">
-                        {{$action->title}}
-                    </h1>
-                    <p class="text-secondary item-intro">
-                        {!! $action->intro !!}
-                    </p>
-                    @if($action->actionPlace() != null)<p>{{$action->actionPlace()->title}}</p>@endif
+                    <h1 class="mt-4">{{$action->title}}</h1>
+                    @include('action.widgets.dates_block')
+                    @if($action->actionPlace() != null)
+                        <p><img class="mr-2" alt="" src="/images/interface/icos/location_ico.svg" style="height: 16px;"/>{{$action->actionPlace()->title}}</p>
+                    @endif
+                    <p class="text-secondary item-intro">{!! $action->intro !!}</p>
                 </div>
             </div>
             <hr>
-            <p class="item-description">
-                {!! $action->description !!}
-            </p>
+            <p class="item-description">{!! $action->description !!}</p>
         </div>
     </div>
 

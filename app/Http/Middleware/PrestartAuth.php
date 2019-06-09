@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App;
 use Illuminate\Support\Facades\Route;
 
 class PrestartAuth
@@ -21,7 +22,7 @@ class PrestartAuth
             session(['prestart'=>'prestart']);
         }
 
-        if ($request->getRequestUri() !=='/' && !session()->has('prestart')) {
+        if (!App::environment('local') && $request->getRequestUri() !=='/' && !session()->has('prestart')) {
             return redirect()->route('index');
         }
 

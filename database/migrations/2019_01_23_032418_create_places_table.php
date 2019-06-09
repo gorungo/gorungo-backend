@@ -16,6 +16,7 @@ class CreatePlacesTable extends Migration
         Schema::create('places', function (Blueprint $table) {
             $table->increments('id');
             $table->point('coordinates');
+            $table->integer('rating')->default(0);
             $table->softDeletes();
         });
     }

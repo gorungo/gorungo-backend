@@ -60,6 +60,18 @@ let localizeMySqlDate = function (mySqlDate) {
     return date.toLocaleDateString(locale);
 };
 
+let getLocation = function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+};
+
+let setLocation = function(location) {
+    window.app.$store.dispatch('setUserLocation', location);
+};
+
 module.exports.getTimeZoneOffset = getTimeZoneOffset;
 module.exports.mySqlDateTimeToJsUTC = mySqlDateTimeToJsUTC;
 module.exports.mySqlDateTimeToJs = mySqlDateTimeToJs;
@@ -70,3 +82,5 @@ module.exports.localizeMySqlTime = localizeMySqlTime;
 module.exports.localizeMySqlDate = localizeMySqlDate;
 module.exports.dateFromMySqlDateTime = dateFromMySqlDateTime;
 module.exports.timeFromMySqlDateTime = timeFromMySqlDateTime;
+module.exports.getLocation = getLocation;
+module.exports.setLocation = setLocation;

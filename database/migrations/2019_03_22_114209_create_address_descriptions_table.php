@@ -17,14 +17,10 @@ class CreateAddressDescriptionsTable extends Migration
             $table->increments('id');
             $table->integer('address_id')->unsigned();
             $table->integer('locale_id')->unsigned();
-            $table->string('country',2);
-            $table->string('administrative_area',100)->comment('State / Province / Region (ISO code when available)');
-            $table->string('sub_administrative_area',100)->comment('County / District (unused)');
-            $table->string('locality',100)->comment('City / Town');
-            $table->string('postal_code',10)->comment('Postal code / ZIP Code');
-            $table->string('thoroughfare',100)->comment('Street address');
-            $table->string('premise',100)->comment('Apartment, Suite, Box number, etc.');
-            $table->string('sub_premise',100)->comment('Apartment, Suite, Box number, etc.');
+            $table->string('country',100);
+            $table->string('region',100);
+            $table->string('address',100);
+
         });
     }
 

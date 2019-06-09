@@ -76,6 +76,16 @@ export default {
             return null;
         },
 
+        documentTitle: function(){
+            if(this.dataLoaded){
+                if(!this.item.id) {
+                    return 'Новый элемент'
+                }else{
+                    return 'Редактирование элемента';
+                }
+            }
+        },
+
 
     },
 

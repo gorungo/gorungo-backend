@@ -8,9 +8,13 @@
 
 @section('header')
     @include('parts.header')
-    @include('parts.section_title', ['sectionTitile' => __('action.title')])
+    @include('parts.section_title', [
+    'sectionTitile' => __('place.title'),
+    'addItemURL' => route('places.create'),
+    'addItemTitle' => __('place.create'),
+    ])
 @endsection
 
 @section('content')
-@include('action.listing')
+@include('place.listing')
 @endsection

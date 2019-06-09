@@ -28,7 +28,7 @@ class LocaleMiddleware
         $request = Request::input();
 
         if(isset($request['locale']) && in_array($request['locale'], self::$languages)){
-            return $request['locale'];
+            return $request['locale'] !== self::$mainLanguage ? $request['locale']:null;
         }else{
 
             $segmentsURI = explode('/', $uri); //делим на части по разделителю "/"

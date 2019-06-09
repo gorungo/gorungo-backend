@@ -2,6 +2,7 @@
 // Body
 $body-bg: #f8fafc;
 $bg-gray: #f8f8f8;
+$default-item-bg: white;
 
 // Typography
 $font-family-sans-serif: museo-sans-100, sans-serif;
@@ -14,7 +15,7 @@ $line-height-base: 1.6;
 
 
 // Colors
-$blue: #3490dc;
+$blue: #1554dc;
 $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66D9b;
@@ -24,16 +25,22 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+$dark: #0d1721 ;
 
+$theme-colors: (
+        "primary": $blue,
+        "danger": $red,
+        "dark": $dark,
+);
 
-$text-color: #111;
-
-$link-color: $blue;
-//$link-hover-color: $blue;
+$link-color: $dark;
+$link-hover-color: $blue;
 $link-hover-decoration: none;
 //$headings-color: #111;
 
 $border-radius-base: 5px;
 $btn-border-radius: 1.5em;
-
 $grid-gutter-width: 50px;
+
+// Bootstrap and its default variables
+@import "~bootstrap/scss/bootstrap";

@@ -24,7 +24,7 @@ class Idea extends JsonResource
 
             'attributes' => [
                 'url' => $this->url,
-                'edit_url' => $this->url,
+                'edit_url' => $this->editUrl,
 
                 'slug' => $this->id ? $this->slug : '',
                 'active' => $this->id ? $this->active : 1,

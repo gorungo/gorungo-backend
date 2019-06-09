@@ -16,8 +16,10 @@ class Photo extends Model
 
     protected $table = 'photos';
     protected $thmbWidth = 400;
+    protected $maxImageWidth = 2000;
 
     protected $maxFileSize = 15; // megabites
+
 
     protected $fillable = [
         'img_name',
@@ -108,6 +110,8 @@ class Photo extends Model
         return $newPhoto;
     }
 
+
+
     /**
      * Resizing and saving uploaded img
      *
@@ -127,8 +131,8 @@ class Photo extends Model
                 $image = $request->file('image');
                 $img = Image::make($image->getRealPath());
 
-                if ($img->width() > 600) {
-                    $img->resize(600, null, function ($constraint) {
+                if ($img->width() > $this->maxImageWidth) {
+                    $img->resize($this->maxImageWidth, null, function ($constraint) {
                         $constraint->aspectRatio();
                     });
                 }
@@ -138,6 +142,45 @@ class Photo extends Model
                 Storage::disk('public')->put( $uploadPath, $img, 'public');
 
                 if(file_exists('storage/'. $uploadPath)){
+                    return true;
+                }
+
+            } catch (\Exception $e){
+                Log::error($e);
+            }
+
+        }
+
+        return false;
+
+
+    }
+
+    public function uploadProfileImages(Request $request, $uploadPathBig, $uploadPathSmall)
+    {
+
+        if ($request->hasFile('image')) {
+
+            try {
+
+                array_map( 'unlink', glob( public_path( 'storage/' . $this->getStoreDirectoryUrl() ) . "/*.*" ) );
+
+                $image = $request->file('image');
+                $img = Image::make($image->getRealPath());
+
+                // сохраняем аватарку 200 на 200
+
+                $img->fit( 200, 200 );
+                $img->stream();
+                Storage::disk( 'public' )->put( $uploadPathBig, $img, 'public' );
+
+                // сохраняем аватарку 50 на 50
+
+                $img->fit( 50, 50 );
+                $img->stream();
+                Storage::disk( 'public' )->put( $uploadPathSmall, $img, 'public' );
+
+                if(file_exists('storage/'. $uploadPathBig) && file_exists('storage/'. $uploadPathSmall)){
                     return true;
                 }
 
@@ -238,7 +281,6 @@ class Photo extends Model
 
 
     }
-
 
     public function scopeIsActive($query){
         return $query->where('active', '=', '1');
