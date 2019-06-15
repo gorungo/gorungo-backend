@@ -5,7 +5,7 @@
                 <div class="card-body">
                     <div class="row w-100">
                         <div class="col-sm-12 col-md-8">
-                            <h2>{{this.actionTitle}}</h2>
+                            <h2>{{this.documentTitle}}</h2>
                         </div>
                         <div class="col-sm-12 col-md-4 text-right">
                             <div v-if="loading" dusk="loading" class="spinner-border float-right" role="status" aria-hidden="true"></div>
@@ -79,7 +79,7 @@
                                 <textarea class="form-control" placeholder="" name="intro" id="frm_intro" rows="6" v-model="item.attributes.intro"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="frm_description">Полное описание<span title="Обязательное поле" class="required-star">*</span></label>
+                                <label>Полное описание<span title="Обязательное поле" class="required-star">*</span></label>
                                 <ckeditor :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
                             </div>
 

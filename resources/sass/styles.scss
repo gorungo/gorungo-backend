@@ -1,10 +1,21 @@
 // Variables
 @import "variables";
 
+#registration-page .card, #login-page .card{
+  color: white;
+  background-color:rgba(0, 0, 0, 0.08) !important;
+}
+
 .bg-white{
   background-color: white;
 }
-
+#registration-page canvas, #login-page canvas {
+  display: block;
+  position: absolute;
+  top: 80px;
+  right: 0;
+  z-index: 1;
+}
 .bg-gray{
   background-color: $bg-gray;
 }

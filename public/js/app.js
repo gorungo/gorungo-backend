@@ -43476,7 +43476,7 @@ var render = function() {
         _c("div", { staticClass: "card-body" }, [
           _c("div", { staticClass: "row w-100" }, [
             _c("div", { staticClass: "col-sm-12 col-md-8" }, [
-              _c("h2", [_vm._v(_vm._s(this.actionTitle))])
+              _c("h2", [_vm._v(_vm._s(this.documentTitle))])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-12 col-md-4 text-right" }, [
@@ -43910,7 +43910,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "frm_description" } }, [
+    return _c("label", [
       _vm._v("Полное описание"),
       _c(
         "span",

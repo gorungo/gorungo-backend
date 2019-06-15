@@ -39,6 +39,9 @@ Route::group(['prefix' => 'v1'], function() {
             ->name('api.profiles.update');
         Route::delete('/profiles/{profile}', 'API\ProfileController@destroy')
             ->name('api.profiles.destroy');
+        Route::post('/profiles/{profile}/set_new_password', 'API\ProfileController@setNewPassword')
+            ->middleware(['auth','can:update,profile'])
+            ->name('api.profiles.set_new_password');
 
 
         // actions

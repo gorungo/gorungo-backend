@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\SetNewPassword;
 use App\User;
 use App\Profile;
 use App\Http\Resources\Profile as ProfileResource;
@@ -118,6 +119,11 @@ class ProfileController extends Controller
         $profile = Profile::where('id', $itemId)->first();
         if($profile) return response()->json($profile->uploadPhoto($request));
 
+        return response()->json(['type' => 'error', 'itemId' => $itemId]);
+    }
+
+    public function setNewPassword(SetNewPassword $request, Profile $profile){
+        $result = $profile->user->setNewPassword();
         return response()->json(['type' => 'error', 'itemId' => $itemId]);
     }
 }

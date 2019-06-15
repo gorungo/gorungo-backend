@@ -84,7 +84,6 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         ->middleware(['auth','can:update,place'])
         ->name('places.edit');
     Route::get('/places/{place}', 'PlaceController@show')
-        ->middleware(['auth','can:view,place'])
         ->name('places.show');
     Route::post('/places', 'PlaceController@store')
         ->middleware(['auth','can:update,place'])

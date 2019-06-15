@@ -66,18 +66,16 @@ class PlaceController extends Controller
         }
     }
 
+
     /**
-     * Display the specified resource.
-     *
-     * @param  Category $category
-     * @param  String $itemSlug
-     * @return \Illuminate\Http\Response
+     * @param Place $place
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show( Place $place)
+
+    public function show(Place $place)
     {
 
         $item = $place;
-
         $placeActions = $place->actions;
 
         /*$breadcrumb_array = [

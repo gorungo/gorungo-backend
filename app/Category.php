@@ -16,14 +16,13 @@ class Category extends Model
     use SoftDeletes;
     use Imageble;
 
-
     protected $table = 'categories';
-
     protected $dates = ['deleted_at'];
-
     protected $fillable = ['author_id', 'parent_id', 'active', 'order', 'slug'];
+    protected $with = ['localisedCategoryTitle'];
 
-    protected $with = [];
+    protected $needCache = false;
+    protected $cacheTimeMinutes = 1;
 
     Public function getTitleAttribute()
     {
@@ -174,9 +173,60 @@ class Category extends Model
 
     public static function getMainCategories()
     {
-        return Cache::tags(['category', 'mainIdeaCategories'])->remember('mainIdeaCategories-' . LocaleMiddleware::getLocaleId(), 1, function () {
-            return self::MainCategory()->with('localisedCategoryTitle')->IsActive()->get();
+        return Cache::tags(['category', 'mainIdeaCategories'])
+            ->remember('mainIdeaCategories-' . LocaleMiddleware::getLocaleId(), 1, function () {
+
+            return self::MainCategory()
+                ->JoinDescription()
+                ->IsActive()
+                ->orderBy('order', 'desc')
+                ->get();
+
         });
+
+    }
+
+    public static function getCategoriesForSelector($activeCategory){
+
+        $categories = null;
+
+        if ($activeCategory){
+            $categories = Category::getChildCategoriesOf($activeCategory);
+            if(!$categories || !$categories->count()){
+
+                // if category doesn't have subcategories
+                // loading subcategories of parent ( brothers and sisters ;)
+
+                if($activeCategory->categoryParent){
+                    $categories = Category::getChildCategoriesOf($activeCategory->categoryParent);
+                }
+            }
+        }
+
+        if(!$categories || !$categories->count()){
+            $categories = Category::getMainCategories();
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Get subcategories of active category
+     * @param Category $category
+     * @return mixed
+     */
+
+    public static function getChildCategoriesOf(Category $category)
+    {
+        return Cache::remember('childIdeaCategoriesOf-' . $category->id . '-' . LocaleMiddleware::getLocaleId(), $category->cacheTimeMinutes, function () use($category) {
+
+                return self::ChildCategory($category->id)
+                    ->JoinDescription()
+                    ->IsActive()
+                    ->orderBy('order', 'desc')
+                    ->get();
+
+            });
 
     }
 
@@ -207,7 +257,7 @@ class Category extends Model
                     $path = $category->categoryParent->slug . '/' . $path;
 
                     if ($category->categoryParent->parent_id !== 0) {
-                        $path = $category->categoryParent()->categoryParent->slug . '/' . $path;
+                        $path = $category->categoryParent->categoryParent->slug . '/' . $path;
                     }
                 }
 
@@ -222,17 +272,17 @@ class Category extends Model
 
     public static function lastChildren()
     {
-        return Category::isActive()->whereDoesntHave('categoryChildren')->get();
+        return Category::whereDoesntHave('categoryChildren')->isActive()->get();
     }
 
     public static function categoryChildrenJSON($category = null)
     {
 
         if ($category == null) {
-            $result = Category::isActive()->MainCategory()->get();
+            $result = Category::MainCategory()->isActive()->get();
 
         } else {
-            $result = Category::isActive()->ChildCategory($category->id)->get();
+            $result = Category::ChildCategory($category->id)->isActive()->get();
 
         }
 
@@ -473,6 +523,14 @@ class Category extends Model
     public function clearAllCache()
     {
         Cache::tags('category')->flush();
+    }
+
+    public function scopeJoinDescription($query)
+    {
+        return $query->join('category_titles', function ($join) {
+            $join->on('categories.id', '=', 'category_titles.category_id')
+                ->where('locale_id', LocaleMiddleware::getLocaleId());
+        })->select('categories.*', 'category_titles.title');
     }
 
 

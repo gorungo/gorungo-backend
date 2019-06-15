@@ -32,7 +32,8 @@ class PlacePolicy
      */
     public function view(User $user, Place $place)
     {
-        return $user->hasPermissionTo('edit places');
+        return true;
+        return $user->hasPermissionTo('view places');
     }
 
     /**

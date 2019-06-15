@@ -5,14 +5,14 @@
             @sortablelink('rating', __('sort.rating'),['rel' => 'nofollow', 'class' => 'dropdown-item'])
             @sortablelink('distance', __('sort.distance'),['rel' => 'nofollow', 'class' => 'dropdown-item'])
         </div>
-        @if($ideas->count())
+        @if($places->count())
             <div class="row">
                 @foreach($places as $place)
                     @include('place.widgets.list_item_12-4', ['item' => $place])
                 @endforeach
             </div>
             <div style="text-align: center;">{{ $places->links() }}</div>
-            @else
+        @else
             @include('place.widgets.no_items')
         @endif
     </div>
