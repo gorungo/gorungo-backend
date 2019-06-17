@@ -46,7 +46,7 @@ class Photo extends Model
     }
 
     public function getRelativeURLAttribute(){
-        return 'storage/images/' . $this->item_type . '/' . $this->item_id . '/' . $this->img_name;
+        return 'storage/images/' . mb_strtolower($this->item_type) . '/' . $this->item_id . '/' . $this->img_name;
     }
 
     public function getUrlAttribute(){
@@ -62,9 +62,9 @@ class Photo extends Model
     public function getStoreDirectoryUrl($itemId = null){
         if($this->item_id){
             $itemId = $this->item_id;
-            return 'images/' . $this->item_type . '/' . $itemId;
+            return 'images/' . mb_strtolower($this->item_type) . '/' . $itemId;
         } else {
-            return 'images/' . $this->modelName . '/' . $itemId;
+            return 'images/' . mb_strtolower($this->modelName) . '/' . $itemId;
         }
 
     }
