@@ -31974,6 +31974,7 @@ a.text-dark:focus {
 #login-page .card {
   color: white;
   background-color: rgba(0, 0, 0, 0.08) !important;
+  z-index: 1;
 }
 
 .bg-white {
@@ -31986,7 +31987,7 @@ a.text-dark:focus {
   position: absolute;
   top: 80px;
   right: 0;
-  z-index: 1;
+  z-index: 0;
 }
 
 .bg-gray {

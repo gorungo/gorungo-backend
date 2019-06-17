@@ -16,7 +16,7 @@
     <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
 </head>
 <body>
-<div id="app" class="@yield('background')">
+<div id="app" class="@yield('color-schema') @yield('background')">
     @yield('header')
     @yield('content')
 </div>
