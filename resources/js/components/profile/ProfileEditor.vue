@@ -75,6 +75,12 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
+                                                <label for="description" class="col-md-4 col-form-label text-md-right">Описание</label>
+                                                <div class="col-md-8">
+                                                    <input id="description" maxlength="200" type="text" class="form-control" v-model="item.attributes.description" name="description">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
                                                 <label for="sex" class="col-md-4 col-form-label text-md-right">Пол</label>
                                                 <div class="col-md-8">
                                                     <select id="sex" class="form-control" name="sex" v-model="item.attributes.sex"  required>
@@ -197,7 +203,7 @@
             addImage(file){
 
                 if(!file.type.match('image.*')){
-                    console.log('${file.name} is not an image');
+                    console.log(`${file.name} is not an image`);
                     return;
                 }
 

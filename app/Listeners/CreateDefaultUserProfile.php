@@ -2,12 +2,14 @@
 
 namespace App\Listeners;
 
+use App\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-
-class SetDefaultUserRole
+class CreateDefaultUserProfile
 {
+
     /**
      * Create the event listener.
      *
@@ -15,7 +17,7 @@ class SetDefaultUserRole
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -24,9 +26,10 @@ class SetDefaultUserRole
      * @param  Registered  $event
      * @return void
      */
-    public function handle( $event )
+    public function handle(Registered $event)
     {
-        Log::info('Default role ' . config('permission.default_role').' added to user ' . $event->user->id);
-        $event->user->assignRole(config('permission.default_role'));
+        $event->user->profile()->create([
+            'name' => '',
+        ]);
     }
 }

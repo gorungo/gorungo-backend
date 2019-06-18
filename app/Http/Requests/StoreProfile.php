@@ -25,10 +25,10 @@ class StoreProfile extends FormRequest
     {
         return [
             'attributes.name' => 'required|min:3|max:100',
-            'attributes.description' => 'required|min:5|max:500',
-            'attributes.site' => 'required|min:3|max:100',
-            'attributes.phone' => 'required|min:3|max:20',
-            'attributes.sex' => 'required|numeric|min:0|max:3',
+            'attributes.description' => 'nullable|max:500',
+            'attributes.site' => 'nullable|min:3|max:100',
+            'attributes.phone' => 'nullable|min:3|max:20',
+            'attributes.sex' => 'nullable|numeric|min:0|max:3',
 
             'relationships.user.attributes.name' => 'required|min:3|max:20',
             'relationships.user.attributes.email' => 'required|email|min:3|max:20',

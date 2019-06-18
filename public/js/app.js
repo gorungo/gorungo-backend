@@ -3983,6 +3983,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 // MIXINGS
 
 
@@ -4126,7 +4132,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       if (!file.type.match('image.*')) {
-        console.log('${file.name} is not an image');
+        console.log("".concat(file.name, " is not an image"));
         return;
       }
 
@@ -45379,6 +45385,54 @@ var render = function() {
                                         _vm.$set(
                                           _vm.item.attributes,
                                           "phone",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-group row" }, [
+                                _c(
+                                  "label",
+                                  {
+                                    staticClass:
+                                      "col-md-4 col-form-label text-md-right",
+                                    attrs: { for: "description" }
+                                  },
+                                  [_vm._v("Описание")]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-md-8" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.item.attributes.description,
+                                        expression:
+                                          "item.attributes.description"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "description",
+                                      maxlength: "200",
+                                      type: "text",
+                                      name: "description"
+                                    },
+                                    domProps: {
+                                      value: _vm.item.attributes.description
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.item.attributes,
+                                          "description",
                                           $event.target.value
                                         )
                                       }

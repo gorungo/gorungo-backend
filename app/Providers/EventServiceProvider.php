@@ -16,6 +16,7 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Registered' => [
             'Illuminate\Auth\Listeners\SendEmailVerificationNotification',
             'App\Listeners\SetDefaultUserRole',
+            'App\Listeners\CreateDefaultUserProfile',
         ],
     ];
 

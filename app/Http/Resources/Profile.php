@@ -20,6 +20,7 @@ class Profile extends JsonResource
         return [
             'type' => 'profiles',
             'id' => $this->id ? $this->id : null,
+
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
