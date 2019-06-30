@@ -188,11 +188,16 @@ class Action extends Model {
     }
 
 
-    public function itemsList( Request $request) {
+    public static function itemsList( Request $request, $activeCategory) {
 
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::remember( 'actions_' . LocaleMiddleware::getLocale() . '_' . request()->getQueryString(), 1, function () {
-            return self::WhereTags( MainFilter::getFiltersTagsArray() )
+        return Cache::remember( 'actions_' . LocaleMiddleware::getLocale() .'_' . $activeCategory . '_' . request()->getQueryString(), 1, function () use ($activeCategory) {
+            return Action::whereHas('actionIdea', function($query) use ($activeCategory){
+                $query
+                    ->whereCategory($activeCategory)
+                    ->WhereTags( MainFilter::getFiltersTagsArray()
+                    );
+            })
                 ->JoinDescription()
                 ->DateFilter()
                 ->Sorting()

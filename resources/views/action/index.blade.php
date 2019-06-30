@@ -8,7 +8,9 @@
 
 @section('header')
     @include('parts.header')
-    @include('parts.section_title', ['sectionTitile' => __('action.title')])
+    @include('parts.section_title', ['sectionTitle' => __('action.title')])
+    @include('action.widgets.category_selector')
+    @include('widgets.menu.main_filters')
 @endsection
 
 @section('content')

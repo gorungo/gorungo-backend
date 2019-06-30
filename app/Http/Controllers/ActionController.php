@@ -35,40 +35,26 @@ class ActionController extends Controller
 
         $categoriesArray = null;
         $activeCategory = null;
+        $subCategory = null;
         $categories = null;
 
         $categoriesArray = explode('/', $categoriesUrl);
-        $activeCategoryTitle = last($categoriesArray);
+        $activeCategorySlug = last($categoriesArray);
 
-        //$activeCategoryTitle = ($category3 !== Null) ? $category3 : Null;
-        //$activeCategoryTitle = ($category2 !== Null && !$activeCategoryTitle) ? $category2 : Null;
-        //$activeCategoryTitle = ($category1 !== Null && !$activeCategoryTitle) ? $category1 : Null;
+        if ($activeCategorySlug) {
 
-        if ($activeCategoryTitle) {
-
-            $activeCategory = Category::where('slug', $activeCategoryTitle)->first();
-
+            $activeCategory = Category::where('slug', mb_strtolower($activeCategorySlug))->first();
             if(!$activeCategory){
                 abort('404');
             }
-
-            // get category child for making links
-            if ($activeCategory){
-                $categories = Category::ChildCategory($activeCategory->id)->IsActive()->get();
-            }
-            if($categories->count() == 0){
-                $categories = Category::ChildCategory($activeCategory->parent_id)->IsActive()->get();
-            }
-
-
-
-        } else {
-            //$categories = Category::MainCategory()->IsActive()->get();
-            $categories = Category::getMainCategories();
+            $subCategory = $activeCategory->categoryParent;
         }
 
+        $categories = Category::getCategoriesForSelector($activeCategory);
+        $ideas = Idea::itemsList($request, $activeCategory);
+
         // get list of actions
-        $actions = $this->action->itemsList($request, $activeCategory);
+        $actions = Action::itemsList($request, $activeCategory);
 
         return view('action.index', compact(['page', 'actions', 'categories']));
     }

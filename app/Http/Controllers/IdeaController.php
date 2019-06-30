@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Idea;
 use App\Category;
 use App\Http\Requests\UploadPhoto;
+use App\Page;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreIdea;
 use App\Http\Middleware\LocaleMiddleware;
@@ -28,6 +29,9 @@ class IdeaController extends Controller
      */
     public function index(Request $request, $categoriesUrl = null)
     {
+        $page = new Page();
+        $page->title = __('idea.title');
+
         $categoriesArray = null;
         $activeCategory = null;
         $subCategory = null;
@@ -49,7 +53,7 @@ class IdeaController extends Controller
         $ideas = Idea::itemsList($request, $activeCategory);
 
         return view('idea.index', compact([
-            'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory'
+            'page', 'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory'
         ]));
     }
 

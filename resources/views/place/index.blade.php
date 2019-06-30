@@ -9,7 +9,7 @@
 @section('header')
     @include('parts.header')
     @include('parts.section_title', [
-    'sectionTitile' => __('place.title'),
+    'sectionTitle' => __('place.title'),
     'addItemURL' => route('places.create'),
     'addItemTitle' => __('place.create'),
     ])
