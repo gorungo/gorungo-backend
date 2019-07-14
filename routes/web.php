@@ -130,8 +130,9 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         //------------------------------------------------------------------------------------------------------
 
 
-        // idea index, show routes -----------------------------------------------------------------------------------------
+        // actions index, show routes -----------------------------------------------------------------------------------------
         Route::get('actions/{categories?}', 'ActionController@index')
+            ->where('categories', '^[a-zA-Z0-9-_\/]+$')
             ->name('actions.index');
 
         Route::group(['prefix' => 'admin'], function () {
