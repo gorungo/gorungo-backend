@@ -13,7 +13,7 @@
     'addItemURL' => route('ideas.create'),
     'addItemTitle' => __('idea.create'),
     ])
-    @include('category.widgets.category_selector')
+    @include('idea.widgets.category_selector')
     @include('widgets.menu.main_filters')
 @endsection
 

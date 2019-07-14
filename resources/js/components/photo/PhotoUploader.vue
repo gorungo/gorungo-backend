@@ -11,8 +11,8 @@
                          >
                         <div class="picture_edit clearfix">
                             <div v-if="!files.length && !filesOrder.length" class="text-center">
-                                <span class="icomoon" style="font-size: 100px; color: #c4e7f9;"></span>
-                                <p>Перетащите cюда фотографии, либо нажмите кнопку "Добавить изображение"</p>
+                                <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
+                                <p>Перетащите cюда фотографии, либо нажмите кнопку "Загрузить изображение"</p>
                             </div>
                             <div class="tmb-sml" v-for="(file, index) in files">
                                 <div class="del-btn" v-on:click="deletePhoto(index)">
@@ -41,7 +41,7 @@
                         </div>
                         <hr v-if="!loading">
                         <div class="file-upload bs">
-                            <span class="icomoon" style="font-size: 18px;"> </span> Добавить изображение
+                            <i class="fas fa-upload"></i> Загрузить изображение
                             <input type="file" name="image" id="file_uploader" multiple="" accept="image/*" @change="fileInputChange" />
                         </div>
                         <div v-if="files.length > 0" class="blue_info_block">Выберите фото и нажмите <img id="img_star" src="/images/interface/icos/ico_star.png">, чтобы сделать изображение главным</div>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div v-else class="text-center">
-                    <span class="icomoon" style="font-size: 100px; color: #c4e7f9;"></span>
+                    <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
                     <p>Возможность добавить фотографии появится после сохранения</p>
                 </div>
             </div>

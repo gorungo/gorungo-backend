@@ -473,8 +473,6 @@ class Category extends Model
 
             $this->update($storeData);
 
-            Log::info($localeId);
-
             if ($this->localisedCategoryTitle) {
                 $this->localisedCategoryTitle()->update($titleStoreData);
             } else {

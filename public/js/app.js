@@ -43984,21 +43984,17 @@ var render = function() {
                     [
                       !_vm.files.length && !_vm.filesOrder.length
                         ? _c("div", { staticClass: "text-center" }, [
-                            _c(
-                              "span",
-                              {
-                                staticClass: "icomoon",
-                                staticStyle: {
-                                  "font-size": "100px",
-                                  color: "#c4e7f9"
-                                }
-                              },
-                              [_vm._v("")]
-                            ),
+                            _c("i", {
+                              staticClass: "fas fa-camera",
+                              staticStyle: {
+                                "font-size": "100px",
+                                color: "#c4e7f9"
+                              }
+                            }),
                             _vm._v(" "),
                             _c("p", [
                               _vm._v(
-                                'Перетащите cюда фотографии, либо нажмите кнопку "Добавить изображение"'
+                                'Перетащите cюда фотографии, либо нажмите кнопку "Загрузить изображение"'
                               )
                             ])
                           ])
@@ -44101,15 +44097,8 @@ var render = function() {
                 !_vm.loading ? _c("hr") : _vm._e(),
                 _vm._v(" "),
                 _c("div", { staticClass: "file-upload bs" }, [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "icomoon",
-                      staticStyle: { "font-size": "18px" }
-                    },
-                    [_vm._v(" ")]
-                  ),
-                  _vm._v(" Добавить изображение\n                        "),
+                  _c("i", { staticClass: "fas fa-upload" }),
+                  _vm._v(" Загрузить изображение\n                        "),
                   _c("input", {
                     attrs: {
                       type: "file",
@@ -44161,14 +44150,10 @@ var render = function() {
               ])
             ])
           : _c("div", { staticClass: "text-center" }, [
-              _c(
-                "span",
-                {
-                  staticClass: "icomoon",
-                  staticStyle: { "font-size": "100px", color: "#c4e7f9" }
-                },
-                [_vm._v("")]
-              ),
+              _c("i", {
+                staticClass: "fas fa-camera",
+                staticStyle: { "font-size": "100px", color: "#c4e7f9" }
+              }),
               _vm._v(" "),
               _c("p", [
                 _vm._v(

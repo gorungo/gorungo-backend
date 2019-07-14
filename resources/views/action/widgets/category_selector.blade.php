@@ -2,10 +2,11 @@
     <div class="container">
         <div class="card mt-4 mb-4 bg-light">
             <div class="card-header">
-                @isset($subCategory)
-                    <a href="{{route('actions.index',$subCategory->pathToCategory())}}">{{$subCategory->title}}</a><span> / </span>
-                @endisset
                 @isset($activeCategory)
+                    <a href="{{route('actions.index')}}">{{__('action.title')}}</a><span> /</span>
+                    @isset($subCategory)
+                        <a href="{{route('actions.index',$subCategory->pathToCategory())}}">{{$subCategory->title}}</a><span> / </span>
+                    @endisset
                     <a href="{{route('actions.index',$activeCategory->pathToCategory())}}">{{$activeCategory->title}}</a>
                 @endisset
                 @can('create', App\Category::class)<a class="float-right" href="{{route('category.create')}}">{{__('category.create')}}</a>@endcan

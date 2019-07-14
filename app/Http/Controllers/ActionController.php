@@ -56,7 +56,7 @@ class ActionController extends Controller
         // get list of actions
         $actions = Action::itemsList($request, $activeCategory);
 
-        return view('action.index', compact(['page', 'actions', 'categories']));
+        return view('action.index', compact(['page', 'actions', 'categories', 'activeCategory', 'subCategory']));
     }
 
     /**
