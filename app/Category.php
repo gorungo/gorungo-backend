@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class Category extends Model
 {
@@ -472,13 +473,15 @@ class Category extends Model
 
             $this->update($storeData);
 
-            if ($this->localisedCategoryTitle()->where('locale_id', $localeId)->get()) {
+            Log::info($localeId);
+
+            if ($this->localisedCategoryTitle) {
                 $this->localisedCategoryTitle()->update($titleStoreData);
             } else {
                 $this->localisedCategoryTitle()->create($titleStoreData);
             }
 
-            if ($this->localisedCategoryDescription()->where('locale_id', $localeId)->first()) {
+            if ($this->localisedCategoryDescription) {
                 $this->localisedCategoryDescription()->update($descriptionStoreData);
             } else {
                 $this->localisedCategoryDescription()->create($descriptionStoreData);
