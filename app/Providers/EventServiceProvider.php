@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Illuminate\Auth\Events\Registered' => [
-            'Illuminate\Auth\Listeners\SendEmailVerificationNotification',
+            //'Illuminate\Auth\Listeners\SendEmailVerificationNotification',
             'App\Listeners\SetDefaultUserRole',
             'App\Listeners\CreateDefaultUserProfile',
         ],
