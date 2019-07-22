@@ -10,7 +10,7 @@
     @include('parts.header')
     @include('parts.section_title', [
     'sectionTitle' => __('idea.title'),
-    'addItemURL' => route('ideas.create'),
+    'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.create'): null,
     'addItemTitle' => __('idea.create'),
     ])
     @include('idea.widgets.category_selector')

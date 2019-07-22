@@ -57,7 +57,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     //------------------------------------------------------------------------------------------------------
 
     // actions crud routes ------------------------------------------------------------------------------------
-    Route::get('/actions/create/{idea}', 'ActionController@create')
+    Route::get('/actions/create/{idea?}', 'ActionController@create')
         ->middleware(['auth','can:create,App\Action'])
         ->name('actions.create');
     Route::get('/actions/{action}/edit', 'ActionController@edit')

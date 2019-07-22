@@ -10,7 +10,7 @@
     @include('parts.header')
     @include('parts.section_title', [
     'sectionTitle' => __('place.title'),
-    'addItemURL' => route('places.create'),
+    'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Place::class) ? route('places.create') : null,
     'addItemTitle' => __('place.create'),
     ])
 @endsection
