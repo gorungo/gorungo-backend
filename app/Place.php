@@ -176,10 +176,10 @@ class Place extends Model
         })->take(20)->get();
     }
 
-    public static function itemsList(Request $request, $maxDistance = 50)
+    public static function itemsList(Request $request)
     {
-        return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page, 0, function () use ($maxDistance) {
-            return self::distance('coordinates', User::findPoint(), $maxDistance)
+        return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page . '_distance_' . request()->distance, 0, function (){
+            return self::distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
                 ->joinDescription()
                 ->sortable()
                 ->paginate();
@@ -314,7 +314,7 @@ class Place extends Model
 
     public function distanceSortable($query, $direction)
     {
-        return $query->orderByDistance('coordinates', User::findPoint(), $direction);
+        return $query->orderByDistance('coordinates', MainFilter::searchPoint(), $direction);
     }
 
     public function titleSortable($query, $direction)

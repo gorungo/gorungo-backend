@@ -13,6 +13,11 @@ return[
     'not_created' => 'Place not created',
     'not_updated' => 'Place not updated',
 
+    // not found
+    'no_items' => 'No places',
+    'no_item_found' => 'Place not found',
+    'no_items_found' => 'Places not found',
+
     'see_places' => 'See places',
     'see_all_places' => 'See all place',
 ];

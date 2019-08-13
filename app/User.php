@@ -36,13 +36,14 @@ class User extends Authenticatable  implements MustVerifyEmail
         return $this->hasOne('App\Profile');
     }
 
-    public static function geoPosition(){
+    /**
+     * Current geo position of user
+     * @return Point
+     */
+    public static function currentPosition(){
         return new Point('131.9233817', '43.1159235');
     }
 
-    public static function findPoint(){
-        return self::geoPosition();
-    }
 
     /**
      * saving new user pwd
