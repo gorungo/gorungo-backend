@@ -6,7 +6,7 @@
                     <a href="{{route('places.index')}}">{{__('place.title')}}</a><span> /</span>
                     <a href="{{route('places.index', $activePlaceType->slug)}}">{{$activePlaceType->title}}</a>
                 @endisset
-                @can('create', App\Place::class)<a class="float-right" href="{{route('place.create')}}">{{__('place.create')}}</a>@endcan
+                @can('create', App\Place::class)<a class="float-right" href="{{route('places.create')}}">{{__('place.create')}}</a>@endcan
             </div>
             <div class="card-body">
                 <div class="row">
