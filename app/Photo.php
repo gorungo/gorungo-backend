@@ -2,14 +2,13 @@
 
 namespace App;
 
-
-use App\Http\Requests\setMainPhoto;
+use Image;
+use App\Http\Requests\Photo\setMainPhoto;
 use Illuminate\Http\Request;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Image;
 
 class Photo extends Model
 {

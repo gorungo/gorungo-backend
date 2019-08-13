@@ -2,7 +2,8 @@
 
 namespace App;
 
-use App\Http\Requests\UploadPhoto;
+use DB;
+use App\Http\Requests\Photo\UploadPhoto;
 use App\Traits\Imageble;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -11,9 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use \Conner\Tagging\Taggable;
 
-use DB;
 use App\Traits\TagInfo;
-use App\Http\Requests\StoreIdea;
+use App\Http\Requests\Idea\StoreIdea;
 
 class Idea extends Model
 {

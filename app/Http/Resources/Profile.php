@@ -19,7 +19,7 @@ class Profile extends JsonResource
     {
         return [
             'type' => 'profiles',
-            'id' => $this->id ? $this->id : null,
+            'id' => $this->id,
 
             'locale' => LocaleMiddleware::getLocale(),
 
@@ -35,7 +35,7 @@ class Profile extends JsonResource
             ],
 
             'relationships' => [
-                'user' => new UserResource($this->user),
+                'user' => new UserResource($this->whenLoaded('user')),
             ],
         ];
     }

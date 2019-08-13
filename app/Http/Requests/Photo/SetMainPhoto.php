@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Photo;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UploadProfilePhoto extends FormRequest
+class setMainPhoto extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class UploadProfilePhoto extends FormRequest
     public function rules()
     {
         return [
-            'file_image' => 'image|nullable|max:7999|mimes:jpeg,bmp,png',
+            'img_id' => 'integer',
+            'controller' =>'string|max:10'
         ];
     }
 }

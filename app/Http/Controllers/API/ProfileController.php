@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\SetNewPassword;
 use App\User;
 use App\Profile;
 use App\Http\Resources\Profile as ProfileResource;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreProfile;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Profile\StoreProfile;
+use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +60,7 @@ class ProfileController extends Controller
      */
     public function show(Profile $profile)
     {
-        return new ProfileResource($profile);
+        return new ProfileResource($profile->load('user'));
     }
 
     /**
@@ -72,7 +71,7 @@ class ProfileController extends Controller
      */
     public function edit(Profile $profile)
     {
-        return new ProfileResource($profile);
+        return new ProfileResource($profile->load('user'));
     }
 
     /**
@@ -122,8 +121,4 @@ class ProfileController extends Controller
         return response()->json(['type' => 'error', 'itemId' => $itemId]);
     }
 
-    public function setNewPassword(SetNewPassword $request, Profile $profile){
-        $result = $profile->user->setNewPassword();
-        return response()->json(['type' => 'error', 'itemId' => $itemId]);
-    }
 }

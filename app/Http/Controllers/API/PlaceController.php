@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-
-
 use App\Place;
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePlace;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Place\StorePlace;
+use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Resources\Place as PlaceResource;
 use App\Http\Controllers\Controller;
 
@@ -101,29 +99,5 @@ class PlaceController extends Controller
 
     public function getByTitle(Request $request){
         return PlaceResource::collection(Place::getByTitle($request->title));
-    }
-
-
-
-    /**
-     * Return list of items photo
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPhotosListJson(){
-        return response()->json($this->idea->ideaPhotos()->isActive()->get());
-    }
-
-    /**
-     * Return list of items photo
-     * @param UploadPhoto $request
-     * @param $itemId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function uploadPhoto(UploadPhoto $request, $itemId){
-
-        $idea = Idea::where('id', $itemId)->first();
-        if($idea) return response()->json($idea->uploadPhoto($request));
-
-        return response()->json(['type' => 'error', 'itemId' => $itemId]);
     }
 }

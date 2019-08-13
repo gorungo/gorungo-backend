@@ -39,10 +39,17 @@ Route::group(['prefix' => 'v1'], function() {
             ->name('api.profiles.update');
         Route::delete('/profiles/{profile}', 'API\ProfileController@destroy')
             ->name('api.profiles.destroy');
-        Route::post('/profiles/{profile}/set_new_password', 'API\ProfileController@setNewPassword')
-            ->middleware(['auth','can:update,profile'])
+
+        Route::patch('/users/{user}/setNewPassword', 'API\UserController@setNewPassword')
+            ->middleware(['auth','can:update,user'])
             ->name('api.profiles.set_new_password');
 
+        // posts
+        Route::get('/posts/create', 'API\PostController@create')->name('api.posts.create');
+        Route::get('/posts/{post}/edit', 'API\PostController@edit')->name('api.posts.edit');
+        Route::post('/posts', 'API\PostController@store')->name('api.posts.store');
+        Route::patch('/posts/{post}', 'API\PostController@update')->name('api.posts.update');
+        Route::delete('/posts/{post}', 'API\PostController@destroy')->name('api.posts.destroy');
 
         // actions
         Route::get('/actions/create', 'API\ActionController@create')->name('api.actions.create');
@@ -82,6 +89,27 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
 
 
+        /*
+         * -------------------------------------------------------------------------
+         * ACTIONS PHOTOS ROUTING
+         * -------------------------------------------------------------------------
+         */
+
+        //Get listing of photos
+        Route::get('/posts/{post}/photos', "API\Photo\ActionController@index")
+            ->name('api.posts.photos_index');
+
+        //Upload photo
+        Route::post('/posts/{post}/photos', 'API\Photo\ActionController@upload')
+            ->name('api.posts.photos_upload');
+
+        //Set item main photos
+        Route::patch('/posts/{post}/photos/{photo}/set_main', 'API\Photo\ActionController@setMain')
+            ->name('api.posts.photos_set_main');
+
+        //Delete item main photos
+        Route::delete('/posts/{post}/photos/{photo}', 'API\Photo\ActionController@destroy')
+            ->name('api.posts.photos_destroy');
         /*
          * -------------------------------------------------------------------------
          * ACTIONS PHOTOS ROUTING

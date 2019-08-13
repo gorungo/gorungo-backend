@@ -1,9 +1,9 @@
-@extends ('layouts.app')
+@extends ('layouts.edit')
 
 @isset($page)
     @section('title', htmlspecialchars(strip_tags($page->title)) or '')
-@section('description', htmlspecialchars(strip_tags($page->description)) or '')
-@section('keywords', htmlspecialchars(strip_tags($page->keywords)) or '')
+    @section('description', htmlspecialchars(strip_tags($page->description)) or '')
+    @section('keywords', htmlspecialchars(strip_tags($page->keywords)) or '')
 @endif
 
 @section('header')
@@ -13,4 +13,9 @@
 @section('content')
     <idea-editor  :prop-item-id="@isset($idea->id){{$idea->id}}@else null @endisset" :user="{{json_encode(Auth()->user())}}"></idea-editor>
 @endsection
+
+@push('scripts')
+    <script src="{{ mix('js/idea_editor.js') }}"></script>
+@endpush
+
 

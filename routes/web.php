@@ -63,37 +63,26 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::get('/actions/{action}/edit', 'ActionController@edit')
         ->middleware(['auth','can:update,action'])
         ->name('actions.edit');
-    Route::post('/actions', 'ActionController@store')
-        ->middleware(['auth','can:update,action'])
-        ->name('actions.store');
-    Route::patch('/actions/{action}', 'ActionController@update')
-        ->middleware(['auth','can:update,action'])
-        ->name('actions.update');
-    Route::delete('/actions/{action}', 'ActionController@destroy')
-        ->middleware(['auth','can:delete,action'])
-        ->name('actions.destroy');
+
     //------------------------------------------------------------------------------------------------------
 
     // place crud routes ------------------------------------------------------------------------------------
-    Route::get('/places', 'PlaceController@index')
-        ->name('places.index');
     Route::get('/places/create', 'PlaceController@create')
         ->middleware(['auth','can:create,App\Place'])
         ->name('places.create');
     Route::get('/places/{place}/edit', 'PlaceController@edit')
         ->middleware(['auth','can:update,place'])
         ->name('places.edit');
-    Route::get('/places/{place}', 'PlaceController@show')
-        ->name('places.show');
-    Route::post('/places', 'PlaceController@store')
-        ->middleware(['auth','can:update,place'])
-        ->name('places.store');
-    Route::patch('/places/{place}', 'PlaceController@update')
-        ->middleware(['auth','can:update,place'])
-        ->name('places.update');
-    Route::delete('/places/{place}', 'PlaceController@destroy')
-        ->middleware(['auth','can:delete,place'])
-        ->name('places.destroy');
+    //------------------------------------------------------------------------------------------------------
+
+
+    // blog crud routes ------------------------------------------------------------------------------------
+    Route::get('/blog/create', 'PostController@create')
+        ->middleware(['auth','can:create,App\Post'])
+        ->name('posts.create');
+    Route::get('/blog/{post}/edit', 'PostController@edit')
+        ->middleware(['auth','can:update,post'])
+        ->name('posts.edit');
     //------------------------------------------------------------------------------------------------------
 
     // profile
@@ -127,10 +116,20 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
             ->where('categories', '^[a-zA-Z0-9-_\/]+$')
             ->name('ideas.index');
 
-        //------------------------------------------------------------------------------------------------------
+        // place ------------------------------------------------------------------------------------------------------
 
+        Route::get('/places/{placeType?}', 'PlaceController@index')
+            ->name('places.index');
 
-        // actions index, show routes -----------------------------------------------------------------------------------------
+        // blog -----------------------------------------------
+
+        Route::get('/blog', 'PostController@index')
+            ->name('posts.index');
+
+        Route::get('/blog/{post}', 'PostController@show')
+            ->name('posts.show');
+
+        // actions  -----------------------------------------------------------------------------------------
         Route::get('actions/{categories?}', 'ActionController@index')
             ->where('categories', '^[a-zA-Z0-9-_\/]+$')
             ->name('actions.index');
@@ -169,6 +168,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::delete('category/{category}', 'CategoryController@destroy')
         ->middleware(['auth','can:delete,category'])
         ->name('category.destroy');
+
+    // place show
+    Route::get('places/{place}', 'PlaceController@show')
+        ->name('places.show');
 
 
 });

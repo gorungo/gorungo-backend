@@ -19,7 +19,8 @@ class CreateCategoryDescriptionTable extends Migration
             $table->integer('locale_id')->unsigned()->lenght(2);
             $table->text('description');
 
-            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('category_id')
+                ->references('id')->on('category')->onDelete('cascade');
         });
     }
 

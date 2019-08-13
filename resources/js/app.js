@@ -28,7 +28,7 @@ Vue.use( CKEditor );
  */
 
 // const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+//files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('CategoryEditor', require('./components/category/CategoryEditor.vue').default);
 Vue.component('ActionEditor', require('./components/action/ActionEditor.vue').default);

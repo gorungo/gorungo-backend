@@ -5,8 +5,8 @@ namespace App;
 use DB;
 use App\Photo;
 use Image;
-use App\Http\Requests\StoreProfile;
-use App\Http\Requests\UploadProfilePhoto;
+use App\Http\Requests\Profile\StoreProfile;
+use App\Http\Requests\Photo\UploadProfilePhoto;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\Log;
@@ -72,7 +72,7 @@ class Profile extends Model
 
 
                 $image = $request->file('image');
-                $img = Image::make($image->getRealPath());
+                $img = Image::make($image->getRealPath())->orientate();
 
                 // сохраняем аватарку 200 на 200
 
@@ -102,4 +102,5 @@ class Profile extends Model
         return $this->imageUrl;
 
     }
+
 }

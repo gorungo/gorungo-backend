@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 
 use App\Profile;
 use App\Photo;
-use App\Http\Requests\SetMainPhoto;
-use App\Http\Requests\UploadProfilePhoto;
+use App\Http\Requests\Photo\SetMainPhoto;
+use App\Http\Requests\Photo\UploadProfilePhoto;
 
 class ProfileController extends Controller
 {

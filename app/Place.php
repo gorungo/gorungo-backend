@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-use App\Http\Requests\StorePlace;
+use App\Http\Requests\Place\StorePlace;
 use App\Http\Middleware\LocaleMiddleware;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
@@ -146,11 +146,8 @@ class Place extends Model
         $defaultTmb = 'images/interface/placeholders/idea.png';
 
         if ( $this->thmb_file_name != null ) {
-            //если есть картинка вакансии
             $src = 'storage/images/place/' . $this->id . '/' . htmlspecialchars( strip_tags( $this->thmb_file_name ) );
-
         } else {
-            //если есть картинка вакансии
             $src = $defaultTmb;
         }
 
@@ -181,9 +178,8 @@ class Place extends Model
 
     public static function itemsList(Request $request, $maxDistance = 50)
     {
-        // получаем список активных идей с учетом города, страницы, локали
         return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page, 0, function () use ($maxDistance) {
-            return self::distance('coordinates', User::startingPoint(), $maxDistance)
+            return self::distance('coordinates', User::findPoint(), $maxDistance)
                 ->joinDescription()
                 ->sortable()
                 ->paginate();
@@ -318,7 +314,7 @@ class Place extends Model
 
     public function distanceSortable($query, $direction)
     {
-        return $query->orderByDistance('coordinates', User::startingPoint(), $direction);
+        return $query->orderByDistance('coordinates', User::findPoint(), $direction);
     }
 
     public function titleSortable($query, $direction)

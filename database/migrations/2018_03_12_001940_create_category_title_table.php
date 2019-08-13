@@ -21,7 +21,8 @@ class CreateCategoryTitleTable extends Migration
             $table->string('title', 191);
             $table->string('intro', 255);
 
-            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('category_id')
+                ->references('id')->on('category')->onDelete('cascade');
         });
     }
 

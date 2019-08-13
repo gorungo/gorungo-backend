@@ -11,8 +11,8 @@ use App\Http\Middleware\LocaleMiddleware;
 use \Conner\Tagging\Taggable;
 use App\Traits\Imageble;
 use App\Traits\TagInfo;
-use App\Http\Requests\StoreAction;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Action\StoreAction;
+use App\Http\Requests\Photo\UploadPhoto;
 
 class Action extends Model {
 

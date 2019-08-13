@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Http\Requests\SetNewPassword;
+use App\Http\Requests\User\SetNewPassword;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -36,8 +36,12 @@ class User extends Authenticatable  implements MustVerifyEmail
         return $this->hasOne('App\Profile');
     }
 
-    public static function startingPoint(){
+    public static function geoPosition(){
         return new Point('131.9233817', '43.1159235');
+    }
+
+    public static function findPoint(){
+        return self::geoPosition();
     }
 
     /**
@@ -47,10 +51,8 @@ class User extends Authenticatable  implements MustVerifyEmail
      */
     public function setNewPassword(SetNewPassword $request)
     {
-        $this->password = bcrypt( $request->password );
-        $this->save();
-
-        return true;
+        $this->password = bcrypt($request->input('password.new'));
+        return $this->save();
     }
 
 }

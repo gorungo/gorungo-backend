@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategory extends FormRequest
+class StorePost extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,8 +29,17 @@ class StoreCategory extends FormRequest
             'attributes.description' => 'required|min:5',
             'attributes.active' => 'required|integer',
 
-            'relationships.categoryParent.id' => 'sometimes|numeric|exists:categories,id',
+            'relationships.categories' => 'required|array',
+            'relationships.categories.*.id' => 'required|numeric|exists:post_categories',
 
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'relationships.categories.required' => __('category.relationships.categories.required'),
+        ];
+    }
+
 }

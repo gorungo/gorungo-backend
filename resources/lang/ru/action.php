@@ -13,6 +13,9 @@ return[
 
     'no_items' => 'Нет действий',
 
+    'see_items' => 'Смотреть действия',
+    'see_all_items' => 'Смотреть все действия',
+
     // request
 
     'request'=> [

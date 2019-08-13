@@ -9,31 +9,32 @@
                         </div>
                         <div class="col-sm-12 col-md-4 text-right">
                             <div v-if="loading" dusk="loading" class="spinner-border float-right" role="status" aria-hidden="true"></div>
-                            <button v-else class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">Сохранить</button>
+                            <button v-else class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="saveForm()">Сохранить</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center my-4">
                 <div class="col-11">
                     <div class="mt-4">
                         <div class="row">
                             <div class="col-4">
                                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                    <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Профиль</a>
-                                    <a class="nav-link" id="v-pills-password-tab" data-toggle="pill" href="#v-pills-password" role="tab" aria-controls="v-pills-password" aria-selected="false">Пароль</a>
+                                    <a class="nav-link active" id="v-pills-profile-tab" @click="setActiveTab('profile')" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Профиль</a>
+                                    <a class="nav-link" id="v-pills-password-tab" @click="setActiveTab('password')" data-toggle="pill" href="#v-pills-password" role="tab" aria-controls="v-pills-password" aria-selected="false">Пароль</a>
                                 </div>
                             </div>
                             <div class="col-8 card card-body">
+                                <errors :errors="errors"></errors>
                                 <div class="tab-content" id="v-pills-tabContent">
                                     <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                                         <div v-if="item">
                                             <div class="form-group row">
                                                 <div class="col-md-4 col-form-label text-md-right">
                                                     <div id="profile-photo">
-                                                        <img :src="item.attributes.imageUrl"  style="height:32px;"/>
+                                                        <img :src="item.attributes.imageUrl"  style="height:2.5rem;"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
@@ -44,6 +45,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <hr>
                                             <div class="form-group row">
                                                 <label for="name" class="col-md-4 col-form-label text-md-right">Имя</label>
                                                 <div class="col-md-8">
@@ -93,7 +95,29 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="v-pills-password" role="tabpanel" aria-labelledby="v-pills-password-tab">
+                                        <div class="form-group row">
+                                            <label for="password" class="col-md-4 col-form-label text-md-right">Старый пароль</label>
 
+                                            <div class="col-md-6">
+                                                <input id="password-old" v-model="password.old" type="password" class="form-control" name="password" required>
+                                            </div>
+                                        </div>
+<hr>
+                                        <div class="form-group row">
+                                            <label for="password" class="col-md-4 col-form-label text-md-right">Новый пароль</label>
+
+                                            <div class="col-md-6">
+                                                <input id="password" v-model="password.new" type="password" class="form-control" name="password" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Подтвердите новый пароль</label>
+
+                                            <div class="col-md-6">
+                                                <input id="password-confirm" v-model="password.new_confirmation" type="password" class="form-control" name="password_confirmation" required>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +158,14 @@
                 filesOrder: [],
                 fileCurrent: '',
                 files: [],
+
+                tab: 'profile',
+
+                password: {
+                    old: '',
+                    new: '',
+                    new_confirmation: '',
+                },
             }
         },
 
@@ -216,9 +248,74 @@
 
             },
 
+            savePassword(){
+                axios({
+
+                    method: 'PATCH',
+                    url: this.savePasswordRequestUrl(),
+                    data: {password: this.password},
+
+                }).then( (resp) => {
+
+                    this.loading = true;
+                    this.errors = null;
+
+                    this.password.old = '';
+                    this.password.new = '';
+                    this.password.new_confirmation = '';
+
+                    if (resp.status === 200 || resp.status === 201) {
+
+                        if(resp.data.type){
+                            userui.showNotification(resp.data.message ? resp.data.message : 'Успешно сохранено', 'green');
+                        }else{
+                            userui.showNoInternetNotification();
+                        }
+
+                    }
+
+                }).catch( (error) => {
+
+                    if(error.response){
+                        if(error.response.data.errors){
+                            this.errors = error.response.data.errors;
+                        }
+                    }
+
+                    if (error.response === undefined) {
+                        userui.showNoInternetNotification();
+                    }
+
+                    this.loading = false;
+
+                }).finally( () => {
+                    this.loading = false;
+                })
+            },
+
             getFilesRequestUrl(){
                 return '/api/' + window.systemInfo.apiVersion + '/' + this.type.toLowerCase() + '/' + this.itemId + '/photos';
             },
+            savePasswordRequestUrl(){
+                return '/api/' + window.systemInfo.apiVersion + '/users/' + this.item.relationships.user.id + '/setNewPassword' ;
+            },
+
+            saveForm(){
+                switch(this.tab){
+                    case 'profile':
+                        this.formSubmit();
+                        break;
+                    case 'password':
+                        this.password.email = this.item.relationships.user.attributes.email;
+                        this.savePassword();
+                        break;
+                }
+            },
+
+            setActiveTab(tab){
+                this.tab = tab;
+                this.errors = null;
+            }
 
         }
     }

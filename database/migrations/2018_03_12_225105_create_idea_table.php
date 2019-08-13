@@ -13,7 +13,7 @@ class CreateIdeaTable extends Migration
      */
     public function up()
     {
-        Schema::create('idea', function (Blueprint $table) {
+        Schema::create('ideas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('author_id')->unsigned()->comment('who is creator of idea');
             $table->integer('category_id')->unsigned()->default(0)->comment('id of category');
@@ -24,7 +24,8 @@ class CreateIdeaTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('category_id')
+                ->references('id')->on('category')->onDelete('cascade');
         });
     }
 
@@ -35,6 +36,6 @@ class CreateIdeaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('idea');
+        Schema::dropIfExists('ideas');
     }
 }

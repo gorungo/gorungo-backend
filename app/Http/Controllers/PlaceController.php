@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Place;
+use App\PlaceType;
 use App\PlaceDescription;
 
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePlace;
+use App\Http\Requests\Place\StorePlace;
 
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
@@ -25,12 +26,15 @@ class PlaceController extends Controller
     /**
      * Display a listing of the resource.
      * @param Request $request
+     * @param PlaceType $placeType
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, ?PlaceType $placeType)
     {
         return view('place.index', [
             'places' => Place::itemsList($request),
+            'activePlaceType' => $placeType,
+            'placeTypes' => PlaceType::widgetActivePlaceTypes(),
         ]);
     }
 
@@ -53,14 +57,12 @@ class PlaceController extends Controller
      */
     public function store(StorePlace $request, Place $place)
     {
-
         $place = $place->createAndSync($request);
 
         if($place){
             return redirect()->route('ideas.edit', $place->id )->with('status', __('place.created'));
 
         }else{
-
             return redirect()->back()->withInput()->with('status', __('idea.not_created'));
 
         }

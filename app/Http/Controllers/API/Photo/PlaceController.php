@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API\Photo;
 
 use App\Place;
 use App\Photo;
-use App\Http\Requests\UploadPhoto;
-use App\Http\Requests\SetMainPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
+use App\Http\Requests\Photo\SetMainPhoto;
 use App\Http\Controllers\Controller;
 
 class PlaceController extends Controller

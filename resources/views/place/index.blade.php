@@ -16,5 +16,6 @@
 @endsection
 
 @section('content')
+@include('place.widgets.place_type_selector')
 @include('place.listing')
 @endsection
