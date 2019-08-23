@@ -1,0 +1,10 @@
+// Variables
+@import "variables";
+
+.item-heading{
+  display: flex;
+  .user-info-block p{
+    margin-bottom: 0;
+  }
+}
+

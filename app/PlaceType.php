@@ -11,6 +11,8 @@ class PlaceType extends Model
     protected $table = 'place_types';
     public $timestamps = false;
 
+    protected $with = ['placeTypeDescriptions', 'localisedPlaceTypeDescription'];
+
     Public function getTitleAttribute()
     {
 

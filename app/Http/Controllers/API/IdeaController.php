@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Idea;
 use App\Http\Resources\Idea as IdeaResource;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreIdea;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Idea\StoreIdea;
+use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
 

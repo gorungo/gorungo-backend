@@ -17,6 +17,8 @@ return[
     'no_item_found' => 'Место не найдено',
     'no_items_found' => 'Места не найдены',
 
+    'places_close_to' => 'Места рядом с',
+    'places_close' => 'Места рядом',
     'see_places' => 'Смотреть места',
     'see_all_places' => 'Смотреть все места',
 ];

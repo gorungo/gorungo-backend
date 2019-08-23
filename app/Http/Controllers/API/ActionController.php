@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Action;
 use App\Http\Resources\Action as ActionResource;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreAction;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Action\StoreAction;
+use App\Http\Requests\Photo\UploadPhoto;
 
 
 class ActionController extends Controller

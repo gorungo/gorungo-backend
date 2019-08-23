@@ -1,4 +1,3 @@
-
 @php $dates_count=0; @endphp
 @foreach($action->actionDates as $date)
     @if(strtotime($date->start_datetime_utc) > date('m-d-Y'))
@@ -20,14 +19,14 @@
         @else
             @if($dates_count == 2)
                 <div id="collapseOne" class="panel-collapse collapse"><div class="panel-body dop-dates-wrap">
+                        @endif
+                        <span class="item-date-time-future"><span class="icomoon color-icon-grey"></span> {{str_replace(', 00:00','',Helper::rdate("j M, H:i", strtotime($date->start_datetime_utc)))}}, <span>{{Helper::dayOfWeekShort(date("w", strtotime($date->start_datetime_utc)))}}</span></span class="item-date-time-future">
+                        @endif
+
+                        @endif
+                        @endforeach
+
+                        @if($dates_count > 1)
+                    </div>
+                </div>
             @endif
-                <span class="item-date-time-future"><span class="icomoon color-icon-grey"></span> {{str_replace(', 00:00','',Helper::rdate("j M, H:i", strtotime($date->start_datetime_utc)))}}, <span>{{Helper::dayOfWeekShort(date("w", strtotime($date->start_datetime_utc)))}}</span></span class="item-date-time-future">
-        @endif
-
-    @endif
-@endforeach
-
-@if($dates_count > 1)
-        </div>
-    </div>
-@endif

@@ -6,9 +6,9 @@ use App\Idea;
 use App\Page;
 use App\Action;
 use App\Category;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreAction;
+use App\Http\Requests\Action\StoreAction;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
 

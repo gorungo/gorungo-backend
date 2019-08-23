@@ -18,6 +18,8 @@ return[
     'no_item_found' => 'Place not found',
     'no_items_found' => 'Places not found',
 
+    'places_close_to' => 'Places close to',
+    'places_close' => 'Places near',
     'see_places' => 'See places',
     'see_all_places' => 'See all place',
 ];

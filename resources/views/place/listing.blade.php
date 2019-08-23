@@ -1,9 +1,8 @@
 <div class="section-wrap bg-gray pt-4">
     <div class="container">
         <div id="place-sort" class="dropdown">
-            @sortablelink('title', __('sort.title'),['rel' => 'nofollow', 'class' => 'dropdown-item'])
-            @sortablelink('rating', __('sort.rating'),['rel' => 'nofollow', 'class' => 'dropdown-item'])
-            @sortablelink('distance', __('sort.distance'),['rel' => 'nofollow', 'class' => 'dropdown-item'])
+            @sortablelink('title', __('sort.title'))
+            @sortablelink('rating', __('sort.rating'))
         </div>
         @if($places->count())
             <div class="row">

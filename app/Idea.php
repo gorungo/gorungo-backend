@@ -202,6 +202,11 @@ class Idea extends Model
         return $this->ideaActions()->isActive()->paginate();
     }
 
+    public static function backgroundImage()
+    {
+        return '/images/bg/mountains_blue.svg';
+    }
+
     /**
      * Get idea actions
      * @param int $actionsCount
@@ -348,7 +353,6 @@ class Idea extends Model
 
         if (count($validTags)) $this->retag($validTags);
 
-
     }
 
 
@@ -356,7 +360,6 @@ class Idea extends Model
 
     public function scopeIsActive($query)
     {
-
         return $query->where('ideas.active', '1');
     }
 

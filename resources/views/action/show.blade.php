@@ -13,8 +13,9 @@
             <hr/>
             <div class="row item-heading">
                 <div class="col-sm-3">
-                    <div class="card my-3">
+                    <div class="my-3">
                         @include('photo.tmb.16x9_fullsize', ['imgUrl' => $action->TmbImgPath])
+                        @include('action.widgets.author')
                     </div>
                 </div>
                 <div class="col-sm-8">

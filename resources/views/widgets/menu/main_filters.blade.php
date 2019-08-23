@@ -14,11 +14,11 @@
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownSeason">
-                    <a class="dropdown-item" onclick="toggleFilter('season', '')" href="#">{{__('menu.season_')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('season', 'spring')" href="#">{{__('menu.season_spring')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('season', 'summer')" href="#">{{__('menu.season_summer')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('season', 'autumn')" href="#">{{__('menu.season_autumn')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('season', 'winter')" href="#">{{__('menu.season_winter')}}</a>
+                    <span class="dropdown-item" onclick="toggleFilter('season', '')">{{__('menu.season_')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('season', 'spring')" >{{__('menu.season_spring')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('season', 'summer')" >{{__('menu.season_summer')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('season', 'autumn')" >{{__('menu.season_autumn')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('season', 'winter')" >{{__('menu.season_winter')}}</span>
                 </div>
             </div>
         </div>
@@ -29,11 +29,11 @@
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownDayTime">
-                    <a class="dropdown-item" onclick="toggleFilter('daytime', '')" href="#">{{__('menu.daytime_')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('daytime', 'morning')" href="#">{{__('menu.daytime_morning')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('daytime', 'day')" href="#">{{__('menu.daytime_day')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('daytime', 'evening')" href="#">{{__('menu.daytime_evening')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('daytime', 'night')" href="#">{{__('menu.daytime_night')}}</a>
+                    <span class="dropdown-item" onclick="toggleFilter('daytime', '')" >{{__('menu.daytime_')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('daytime', 'morning')" >{{__('menu.daytime_morning')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('daytime', 'day')" >{{__('menu.daytime_day')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('daytime', 'evening')"  >{{__('menu.daytime_evening')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('daytime', 'night')" >{{__('menu.daytime_night')}}</span>
                 </div>
             </div>
         </div>
@@ -44,10 +44,10 @@
                     <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownPlace">
-                    <a class="dropdown-item" onclick="toggleFilter('distance', '')" href="#">{{__('menu.distance_')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('distance', 'at')" href="#">{{__('menu.distance_at')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('distance', 'close')" href="#">{{__('menu.distance_close')}}</a>
-                    <a class="dropdown-item" onclick="toggleFilter('distance', 'far')" href="#">{{__('menu.distance_far')}}</a>
+                    <span class="dropdown-item" onclick="toggleFilter('distance', '')" >{{__('menu.distance_')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('distance', 'at')" >{{__('menu.distance_at')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('distance', 'close')" >{{__('menu.distance_close')}}</span>
+                    <span class="dropdown-item" onclick="toggleFilter('distance', 'far')" >{{__('menu.distance_far')}}</span>
                 </div>
             </div>
         </div>

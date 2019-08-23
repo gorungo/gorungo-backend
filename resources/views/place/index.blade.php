@@ -9,7 +9,8 @@
 @section('header')
     @include('parts.header')
     @include('parts.section_title', [
-    'sectionTitle' => __('place.title'),
+    'currentPlace' => $currentPlace,
+    'sectionTitle' => $sectionTitle,
     'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Place::class) ? route('places.create') : null,
     'addItemTitle' => __('place.create'),
     ])

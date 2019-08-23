@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\Http\Requests\StoreIdea;
+use App\Http\Requests\Idea\StoreIdea;
 use DB;
-use App\Http\Requests\StoreCategory;
+use App\Http\Requests\Category\StoreCategory;
 use App\Traits\Imageble;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

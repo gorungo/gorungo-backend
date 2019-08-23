@@ -1,4 +1,4 @@
-<div class="section-wrap bg-gray pt-4">
+<div class="section-wrap bg-gray pt-5">
     <div class="container">
         @if($ideas->count())
             <div class="row">

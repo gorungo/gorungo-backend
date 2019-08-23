@@ -33,6 +33,51 @@ class Action extends Model {
 
 
 
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
+    /**
+     * Action idea
+     * @return mixed
+     */
+    public function actionIdea()
+    {
+        return $this->belongsTo( 'App\Idea', 'idea_id' );
+    }
+
+    public function actionCategories()
+    {
+        return $this->actionIdea->ideaCategories()->get();
+    }
+
+    public function actionDates()
+    {
+        return $this->hasMany('App\ActionDate');
+    }
+
+    public function actionPlace()
+    {
+        return $this->actionPlaces()->first();
+    }
+
+    public function actionPlaces()
+    {
+        return $this->belongsToMany('App\Place', 'action_place', 'action_id', 'place_id');
+    }
+
+    public function actionDescriptions() {
+        return $this->hasMany( 'App\ActionDescription', 'action_id', 'id' );
+    }
+
+
+    public function localisedActionDescription() {
+        return $this
+            ->hasOne( 'App\ActionDescription', 'action_id', 'id' )
+            ->where( 'locale_id', LocaleMiddleware::getLocaleId() );
+    }
+
+
     Public function getTitleAttribute() {
 
             if($this->localisedActionDescription != null){
@@ -133,45 +178,7 @@ class Action extends Model {
         }
     }
 
-    /**
-     * Action idea
-     * @return mixed
-     */
-    public function actionIdea()
-    {
-        return $this->belongsTo( 'App\Idea', 'idea_id' );
-    }
 
-    public function actionCategories()
-    {
-        return $this->actionIdea->ideaCategories()->get();
-    }
-
-    public function actionDates()
-    {
-        return $this->hasMany('App\ActionDate');
-    }
-
-    public function actionPlace()
-    {
-        return $this->actionPlaces()->first();
-    }
-
-    public function actionPlaces()
-    {
-        return $this->belongsToMany('App\Place', 'action_place', 'action_id', 'place_id');
-    }
-
-    public function actionDescriptions() {
-        return $this->hasMany( 'App\ActionDescription', 'action_id', 'id' );
-    }
-
-
-    public function localisedActionDescription() {
-        return $this
-            ->hasOne( 'App\ActionDescription', 'action_id', 'id' )
-            ->where( 'locale_id', LocaleMiddleware::getLocaleId() );
-    }
 
     public function hasLocaleName( $localeName ) {
         return $this

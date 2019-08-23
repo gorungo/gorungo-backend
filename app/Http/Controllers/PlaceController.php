@@ -31,8 +31,17 @@ class PlaceController extends Controller
      */
     public function index(Request $request, ?PlaceType $placeType)
     {
+        $currentPlace = Place::currentPlace();
+        $sectionTitle = __('place.title');
+        if($currentPlace){
+            $sectionTitle =__('place.places_close_to') .' '. $currentPlace->title;
+        }
+
+
         return view('place.index', [
             'places' => Place::itemsList($request),
+            'sectionTitle' => $sectionTitle,
+            'currentPlace' => $currentPlace,
             'activePlaceType' => $placeType,
             'placeTypes' => PlaceType::widgetActivePlaceTypes(),
         ]);

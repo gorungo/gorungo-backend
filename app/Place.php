@@ -181,6 +181,7 @@ class Place extends Model
         return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page . '_distance_' . request()->distance, 0, function (){
             return self::distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
                 ->joinDescription()
+                ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc')
                 ->sortable()
                 ->paginate();
         });
@@ -326,4 +327,36 @@ class Place extends Model
     {
         return $query->orderBy('place_descriptions.title', $direction);
     }
+
+    public static function coordinatesById($id)
+    {
+        $place = self::whereId((int)$id)->isActive()->first();
+
+        if($place) return $place->coordinates;
+        return null;
+    }
+
+    /**
+     * Get currently viewing place ( if isset pid in request )
+     * @return mixed
+     *
+     */
+    public static function currentPlace()
+    {
+        $place = null;
+        if(request()->has('lid') && request()->input('lid') !== '') {
+            if (session()->has('current_place')) {
+                $place = session()->get('current_place');
+                if($place->id !== (int)request()->input('lid')){
+                    $place = Place::find((int)request()->input('lid'));
+                }
+            } else {
+                $place = Place::find((int)request()->input('lid'));
+                if ($place) session()->put('current_place');
+            }
+        }
+
+        return $place;
+    }
+
 }

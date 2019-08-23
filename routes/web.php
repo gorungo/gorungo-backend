@@ -174,6 +174,17 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         ->name('places.show');
 
 
+    // user page show
+    Route::get('users/{user}', 'UserController@show')
+        ->name('users.show');
+
+    // show user ideas
+    Route::get('users/{user}/ideas', 'UserController@showIdeas')
+        ->name('users.show_ideas');
+
+
+
+
 });
 
 //Переключение языков

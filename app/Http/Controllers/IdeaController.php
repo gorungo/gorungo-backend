@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Idea;
 use App\Category;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
 use App\Page;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreIdea;
+use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
 
@@ -49,11 +49,13 @@ class IdeaController extends Controller
             $subCategory = $activeCategory->categoryParent;
         }
 
+        $backgroundImage = Idea::backgroundImage($activeCategory);
         $categories = Category::getCategoriesForSelector($activeCategory);
+
         $ideas = Idea::itemsList($request, $activeCategory);
 
         return view('idea.index', compact([
-            'page', 'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory'
+            'page', 'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory', 'backgroundImage'
         ]));
     }
 
