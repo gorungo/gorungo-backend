@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Place\StorePlace;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Resources\Place as PlaceResource;
+use App\Http\Resources\PlaceNoRelationships as PlaceNoRelationshipsResource;
 use App\Http\Controllers\Controller;
 
 use App\Http\Middleware\LocaleMiddleware;
@@ -98,6 +99,6 @@ class PlaceController extends Controller
     }
 
     public function getByTitle(Request $request){
-        return PlaceResource::collection(Place::getByTitle($request->title));
+        return PlaceNoRelationshipsResource::collection(Place::getByTitle($request->title));
     }
 }

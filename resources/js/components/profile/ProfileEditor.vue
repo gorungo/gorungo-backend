@@ -136,7 +136,7 @@
 
     import PhotoUploader from '../photo/PhotoUploader.vue';
     import DateSelector from '../DateSelector.vue';
-    import PlaceSelector from '../PlaceSelector.vue';
+    import PlaceSelector from '../place/PlaceSelector.vue';
     import LocaleSelector from '../LocaleSelector.vue';
 
 

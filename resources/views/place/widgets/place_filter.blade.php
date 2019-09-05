@@ -1,0 +1,1 @@
+<main-place-filter :prop-active-place="{{json_encode($activePlaceResource)}}"></main-place-filter>

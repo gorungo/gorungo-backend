@@ -21,7 +21,13 @@
     @yield('content')
 </div>
 <!-- Scripts -->
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ asset('js/localization/messages.js') }}"></script>
+@guest
+    <script src="{{ mix('js/app_guest.js') }}"></script>
+@endguest
+@auth
+    <script src="{{ mix('js/app.js') }}"></script>
+@endauth
 
 @yield('scripts')
 @stack('scripts')

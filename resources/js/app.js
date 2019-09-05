@@ -7,10 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-window.userui = require('./userui');
-window.go = require('./go');
-
 import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.use( CKEditor );
 
@@ -36,6 +32,9 @@ Vue.component('PlaceEditor', require('./components/place/PlaceEditor.vue').defau
 Vue.component('IdeaEditor', require('./components/idea/IdeaEditor.vue').default);
 Vue.component('ProfileEditor', require('./components/profile/ProfileEditor.vue').default);
 
+Vue.component('RandomIdea', require('./components/idea/RandomIdea.vue').default);
+Vue.component('MainPlaceFilter', require('./components/place/MainPlaceFilter.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -47,7 +46,6 @@ Vue.component('ProfileEditor', require('./components/profile/ProfileEditor.vue')
 window.systemInfo = {
     apiVersion: 'v1',
 };
-
 
 let app = new Vue({
     el: '#app',

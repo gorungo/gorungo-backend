@@ -68,3 +68,22 @@
   justify-content: center;
 }
 
+.btn {
+  border-width: 2px;
+}
+
+.btn-outline-random-idea{
+  border-color: inherit;
+  color: $green;
+}
+
+.distance-selector__item{
+  font-size: 18px;
+  color: $text-color;
+}
+.distance-selector__item.active{
+  color: $primary;
+  font-weight: 700;
+  border-bottom: 1px solid lighten($primary, 20%);
+}
+

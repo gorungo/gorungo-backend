@@ -22,6 +22,7 @@ mix.webpackConfig({
 });
 
 mix.js('resources/js/app.js', 'public/js')
+    .js('resources/js/app_guest.js', 'public/js')
     .js('resources/js/category.js', 'public/js/category.js')
     .js('resources/js/userui.js', 'public/js/userui.js')
     .sass('resources/sass/app.scss', 'public/css')

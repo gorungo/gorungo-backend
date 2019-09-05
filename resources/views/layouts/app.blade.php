@@ -23,7 +23,13 @@
 </div>
 <!-- Scripts -->
 <!--<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>-->
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ asset('js/localization/messages.js') }}"></script>
+@guest
+    <script src="{{ mix('js/app_guest.js') }}"></script>
+@endguest
+@auth
+    <script src="{{ mix('js/app.js') }}"></script>
+@endauth
 
 @yield('scripts')
 @stack('scripts')

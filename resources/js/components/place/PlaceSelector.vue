@@ -1,6 +1,6 @@
 <template>
     <div id="place-selector" class="place-selector">
-        <h5>Места</h5>
+        <h5>{{Lang.get('place.title')}}</h5>
         <!-- Place selector -->
         <div class="row">
             <div class="col-sm-4" v-for="(place, index) in places">
@@ -22,12 +22,12 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content search-list">
                     <div class="modal-header">
-                        <input name="placeTitle" class="w-100 form-control input-cool" v-model="searchTitle" placeholder="Введите название места"/>
+                        <input name="placeTitle" class="w-100 form-control input-cool" v-model="searchTitle" :placeholder="Lang.get('place.type_place_name')"/>
                         <button v-if="!loading" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div class="spinner-grow text-dark float-right" role="status" v-if="loading" style="width: 1.5rem; height: 1.5rem;">
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only">{{Lang.get('editor.loading')}}...</span>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -35,11 +35,11 @@
                             <ul class="list-group list-group-flush" v-if="foundPlaces.length && !loading">
                                 <li class="list-group-item" v-for="(place ,index) in foundPlaces" v-on:click="addPlace(index)">
                                     {{place.attributes.title}}
-                                    <span class="btn btn-link float-right">Выбрать</span>
+                                    <span class="btn btn-link float-right">{{Lang.get('editor.select')}}</span>
                                 </li>
                             </ul>
                             <div v-if="noSearchResults" class="mt-2">
-                                Ничего не нашли, измените ваш запрос
+                                {{Lang.get('editor.nothing_found_try_to_change_query')}}
                             </div>
                         </div>
                     </div>
@@ -50,9 +50,12 @@
 </template>
 
 <script>
+    import PlaceSelector from '../../mixins/PlaceSelector.js';
 
     export default {
+
         name: "PlaceSelector",
+        mixins: [PlaceSelector],
 
 //------DATA-----------------------------------------------------------------------------------------------
 
@@ -90,48 +93,7 @@
             }
         },
 
-        computed:{
-            noSearchResults(){
-                return !this.loading && !this.foundPlaces.length && this.searchTitle.length >= this.searchMinimum;
-            }
-        },
-
         methods: {
-
-            getPlacesByTitle:
-                _.debounce(function(title){
-
-                    this.foundPlaces = [];
-
-                    axios.get( this.placesByTitleRequestUrl(), { params:{
-                            locale: this.locale,
-                            title: title,
-                        } } )
-                        .then( (resp) => {
-                            if (resp.status === 200) {
-                                this.dataLoaded = true;
-                                this.foundPlaces = resp.data.data;
-                            }
-
-                        }).catch( (error) => {
-
-                        if (error.response === undefined) {
-                            userui.showNoInternetNotification();
-                        }
-
-                        this.loading = false;
-
-                    }).finally( () => {
-                        this.loading = false;
-                    })
-
-                }, 2000),
-
-
-
-            placesByTitleRequestUrl: function(){
-                return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/get_by_title' ;
-            },
 
             addPlace: function(index){
                 this.places.push(this.foundPlaces[index]);
@@ -149,7 +111,15 @@
         },
 
 //------COMPUTED-----------------------------------------------------------------------------------------------
+        computed:{
+            Lang(){
+                return window.Lang;
+            },
 
+            noSearchResults(){
+                return !this.loading && !this.foundPlaces.length && this.searchTitle.length >= this.searchMinimum;
+            }
+        },
 
     }
 </script>

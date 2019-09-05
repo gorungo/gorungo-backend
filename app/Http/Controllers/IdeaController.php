@@ -51,7 +51,6 @@ class IdeaController extends Controller
 
         $backgroundImage = Idea::backgroundImage($activeCategory);
         $categories = Category::getCategoriesForSelector($activeCategory);
-
         $ideas = Idea::itemsList($request, $activeCategory);
 
         return view('idea.index', compact([

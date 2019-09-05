@@ -8,6 +8,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use PHPUnit\Runner\Exception;
 use Spatie\Permission\Traits\HasRoles;
 
 use Illuminate\Support\Facades\Log;
@@ -110,15 +111,21 @@ class User extends Authenticatable  implements MustVerifyEmail
 
         if(!$coordinates){
             // Получаем координаты пользователя если их нет в сессии
-            $client = new \GuzzleHttp\Client();
-            $body = $client->get('https://ipinfo.io/geo')->getBody();
-            $obj = json_decode($body);
 
-            [$lat, $lang] = explode(',', $obj->loc);
+            try{
+                $client = new \GuzzleHttp\Client();
+                $body = $client->get('https://ipinfo.io/geo')->getBody();
+                $obj = json_decode($body);
+                [$lat, $lang] = explode(',', $obj->loc);
+            }catch(\Exception $exception){
+                Log::info('https://ipinfo.io/geo service unavailable');
+            }
+
+
 
             $coordinates = [
-                'lat' => $lat,
-                'lng' => $lang,
+                'lat' => $lat ?? 0,
+                'lng' => $lang ?? 0,
                 'country' => $obj->country ?? null,
                 'city' => $obj->city ?? null,
                 'time' => date("Y-m-d H:i:s"),

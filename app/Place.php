@@ -187,6 +187,11 @@ class Place extends Model
         });
     }
 
+    public static function backgroundImage()
+    {
+        return '/images/bg/mountains_blue.svg';
+    }
+
     public function createAndSync( StorePlace $request ){
 
         $createResult = DB::transaction(function () use ($request) {
@@ -341,22 +346,23 @@ class Place extends Model
      * @return mixed
      *
      */
-    public static function currentPlace()
+    public static function activePlace()
     {
         $place = null;
-        if(request()->has('lid') && request()->input('lid') !== '') {
+        if(request()->has('plid') && request()->input('plid') !== '') {
             if (session()->has('current_place')) {
                 $place = session()->get('current_place');
-                if($place->id !== (int)request()->input('lid')){
-                    $place = Place::find((int)request()->input('lid'));
+                if($place->id !== (int)request()->input('plid')){
+                    $place = Place::find((int)request()->input('plid'));
                 }
             } else {
-                $place = Place::find((int)request()->input('lid'));
+                $place = Place::find((int)request()->input('plid'));
                 if ($place) session()->put('current_place');
             }
         }
 
         return $place;
     }
+
 
 }

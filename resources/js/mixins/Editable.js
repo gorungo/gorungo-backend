@@ -63,7 +63,7 @@ export default {
 
     computed: {
 
-        itemId: function(){
+        itemId(){
 
             if(this.item !== null && this.item.id !== null) {
                 return this.item.id;
@@ -76,7 +76,7 @@ export default {
             return null;
         },
 
-        documentTitle: function(){
+        documentTitle(){
             if(this.dataLoaded){
                 if(!this.item.id) {
                     return 'Новый элемент'
@@ -84,6 +84,10 @@ export default {
                     return 'Редактирование элемента';
                 }
             }
+        },
+
+        Lang(){
+            return window.Lang;
         },
 
 
@@ -116,26 +120,29 @@ export default {
 
         fetch: function(){
 
-            axios.get( this.fetchRequestUrl(), {
-                params: this.fetchRequestParams() } )
-                .then( (resp) => {
+            if(!this.loading){
+                this.loading = true;
+                axios.get( this.fetchRequestUrl(), {
+                    params: this.fetchRequestParams() } )
+                    .then( (resp) => {
 
-                    this.loading = true;
-                    if (resp.status === 200) {
-                        this.dataLoaded = true;
-                        this.item = resp.data.data;
+                        this.loading = true;
+                        if (resp.status === 200) {
+                            this.dataLoaded = true;
+                            this.item = resp.data.data;
+                        }
+
+                    }).catch( (error) => {
+
+                    if (error.response === undefined) {
+                        userui.showNoInternetNotification();
                     }
+                    this.loading = false;
 
-                }).catch( (error) => {
-
-                if (error.response === undefined) {
-                    userui.showNoInternetNotification();
-                }
-                this.loading = false;
-
-            }).finally( () => {
-                this.loading = false;
-            })
+                }).finally( () => {
+                    this.loading = false;
+                })
+            }
 
         },
 
@@ -145,58 +152,57 @@ export default {
 
         save: function(){
 
-            axios({
-                method: this.saveMethod(),
-                url: this.saveRequestUrl(),
-                data: this.item,
-
-            }).then( (resp) => {
-
+            if(!this.loading){
                 this.loading = true;
-                this.errors = null;
+                axios({
+                    method: this.saveMethod(),
+                    url: this.saveRequestUrl(),
+                    data: this.item,
 
-                if (resp.status === 200 || resp.status === 201) {
+                }).then( (resp) => {
+                    this.errors = null;
+                    if (resp.status === 200 || resp.status === 201) {
 
-                    if(resp.data.data.id !== null ){
+                        if(resp.data.data.id !== null ){
 
-                        if(resp.data.data.attributes.edit_url){
-                            this.updateBrowserUrl(resp.data.data.attributes.edit_url);
+                            if(resp.data.data.attributes.edit_url){
+                                this.updateBrowserUrl(resp.data.data.attributes.edit_url);
+                            }
+
+                            if(this.itemId === null){
+                                this.item.id = resp.data.data.id;
+                                this.item.attributes.url = resp.data.data.attributes.url;
+                                this.item.attributes.edit_url = resp.data.data.attributes.edit_url;
+                            }
+
+                            this.afterSave();
+
+                            userui.showNotification('Успешно сохранено', 'green');
+                        }else{
+                            userui.showNoInternetNotification();
                         }
 
-                        if(this.itemId === null){
-                            this.item.id = resp.data.data.id;
-                            this.item.attributes.url = resp.data.data.attributes.url;
-                            this.item.attributes.edit_url = resp.data.data.attributes.edit_url;
+
+                    }
+
+                }).catch( (error) => {
+
+                    if(error.response){
+                        if(error.response.data.errors){
+                            this.errors = error.response.data.errors;
                         }
+                    }
 
-                        this.loading = false;
-                        this.afterSave();
-
-                        userui.showNotification('Успешно сохранено', 'green');
-                    }else{
+                    if (error.response === undefined) {
                         userui.showNoInternetNotification();
                     }
 
 
-                }
+                }).finally( () => {
+                    this.loading = false;
+                })
+            }
 
-            }).catch( (error) => {
-
-                if(error.response){
-                    if(error.response.data.errors){
-                        this.errors = error.response.data.errors;
-                    }
-                }
-
-                if (error.response === undefined) {
-                    userui.showNoInternetNotification();
-                }
-
-                this.loading = false;
-
-            }).finally( () => {
-                this.loading = false;
-            })
         },
 
 

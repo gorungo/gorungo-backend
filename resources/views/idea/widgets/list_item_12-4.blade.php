@@ -9,7 +9,7 @@
                 <a href="{{$item->Url}}">
                 <h4 class="card-title">{{$item->title}}</h4>
                 </a>
-                <p class="card-text text-secondary">{{$item->intro}} {{$item->id}}</p>
+                <p class="card-text text-secondary">{{$item->intro}} @auth @if(Auth()->user()->hasRole('super-admin')){{$item->id}}@endif @endauth</p>
             </div>
             <div class="list-item-dropdown">
                 @include('idea.widgets.item_dropdown')

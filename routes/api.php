@@ -62,10 +62,11 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/ideas/create', 'API\IdeaController@create')->name('api.ideas.create');
         Route::get('/ideas/{idea}/edit', 'API\IdeaController@edit')->name('api.ideas.edit');
         Route::post('/ideas', 'API\IdeaController@store')->name('api.ideas.store');
-        Route::patch('/ideas/{idea}', 'API\IdeaController@update')->name('api.ideas.update');
-        Route::delete('/ideas/{idea}', 'API\IdeaController@destroy')->name('api.ideas.destroy');
 
         Route::get('/ideas/extended_tags', 'API\IdeaController@getAllAvailableTags')->name('api.ideas.get_all_available_tags');
+
+        Route::patch('/ideas/{idea}', 'API\IdeaController@update')->name('api.ideas.update');
+        Route::delete('/ideas/{idea}', 'API\IdeaController@destroy')->name('api.ideas.destroy');
 
         // places
         Route::get('/places/create', 'API\PlaceController@create')->name('api.places.create');
@@ -199,16 +200,18 @@ Route::group(['prefix' => 'v1'], function() {
             ->name('api.profiles.photos_destroy');
 
 
-        /*
+    });
+
+    /*
          * --------------------------------------------------------------------------
          * PLACES
          * --------------------------------------------------------------------------
          */
 
-        //Get listing of places by title
-        Route::get('/places/get_by_title', "API\PlaceController@getByTitle")
-            ->name('api.place.get_by_title');
+    //Get listing of places by title
+    Route::get('/places/getByTitle', "API\PlaceController@getByTitle")
+        ->name('api.place.get_by_title');
 
-    });
+    Route::get('/ideas/randomIdea', 'API\IdeaController@randomIdea')->name('api.ideas.random_idea');
 
 });

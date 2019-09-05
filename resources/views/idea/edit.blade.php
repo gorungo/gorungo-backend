@@ -14,8 +14,5 @@
     <idea-editor  :prop-item-id="@isset($idea->id){{$idea->id}}@else null @endisset" :user="{{json_encode(Auth()->user())}}"></idea-editor>
 @endsection
 
-@push('scripts')
-    <script src="{{ mix('js/idea_editor.js') }}"></script>
-@endpush
 
 

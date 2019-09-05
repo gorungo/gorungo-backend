@@ -2,7 +2,7 @@
 
 return[
     'title' => 'Идеи',
-    'description' => 'Море идей о том, как провести время',
+    'description' => '1000 идей как провести время',
 
     'item_title' => 'Идея',
 
@@ -17,6 +17,12 @@ return[
     'no_items' => 'Нет идей',
     'no_item_found' => 'Идея не найдена',
     'no_items_found' => 'Идеи не найдены',
+
+    'idea_for_you' => 'Идея для вас',
+    'random_idea' => 'Случайная идея',
+    'other_idea' => 'Другая идея',
+
+    'type_place_name' => 'Введите название места',
 
     'see_actions' => 'Смотреть действия',
     'see_all_actions' => 'Смотреть все действия',

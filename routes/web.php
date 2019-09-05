@@ -92,6 +92,11 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         ->name('profile.edit');
 
     // routes with city
+    
+    // place show
+    Route::get('places/{place}', 'PlaceController@show')
+        ->name('places.show');
+
 
     Route::group(['prefix' => App\Http\Middleware\LocationMiddleware::getLocation()], function () {
 
@@ -168,10 +173,6 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     Route::delete('category/{category}', 'CategoryController@destroy')
         ->middleware(['auth','can:delete,category'])
         ->name('category.destroy');
-
-    // place show
-    Route::get('places/{place}', 'PlaceController@show')
-        ->name('places.show');
 
 
     // user page show

@@ -9,7 +9,7 @@ use App\Address;
 use App\Http\Resources\PlaceType as PlaceTypeResource;
 use App\PlaceType;
 
-class Place extends JsonResource
+class PlaceNoRelationships extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -33,17 +33,14 @@ class Place extends JsonResource
                 'edit_url' => $this->editUrl,
                 'description' => $this->description,
                 'intro' => $this->intro,
+                'coordinates' =>$this->id ? $this->coordinates : [
+                    'coordinates' => [null,null]
+                ],
 
                 'rating' => $this->rating ?? 0,
             ],
 
             'relationships' => [
-                'placeType' => new PlaceTypeResource($this->whenLoaded('placeType')) ?? null,
-                'address' => $this->placeAddress ? new AddressResource($this->placeAddress) : new AddressResource(new Address),
-            ],
-
-            'meta' => [
-                'allPlaceTypes' => PlaceTypeResource::collection(PlaceType::all()),
             ],
         ];
     }

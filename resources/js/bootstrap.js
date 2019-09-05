@@ -55,3 +55,8 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+// init vue
+window.Vue = require('vue');
+window.userui = require('./userui');
+window.go = require('./go');

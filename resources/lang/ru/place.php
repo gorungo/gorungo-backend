@@ -3,7 +3,7 @@
 return[
     'title' => 'Места',
     'item_title' => 'Место',
-    'description' => 'Места',
+    'description' => 'Места для развития и путешествий',
 
     'create' => 'Новое место',
     'edit' => 'Редактировать место',
@@ -21,4 +21,16 @@ return[
     'places_close' => 'Места рядом',
     'see_places' => 'Смотреть места',
     'see_all_places' => 'Смотреть все места',
+
+    // place main filter
+    'select_place' => 'Выберите место',
+    'type_place_name' => 'Введите название места',
+    'recently_viewed' => 'Недавно просмотрено',
+    'distance' => [
+        'any' => 'Любое расстояние',
+        'popular' => 'Популярное',
+        'at' => 'Дома',
+        'close' => 'Рядом',
+        'far' => 'Далеко',
+    ],
 ];

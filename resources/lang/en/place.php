@@ -22,4 +22,16 @@ return[
     'places_close' => 'Places near',
     'see_places' => 'See places',
     'see_all_places' => 'See all place',
+
+    // place main filter
+    'select_place' => 'Select place',
+    'type_place_name' => 'Type in place title',
+    'recently_viewed' => 'Recently viewed',
+    'distance' => [
+        'any' => 'Any distance',
+        'popular' => 'Popular',
+        'at' => 'At home',
+        'close' => 'Nearby',
+        'far' => 'Far',
+    ],
 ];

@@ -19,6 +19,7 @@ return [
         'general',
         'idea',
         'menu',
+        'place',
         'pagination',
         'passwords',
         'tag',

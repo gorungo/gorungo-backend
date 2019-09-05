@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Photo;
-use App\Http\Requests\UploadPhoto;
+use App\Http\Requests\Photo\UploadPhoto;
 
 
 trait Imageble

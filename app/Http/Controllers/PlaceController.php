@@ -10,6 +10,8 @@ use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Http\Request;
 use App\Http\Requests\Place\StorePlace;
 
+use App\Http\Resources\PlaceNoRelationships;
+
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
 
@@ -31,19 +33,22 @@ class PlaceController extends Controller
      */
     public function index(Request $request, ?PlaceType $placeType)
     {
-        $currentPlace = Place::currentPlace();
+        $activePlace = Place::activePlace();
         $sectionTitle = __('place.title');
-        if($currentPlace){
-            $sectionTitle =__('place.places_close_to') .' '. $currentPlace->title;
+
+        if($activePlace){
+            $sectionTitle =__('place.places_close_to') .' '. $activePlace->title;
         }
 
 
         return view('place.index', [
             'places' => Place::itemsList($request),
             'sectionTitle' => $sectionTitle,
-            'currentPlace' => $currentPlace,
+            'activePlace' => $activePlace,
+            'activePlaceResource' => $activePlace ? new PlaceNoRelationships($activePlace) : null,
             'activePlaceType' => $placeType,
             'placeTypes' => PlaceType::widgetActivePlaceTypes(),
+            'backgroundImage' => Place::backgroundImage(),
         ]);
     }
 
@@ -144,26 +149,4 @@ class PlaceController extends Controller
         //
     }
 
-
-    /**
-     * Return list of items photo
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPhotosListJson(){
-        return response()->json($this->idea->ideaPhotos()->isActive()->get());
-    }
-
-    /**
-     * Return list of items photo
-     * @param UploadPhoto $request
-     * @param $itemId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function uploadPhoto(UploadPhoto $request, $itemId){
-
-        $idea = Idea::where('id', $itemId)->first();
-        if($idea) return response()->json($idea->uploadPhoto($request));
-
-        return response()->json(['type' => 'error', 'itemId' => $itemId]);
-    }
 }

@@ -8,13 +8,16 @@
                             <h2>{{this.documentTitle}}</h2>
                         </div>
                         <div class="col-sm-12 col-md-4 text-right">
-                            <div v-if="loading" dusk="loading" class="spinner-border float-right" role="status" aria-hidden="true"></div>
-                            <button v-else class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">Сохранить</button>
+                            <button :disabled="loading" class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">
+                                <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span v-if="loading" class="sr-only">{{Lang.get('editor.loading')}}...</span>
+                                <span v-else>{{Lang.get('editor.save_button')}}</span>
+                            </button>
                         </div>
                         <div class="col-12 col-md-12">
                             <div class="d-flex justify-content-center">
                                 <ul class="nav nav-pills">
-                                    <li role="presentation" id="tab_main"class="active">
+                                    <li role="presentation" id="tab_main" class="active">
                                         <a class="nav-link active" id="edit-main-block-tab" data-toggle="tab" href="#edit-main-block" role="tab" aria-controls="profile" aria-selected="true"><span class="glyphicon glyphicon-pencil"> </span>Основное</a>
                                     </li>
                                     <li role="presentation" id="tab_photo">
@@ -27,9 +30,7 @@
                 </div>
             </div>
         </div>
-
-
-        <div v-if="dataLoaded" class="mt-4">
+        <div v-if="dataLoaded && !loading" class="mt-4">
             <div class="container">
                 <errors :errors="errors"></errors>
 
@@ -131,8 +132,6 @@
         },
 
         computed: {
-
-
             documentTitle: function(){
                 if(this.dataLoaded){
                     if(!this.item.id) {

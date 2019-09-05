@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use App\Http\Controllers\Controller;
 
 use App\Idea;
@@ -31,7 +32,7 @@ class IdeaController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @param  Idea $idea
+     * @param  Idea  $idea
      * @return IdeaResource
      */
     public function create(Idea $idea)
@@ -42,47 +43,47 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreIdea $request
-     * @param  Idea $idea
+     * @param  StoreIdea  $request
+     * @param  Idea  $idea
      * @return IdeaResource
      */
     public function store(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->createAndSync($request));
+        return new IdeaResource($idea->createAndSync($request)->loadMissing('ideaCategories'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Idea $idea
+     * @param  Idea  $idea
      * @return IdeaResource
      */
     public function show(Idea $idea)
     {
-        return new IdeaResource($idea);
+        return new IdeaResource($idea->loadMissing('ideaCategories'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Idea $idea
+     * @param  Idea  $idea
      * @return IdeaResource
      */
     public function edit(Idea $idea)
     {
-        return new IdeaResource($idea);
+        return new IdeaResource($idea->loadMissing('ideaCategories'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  StoreIdea $request
-     * @param  Idea $idea
+     * @param  StoreIdea  $request
+     * @param  Idea  $idea
      * @return IdeaResource
      */
     public function update(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->updateAndSync($request));
+        return new IdeaResource($idea->updateAndSync($request)->loadMissing('ideaCategories'));
     }
 
     /**
@@ -101,26 +102,36 @@ class IdeaController extends Controller
      * Return list of items photo
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPhotosListJson(){
+    public function getPhotosListJson()
+    {
         return response()->json($this->idea->ideaPhotos()->isActive()->get());
     }
 
-    public function getAllAvailableTags(){
+    public function getAllAvailableTags()
+    {
         return $this->idea->getAllTags();
     }
 
 
     /**
      * Return list of items photo
-     * @param UploadPhoto $request
+     * @param  UploadPhoto  $request
      * @param $itemId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadPhoto(UploadPhoto $request, $itemId){
+    public function uploadPhoto(UploadPhoto $request, $itemId)
+    {
 
         $idea = Idea::where('id', $itemId)->first();
-        if($idea) return response()->json($idea->uploadPhoto($request));
+        if ($idea) {
+            return response()->json($idea->uploadPhoto($request));
+        }
 
         return response()->json(['type' => 'error', 'itemId' => $itemId]);
+    }
+
+    public function randomIdea()
+    {
+        return new IdeaResource(Idea::randomIdea());
     }
 }

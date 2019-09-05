@@ -32,10 +32,11 @@ class Idea extends JsonResource
                 'title' => $this->id ? $this->title : '',
                 'intro' => $this->id ? $this->intro : '',
                 'description' => $this->id ? $this->description : '',
+                'imageUrl' => asset($this->TmbImgPath)
             ],
 
             'relationships' => [
-                'categories' => $this->id ? CategoryResource::collection($this->ideaCategories) : [],
+                'categories' => $this->id ? CategoryResource::collection($this->whenLoaded('ideaCategories')) : [],
                 'tags' => $this->id ? $this->getItemTags() : IdeaModel::emptyTagsArray(),
             ],
         ];

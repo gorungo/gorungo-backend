@@ -52,11 +52,12 @@ class ActionController extends Controller
 
         $categories = Category::getCategoriesForSelector($activeCategory);
         $ideas = Idea::itemsList($request, $activeCategory);
+        $backgroundImage = Action::backgroundImage($activeCategory);
 
         // get list of actions
         $actions = Action::itemsList($request, $activeCategory);
 
-        return view('action.index', compact(['page', 'actions', 'categories', 'activeCategory', 'subCategory']));
+        return view('action.index', compact(['page', 'actions', 'categories', 'activeCategory', 'subCategory', 'backgroundImage']));
     }
 
     /**

@@ -65,13 +65,16 @@ class Idea extends Model
 
     Public function getUrlAttribute()
     {
-
         if ($this->ideaMainCategory) {
             return route('ideas.show', [$this->ideaMainCategory->pathToCategory(), $this->slug]);
         } else {
             return '';
         }
+    }
 
+    public function getEditUrlAttribute()
+    {
+        return route('ideas.edit', [$this->slug]);
     }
 
     /**
@@ -221,6 +224,12 @@ class Idea extends Model
     {
         return str_slug($title);
     }
+
+    public static function randomIdea()
+    {
+        return self::inRandomOrder()->first();
+    }
+
 
     public function createAndSync(StoreIdea $request)
     {
@@ -388,7 +397,6 @@ class Idea extends Model
 
             $childCategories = $activeCategory->allCategoryChildrenArray();
 
-            dd($childCategories);
 
             return $query->whereHas('ideaCategories.categoryChildren', function ($query) use ($childCategories) {
                 $query->whereIn('category_id', $childCategories);

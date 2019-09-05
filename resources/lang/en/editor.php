@@ -42,6 +42,14 @@ return [
     'list_select_category' => 'Select category',
     'list_select_no_categories' => 'No categories',
 
+    'to_select' => 'Select',
+    'select' => 'Select',
+
+    'loading' => 'Loading',
+
+    'nothing_found' => 'Nothing found',
+    'nothing_found_try_to_change_query' => 'Nothing found, try to change query',
+
     'save_button' => 'SAVE',
     'close_button' => 'CLOSE',
 
