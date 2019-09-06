@@ -1,4 +1,4 @@
-
+@can('update', $item)
 <div class="btn-group pull-right user_menu_btn">
     <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="glyphicon glyphicon-option-horizontal"></span>
@@ -14,6 +14,7 @@
             {!! method_field('delete') !!}
         </form>
     </div>
-
 </div>
+@endcan
+
 

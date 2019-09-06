@@ -4,11 +4,11 @@
     @isset($activeCategory)
         <div class="card-header">
 
-                    <a href="{{route('ideas.index')}}">{{__('idea.title')}}</a><span> /</span>
-                    @isset($subCategory)
-                        <a href="{{route('ideas.index',$subCategory->pathToCategory())}}">{{$subCategory->title}}</a><span> / </span>
-                    @endisset
-                    <a href="{{route('ideas.index',$activeCategory->pathToCategory())}}">{{$activeCategory->title}}</a>
+            <a href="{{route('ideas.index')}}">{{__('idea.title')}}</a><span> /</span>
+            @isset($subCategory)
+                <a href="{{route('ideas.index',$subCategory->pathToCategory())}}">{{$subCategory->title}}</a><span> / </span>
+            @endisset
+            <a href="{{route('ideas.index',$activeCategory->pathToCategory())}}">{{$activeCategory->title}}</a>
 
             @can('create', App\Category::class)<a class="float-right" href="{{route('category.create')}}">{{__('category.create')}}</a>@endcan
         </div>
