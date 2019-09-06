@@ -33,6 +33,9 @@ class Place extends JsonResource
                 'edit_url' => $this->editUrl,
                 'description' => $this->description,
                 'intro' => $this->intro,
+                'coordinates' =>$this->id ? $this->coordinates : [
+                    'coordinates' => [null,null]
+                ],
 
                 'rating' => $this->rating ?? 0,
             ],
