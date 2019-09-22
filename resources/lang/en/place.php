@@ -19,6 +19,7 @@ return[
     'no_items_found' => 'Places not found',
 
     'places_close_to' => 'Places close to',
+    'close_to' => 'Close to',
     'places_close' => 'Places near',
     'see_places' => 'See places',
     'see_all_places' => 'See all place',

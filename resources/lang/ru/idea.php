@@ -22,7 +22,7 @@ return[
     'random_idea' => 'Случайная идея',
     'other_idea' => 'Другая идея',
 
-    'type_place_name' => 'Введите название места',
+    'type_idea_title' => 'Введите название идеи',
 
     'see_actions' => 'Смотреть действия',
     'see_all_actions' => 'Смотреть все действия',

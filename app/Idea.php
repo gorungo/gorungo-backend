@@ -287,9 +287,14 @@ class Idea extends Model
             ];
 
             $this->update($storeData);
-            $this->localisedIdeaDescription()->update($descriptionStoreData);
-            $this->updateRelationships($request);
 
+            if($this->localisedIdeaDescription){
+                $this->localisedIdeaDescription()->update($descriptionStoreData);
+            }else{
+                $this->localisedIdeaDescription()->create($descriptionStoreData);
+            }
+
+            $this->updateRelationships($request);
 
             return $this;
 
@@ -453,6 +458,12 @@ class Idea extends Model
             'tagsSeasonsGroup' => [],
             'tagsDayTimeGroup' => [],
         ];
+    }
+
+    public static function getByTitle(String $title){
+        return self::whereHas('ideaDescriptions', function ($query) use ($title) {
+            $query->where('title', 'like' , '%' . $title . '%');
+        })->take(20)->get();
     }
 
 

@@ -41,5 +41,9 @@ return [
 
     'and_more_filters' => '',
 
+    'select_season' => 'Select season',
+    'select_time' => 'Select time',
+    'apply_filters' => 'Apply'
+
 
 ];

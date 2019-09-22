@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
 
 
+
         /*
          * -------------------------------------------------------------------------
          * ACTIONS PHOTOS ROUTING
@@ -212,6 +213,15 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/places/getByTitle', "API\PlaceController@getByTitle")
         ->name('api.place.get_by_title');
 
+    //Get listing of places by title
+    Route::get('/ideas/getByTitle', "API\IdeaController@getByTitle")
+        ->name('api.place.get_by_title');
+
     Route::get('/ideas/randomIdea', 'API\IdeaController@randomIdea')->name('api.ideas.random_idea');
+
+    // filters
+
+    Route::get('/filters/{filter}/activeItems', "API\FilterController@activeItems")
+        ->name('api.filters.active_items');
 
 });

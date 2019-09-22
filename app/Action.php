@@ -280,7 +280,6 @@ class Action extends Model
 
     public function updateAndSync(StoreAction $request)
     {
-
         $updateResult = DB::transaction(function () use ($request) {
 
             $localeId = LocaleMiddleware::getLocaleId();
@@ -299,9 +298,13 @@ class Action extends Model
             ];
 
             $this->update($storeData);
-            $this->localisedActionDescription()->update($descriptionStoreData);
-            $this->updateRelationships($request);
+            if($this->localisedActionDescription){
+                $this->localisedActionDescription()->update($descriptionStoreData);
+            }else{
+                $this->localisedActionDescription()->create($descriptionStoreData);
+            }
 
+            $this->updateRelationships($request);
 
             return $this;
 

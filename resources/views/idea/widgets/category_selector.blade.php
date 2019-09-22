@@ -6,9 +6,9 @@
 
             <a href="{{route('ideas.index')}}">{{__('idea.title')}}</a><span> /</span>
             @isset($subCategory)
-                <a href="{{route('ideas.index',$subCategory->pathToCategory())}}">{{$subCategory->title}}</a><span> / </span>
+                <a href="{{route('ideas.index',$subCategory->pathToCategory()).MainFilter::queryString()}}">{{$subCategory->title}}</a><span> / </span>
             @endisset
-            <a href="{{route('ideas.index',$activeCategory->pathToCategory())}}">{{$activeCategory->title}}</a>
+            <a href="{{route('ideas.index',$activeCategory->pathToCategory()).MainFilter::queryString()}}">{{$activeCategory->title}}</a>
 
             @can('create', App\Category::class)<a class="float-right" href="{{route('category.create')}}">{{__('category.create')}}</a>@endcan
         </div>
@@ -18,7 +18,7 @@
         @foreach($categories as $category)
             @if($category->title !== null)
                 <div class="col-md-3">
-                    <a href="{{route('ideas.index', [$category->pathToCategory()])}}">{{$category->title}}</a>
+                    <a href="{{route('ideas.index', [$category->pathToCategory()]).MainFilter::queryString()}}">{{$category->title}}</a>
                     @can('update', $category)
                     <a href="{{route('category.edit', $category->slug)}}" class="float-right" style="color: grey;">{{__('category.edit_short')}}</a>
                     @endcan

@@ -38,15 +38,15 @@ class Action extends JsonResource
             'attributes' => [
                 'url' => $this->url,
                 'edit_url' => $this->editUrl,
-                
-                'slug' => $this->slug ? $this->slug : '',
-                'active' => $this->active ? $this->active : 0,
+
+                'slug' => $this->id ? $this->slug : '',
+                'active' => $this->id ? $this->active : 0,
                 'main_category_id' => $this->id ? $this->main_category_id : null,
 
                 // localized information
-                'title' => $this->title ? $this->title : '',
-                'intro' => $this->intro ? $this->intro : '',
-                'description' => $this->description ? $this->description : '',
+                'title' => $this->id ? $this->title : '',
+                'intro' => $this->id ? $this->intro : '',
+                'description' => $this->id ? $this->description : '',
             ],
 
             'relationships' => [

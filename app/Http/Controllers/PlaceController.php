@@ -8,7 +8,7 @@ use App\PlaceDescription;
 
 use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Http\Request;
-use App\Http\Requests\Place\StorePlace;
+use App\Http\Requests\Place\GetFilterItems;
 
 use App\Http\Resources\PlaceNoRelationships;
 
@@ -65,11 +65,11 @@ class PlaceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StorePlace $request
+     * @param  GetFilterItems $request
      * @param  Place $place
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePlace $request, Place $place)
+    public function store(GetFilterItems $request, Place $place)
     {
         $place = $place->createAndSync($request);
 
@@ -117,11 +117,11 @@ class PlaceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  StorePlace $request
+     * @param  GetFilterItems $request
      * @param  Place $place
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePlace $request, Place $place)
+    public function update(GetFilterItems $request, Place $place)
     {
 
         $updateResult = $place->updateAndSync($request);

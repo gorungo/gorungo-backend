@@ -1,1 +1,1 @@
-<main-place-filter :prop-active-place="{{json_encode($activePlaceResource)}}"></main-place-filter>
+<main-place-filter prop-section="places" :prop-active-place="{{json_encode($activePlaceResource ?? null)}}"></main-place-filter>

@@ -33,7 +33,7 @@ export default {
                     })
 
 
-            }, 2000),
+            }, 500),
 
         placesByTitleRequestUrl: function(){
             return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/getByTitle' ;

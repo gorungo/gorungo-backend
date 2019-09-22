@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-use App\Http\Requests\Place\StorePlace;
+use App\Http\Requests\Place\GetFilterItems;
 use App\Http\Middleware\LocaleMiddleware;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
@@ -192,7 +192,7 @@ class Place extends Model
         return '/images/bg/mountains_blue.svg';
     }
 
-    public function createAndSync( StorePlace $request ){
+    public function createAndSync( GetFilterItems $request ){
 
         $createResult = DB::transaction(function () use ($request) {
 
@@ -225,7 +225,7 @@ class Place extends Model
         return $createResult;
     }
 
-    public function updateAndSync( StorePlace $request ) {
+    public function updateAndSync( GetFilterItems $request ) {
 
         $updateResult = DB::transaction( function () use ( $request ) {
 
@@ -246,7 +246,12 @@ class Place extends Model
             ];
 
             $this->update( $storeData );
-            $this->localisedPlaceDescription()->update($descriptionStoreData);
+            if($this->localisedPlaceDescription){
+                $this->localisedPlaceDescription()->update($descriptionStoreData);
+            }else{
+                $this->localisedPlaceDescription()->create($descriptionStoreData);
+            }
+
             $this->updateRelationships( $request );
 
             return $this;
@@ -258,7 +263,7 @@ class Place extends Model
 
     }
 
-    private function updateRelationships( StorePlace $request ) : void
+    private function updateRelationships( GetFilterItems $request ) : void
     {
         $this->saveAddress( $request );
     }

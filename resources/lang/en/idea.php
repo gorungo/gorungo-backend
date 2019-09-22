@@ -16,6 +16,8 @@ return[
     'random_idea' => 'Random idea',
     'other_idea' => 'Other idea',
 
+    'type_idea_title' => 'Type idea title',
+
     'see_actions' => 'See actions',
     'see_all_actions' => 'See all actions',
 ];

@@ -8,13 +8,13 @@
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item @if(Route::currentRouteName() == 'ideas.index') active @endif">
-                        <a class="nav-link" href="{{route('ideas.index')}}">{{__('idea.title')}}</a>
+                        <a class="nav-link" href="{{route('ideas.index') . MainFilter::queryString()}}">{{__('idea.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'actions.index') active @endif">
-                        <a class="nav-link" href="{{route('actions.index')}}">{{__('action.title')}}</a>
+                        <a class="nav-link" href="{{route('actions.index') . MainFilter::queryString()}}">{{__('action.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'places.index') active @endif">
-                        <a class="nav-link" href="{{route('places.index')}}">{{__('place.title')}}</a>
+                        <a class="nav-link" href="{{route('places.index') . MainFilter::queryString()}}">{{__('place.title')}}</a>
                     </li>
                 </ul>
 

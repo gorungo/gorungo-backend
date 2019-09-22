@@ -51,17 +51,6 @@ class ActionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Action $action
-     * @return ActionResource
-     */
-    public function show(Action $action)
-    {
-        return new ActionResource($action);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  Action $action
@@ -82,6 +71,17 @@ class ActionController extends Controller
     public function update(StoreAction $request, Action $action)
     {
         return new ActionResource($action->updateAndSync($request));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Action $action
+     * @return ActionResource
+     */
+    public function show(Action $action)
+    {
+        return new ActionResource($action);
     }
 
     /**

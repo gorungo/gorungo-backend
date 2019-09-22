@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PlaceNoRelationships;
 use App\Idea;
 use App\Page;
 use App\Action;
 use App\Category;
 use App\Http\Requests\Photo\UploadPhoto;
+use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Requests\Action\StoreAction;
 use App\Http\Middleware\LocaleMiddleware;
@@ -53,11 +55,16 @@ class ActionController extends Controller
         $categories = Category::getCategoriesForSelector($activeCategory);
         $ideas = Idea::itemsList($request, $activeCategory);
         $backgroundImage = Action::backgroundImage($activeCategory);
+        $activePlace = Place::activePlace();
+        $activePlaceResource = $activePlace ? new PlaceNoRelationships($activePlace) : null;
 
         // get list of actions
         $actions = Action::itemsList($request, $activeCategory);
 
-        return view('action.index', compact(['page', 'actions', 'categories', 'activeCategory', 'subCategory', 'backgroundImage']));
+        return view('action.index', compact([
+            'page', 'actions', 'categories', 'activeCategory', 'subCategory', 'backgroundImage',
+            'activePlace', 'activePlaceResource'
+        ]));
     }
 
     /**

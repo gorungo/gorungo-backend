@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PlaceNoRelationships;
 use App\Idea;
 use App\Category;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Page;
+use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Middleware\LocaleMiddleware;
@@ -49,12 +51,21 @@ class IdeaController extends Controller
             $subCategory = $activeCategory->categoryParent;
         }
 
+        $activePlace = Place::activePlace();
+        $activePlaceResource = $activePlace ? new PlaceNoRelationships($activePlace) : null;
+        $sectionTitle = __('place.title');
+
+        if($activePlace){
+            $sectionTitle =__('place.places_close_to') .' '. $activePlace->title;
+        }
+
         $backgroundImage = Idea::backgroundImage($activeCategory);
         $categories = Category::getCategoriesForSelector($activeCategory);
         $ideas = Idea::itemsList($request, $activeCategory);
 
         return view('idea.index', compact([
-            'page', 'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory', 'backgroundImage'
+            'page', 'ideas', 'activeCategory', 'categories', 'categoriesUrl', 'subCategory', 'backgroundImage',
+            'sectionTitle', 'activePlace', 'activePlaceResource'
         ]));
     }
 

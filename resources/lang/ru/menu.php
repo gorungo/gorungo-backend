@@ -25,6 +25,7 @@ return [
     'daytime_evening' => 'Вечером',
     'daytime_night' => 'Ночью',
 
+
     // distance filter
     'distance_' => 'Любое расстояние',
     'distance_at' => 'Дома',
@@ -32,6 +33,10 @@ return [
     'distance_far' => 'Далеко от дома',
 
     'and_more_filters' => '',
+
+    'select_season' => 'Выберите сезон',
+    'select_time' => 'Выберите время',
+    'apply_filters' => 'Применить фильтр'
 
 
 ];

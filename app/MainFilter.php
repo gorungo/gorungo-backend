@@ -9,19 +9,34 @@ use Illuminate\Support\Facades\Log;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Http\Resources\Filter;
+
 class MainFilter extends Model
 {
 
     public static function hasFiler($filter, $value)
     {
         if (request()->has($filter)) {
-            foreach (explode(',', request()->input($filter)) as $activeFilter) {
-
+            foreach (explode('-', urldecode(request()->input($filter))) as $activeFilter) {
                 if ($activeFilter == $value) return $value;
-
             };
         }
         return false;
+    }
+
+    public static function queryString()
+    {
+        $queryString = '';
+
+        foreach(request()->all() as $key=>$val){
+            if($queryString === ''){
+                $queryString = '?' . $key . '=' . $val;
+            }else{
+                $queryString = $queryString . '&' . $key . '=' . $val;
+            }
+        }
+
+        return $queryString;
     }
 
     public static function getFilterTitle($filter)
@@ -31,7 +46,7 @@ class MainFilter extends Model
         $filtersInTitleCount = 0;
 
         if (request()->has($filter) && request()->input($filter) != null) {
-            foreach (explode(',', request()->input($filter)) as $value) {
+            foreach (explode(',', urldecode(request()->input($filter))) as $value) {
 
                 if (self::isRealFilter($filter, $value)) {
                     $title = $title . ($title == '' ? '' : ', ') .
@@ -110,5 +125,37 @@ class MainFilter extends Model
         }
 
         return $distance;
+    }
+
+    /**
+     * Filters collection to send to frontend
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function seasonFiltersArray()
+    {
+        return Filter::collection([
+            'season_' => __('menu.season_'),
+            'season_spring' => __('menu.season_spring'),
+            'season_summer' => __('menu.season_summer'),
+            'season_autumn' => __('menu.season_autumn'),
+            'season_winter' => __('menu.season_winter'),
+        ]);
+
+    }
+
+    /**
+     * Filters collection to send to frontend
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function timeFiltersArray()
+    {
+        return Filter::collection([
+            'daytime_' => __('menu.daytime_'),
+            'daytime_morning' => __('menu.daytime_morning'),
+            'daytime_day' => __('menu.daytime_day'),
+            'daytime_evening' => __('menu.daytime_evening'),
+            'daytime_night' => __('menu.daytime_night'),
+        ]);
+
     }
 }

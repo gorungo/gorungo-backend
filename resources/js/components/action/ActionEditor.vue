@@ -27,8 +27,6 @@
                 </div>
             </div>
         </div>
-
-
         <div v-if="dataLoaded" class="mt-4">
             <div class="container">
                 <div class="tab-content">
@@ -51,7 +49,7 @@
                                                 <div class="col-sm-4 col-6">
                                                     <input type="radio" class="radio" name="active" id="active_1"
                                                            value="1"  v-model="item.attributes.active"/>
-                                                    <label dsk="active_1" for="active_1"> Опубликовать</label>
+                                                    <label dusk="active_1" for="active_1"> Опубликовать</label>
                                                 </div>
                                             </div>
 
@@ -61,6 +59,11 @@
                             </div>
 
                             <hr/>
+                            <idea-selector
+                                    v-if="item !== null"
+                                    :locale = "locale"
+                                    v-model = "item.relationships.idea"
+                            ></idea-selector>
                             <place-selector
                                     v-if="item !== null"
                                     :locale = "locale"
@@ -121,6 +124,7 @@
     import PhotoUploader from '../photo/PhotoUploader.vue';
     import DateSelector from '../DateSelector.vue';
     import PlaceSelector from '../place/PlaceSelector.vue';
+    import IdeaSelector from '../idea/IdeaSelector.vue';
     import LocaleSelector from '../LocaleSelector.vue';
 
 
@@ -132,7 +136,7 @@
         mixins: [ Editable ],
 
         components: {
-            PhotoUploader, DateSelector, PlaceSelector, LocaleSelector
+            PhotoUploader, IdeaSelector, DateSelector, PlaceSelector, LocaleSelector
         },
 
         data(){

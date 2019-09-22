@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Idea;
 use App\Http\Resources\Idea as IdeaResource;
+use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Requests\Photo\UploadPhoto;
@@ -133,5 +134,9 @@ class IdeaController extends Controller
     public function randomIdea()
     {
         return new IdeaResource(Idea::randomIdea());
+    }
+
+    public function getByTitle(Request $request){
+        return IdeaResource::collection(Idea::getByTitle($request->title));
     }
 }

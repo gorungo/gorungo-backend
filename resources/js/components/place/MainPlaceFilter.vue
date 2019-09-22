@@ -21,10 +21,13 @@
                     <div class="modal-body">
                         <div class="">
                             <div v-if="searchTitle.length === 0" id="mainPlaceFilterModalDistanceSelector" style="justify-content: space-evenly;" class="d-flex distance-selector">
-                                <span @click="activeDistanceFilter = 'popular'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'popular'}">{{Lang.get('place.distance.popular')}}</span>
+                                <span v-if="propSection === 'places'" @click="activeDistanceFilter = 'popular'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'popular'}">{{Lang.get('place.distance.popular')}}</span>
                                 <span @click="activeDistanceFilter = null" class="distance-selector__item" :class="{active: activeDistanceFilter === null}">{{Lang.get('place.distance.any')}}</span>
-                                <span @click="activeDistanceFilter = 'close'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.distance.close')}}</span>
+                                <span v-if="activePlace == null" @click="activeDistancseFilter = 'close'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.distance.close')}}</span>
+                                <span v-if="activePlace != null" @click="activeDistancseFilter = 'close'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.close_to')}}</span>
                             </div>
+                            <hr>
+                            <p v-if="activePlace != null" class="active-place">{{activePlace.attributes.title}} <span class="btn btn-link float-right">{{Lang.get('editor.select')}}</span></p>
                             <ul class="list-group list-group-flush" v-if="foundPlaces.length && !loading">
                                 <li class="list-group-item" v-for="(place ,index) in foundPlaces" v-on:click="setPlace(index)">
                                     {{place.attributes.title}}
@@ -47,7 +50,22 @@
 
     export default {
         name: "MainPlaceFilter",
-        props: ['propActivePlace'],
+        props: {
+            // active place resource
+            propActivePlace: {
+                type: Object,
+                default: function (){
+                    return null;
+                }
+
+            },
+            // selected section
+            propSection: {
+                type: String,
+                default: 'places'
+
+            },
+        },
         mixins: [PlaceSelector],
 
         data(){
@@ -145,5 +163,10 @@
 </script>
 
 <style scoped>
-
+    .distance-selector__item{
+        cursor: pointer;
+    }
+    .active-place{
+        line-height: 2.1rem;
+    }
 </style>
