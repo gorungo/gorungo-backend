@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Idea;
 use App\Http\Resources\Idea as IdeaResource;
+use App\Http\Resources\ActionPrice as ActionPriceResource;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Place as PlaceResource;
 use App\Http\Resources\Date as DateResource;
@@ -26,7 +27,7 @@ class Action extends JsonResource
             $idea = Idea::find(request()->input('idea_id'));
         }
         if(!$idea){
-            $idea = $this->actionIdea;
+            $idea = $this->whenLoaded('actionIdea');
         }
 
 
@@ -39,21 +40,22 @@ class Action extends JsonResource
                 'url' => $this->url,
                 'edit_url' => $this->editUrl,
 
-                'slug' => $this->id ? $this->slug : '',
-                'active' => $this->id ? $this->active : 0,
-                'main_category_id' => $this->id ? $this->main_category_id : null,
+                'slug' => $this->slug,
+                'active' => $this->active,
+                'main_category_id' => $this->main_category_id ,
 
                 // localized information
-                'title' => $this->id ? $this->title : '',
-                'intro' => $this->id ? $this->intro : '',
-                'description' => $this->id ? $this->description : '',
+                'title' => $this->title,
+                'intro' => $this->intro,
+                'description' => $this->description,
             ],
 
             'relationships' => [
                 'idea' => new IdeaResource($idea),
                 'author' => new UserResource($this->author),
-                'places' => PlaceResource::collection($this->actionPlaces),
-                'dates' => DateResource::collection($this->actionDates)
+                'price' => new ActionPriceResource($this->whenLoaded('actionPrice')),
+                'places' => PlaceResource::collection($this->whenLoaded('actionPlaces')),
+                'dates' => DateResource::collection($this->whenLoaded('actionDates'))
             ],
         ];
     }

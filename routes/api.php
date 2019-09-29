@@ -203,7 +203,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     });
 
-    /*
+        /*
          * --------------------------------------------------------------------------
          * PLACES
          * --------------------------------------------------------------------------
@@ -224,4 +224,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/filters/{filter}/activeItems', "API\FilterController@activeItems")
         ->name('api.filters.active_items');
 
+    // currencies
+    Route::get('/currencies/active', "API\CurrencyController@active")
+        ->name('api.currencies.active');
 });

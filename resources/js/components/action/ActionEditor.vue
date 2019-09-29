@@ -88,7 +88,23 @@
                                 <label for="frm_description">Полное описание<span title="Обязательное поле" class="required-star">*</span></label>
                                 <textarea class="form-control" placeholder="" name="description" id="frm_description" rows="6" v-model="item.attributes.description"></textarea>
                             </div>
-
+                            <div class="row" v-if="currencies.length">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="frm_price">Стоимость<span title="Обязательное поле" class="required-star">*</span></label>
+                                        <input id="frm_price" name="price" class="form-control" placeholder="" type="number" maxlength="100" v-model="item.relationships.price.attributes.price" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="frm_currency">Валюта<span title="Обязательное поле" class="required-star">*</span></label>
+                                        <select id="frm_currency" class="form-control" v-model="item.relationships.price.relationships.currency">
+                                            <option disabled value="">Выберите один из вариантов</option>
+                                            <option :value="currency" v-for="(currency, index) in currencies">{{currency.attributes.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div>
                                 <span class="text-secondary">(<span class="required-star">*</span>) отмечены необходимые поля</span>
                             </div>
@@ -139,15 +155,18 @@
             PhotoUploader, IdeaSelector, DateSelector, PlaceSelector, LocaleSelector
         },
 
+        mounted(){
+            this.fetchCurrencies();
+        },
+
         data(){
             return{
                 type: 'actions',
-
+                currencies: [],
             }
         },
 
         computed: {
-
 
             actionTitle(){
                 if(this.dataLoaded){
@@ -173,6 +192,26 @@
                     idea_id: this.ideaId,
                 }
             },
+
+            fetchCurrencies(){
+                axios.get(
+                    this.fetchCurrenciesRequestUrl(), { params: {
+                            locale: this.locale,
+                        }}
+                ).then((resp) => {
+                    if (resp.status === 200 || resp.status === 201){
+                        this.currencies = resp.data;
+                    }
+                }).catch(
+
+                ).finally(
+
+                );
+            },
+
+            fetchCurrenciesRequestUrl(){
+                return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
+            }
 
         }
     }

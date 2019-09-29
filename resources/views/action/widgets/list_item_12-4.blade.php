@@ -7,6 +7,9 @@
                 <div class="card-body">
                     <h5 class="card-title">{{$item->title}}</h5>
                     <p class="card-text">{{$item->intro}} {{$item->id}}</p>
+                    @isset($item->actionPrice)
+                        {{$item->actionPrice->price}} {{$item->actionPrice->currency->shortTitle}}
+                    @endisset
                 </div>
             </a>
             <div class="list-item-dropdown">

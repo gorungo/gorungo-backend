@@ -30,7 +30,16 @@ class Action extends Model
 
     protected $fillable = ['author_id', 'idea_id', 'active', 'slug'];
 
-    protected $with = ['localisedActionDescription', 'actionPlaces'];
+    protected $with = ['localisedActionDescription', 'actionPlaces', 'actionPrice'];
+
+    protected $attributes = [
+        'title' => '',
+        'intro' => '',
+        'description' => '',
+        'active' => 0,
+        'slug' => '',
+        'main_category_id' => null,
+    ];
 
 
     public function author()
@@ -65,6 +74,15 @@ class Action extends Model
     public function actionPlaces()
     {
         return $this->belongsToMany('App\Place', 'action_place', 'action_id', 'place_id');
+    }
+
+    public function actionPrice()
+    {
+        return $this->hasOne('App\ActionPrice')
+            ->withDefault([
+                'price' => 0,
+                'currency_id' => 3
+            ]);
     }
 
     public function actionDescriptions()
@@ -142,7 +160,7 @@ class Action extends Model
 
     public function getEditUrlAttribute()
     {
-        return route('actions.edit', [$this->id]);
+        return route('actions.edit', [$this->slug]);
     }
 
     /**
@@ -305,7 +323,6 @@ class Action extends Model
             }
 
             $this->updateRelationships($request);
-
             return $this;
 
         });
@@ -316,9 +333,9 @@ class Action extends Model
 
     private function updateRelationships(StoreAction $request): void
     {
-        //$this->saveTags( $request );
         $this->savePlaces($request);
         $this->saveDates($request);
+        $this->savePrice($request);
     }
 
     private function savePlaces(StoreAction $request): void
@@ -338,8 +355,22 @@ class Action extends Model
             }
 
         }
+    }
 
-
+    private function savePrice(StoreAction $request): void
+    {
+        $actionPrice = $request->input('relationships.price');
+        if($actionPrice['id'] !== null){
+            $this->actionPrice()->whereId($actionPrice['id'])->update([
+                'price' => $actionPrice['attributes']['price'],
+                'currency_id' => $actionPrice['relationships']['currency']['id'],
+            ]);
+        }else{
+            $this->actionPrice()->create([
+                'price' => $actionPrice['attributes']['price'],
+                'currency_id' => $actionPrice['relationships']['currency']['id'],
+            ]);
+        }
     }
 
     private function saveDates(StoreAction $request): void

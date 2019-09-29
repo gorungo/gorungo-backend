@@ -35,7 +35,7 @@ class ActionController extends Controller
      */
     public function create(Action $action)
     {
-        return new ActionResource($action);
+        return new ActionResource($action->loadMissing(['actionPrice', 'actionIdea', 'actionPlaces', 'actionDates']));
     }
 
     /**
@@ -58,7 +58,7 @@ class ActionController extends Controller
      */
     public function edit(Action $action)
     {
-        return new ActionResource($action);
+        return new ActionResource($action->loadMissing(['actionPrice', 'actionIdea', 'actionPlaces', 'actionDates']));
     }
 
     /**
@@ -81,7 +81,7 @@ class ActionController extends Controller
      */
     public function show(Action $action)
     {
-        return new ActionResource($action);
+        return new ActionResource($action->loadMissing(['actionPrice', 'actionIdea', 'actionPlaces', 'actionDates']));
     }
 
     /**

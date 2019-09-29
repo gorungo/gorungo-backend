@@ -8,7 +8,7 @@ use App\PlaceDescription;
 
 use App\Http\Requests\Photo\UploadPhoto;
 use Illuminate\Http\Request;
-use App\Http\Requests\Place\GetFilterItems;
+use App\Http\Requests\Filter\GetFilterItems;
 
 use App\Http\Resources\PlaceNoRelationships;
 

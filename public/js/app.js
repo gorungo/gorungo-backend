@@ -2723,6 +2723,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // MIXINGS
 
 
@@ -2741,9 +2757,13 @@ __webpack_require__.r(__webpack_exports__);
     PlaceSelector: _place_PlaceSelector_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     LocaleSelector: _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
+  mounted: function mounted() {
+    this.fetchCurrencies();
+  },
   data: function data() {
     return {
-      type: 'actions'
+      type: 'actions',
+      currencies: []
     };
   },
   computed: {
@@ -2766,6 +2786,22 @@ __webpack_require__.r(__webpack_exports__);
         locale: this.locale,
         idea_id: this.ideaId
       };
+    },
+    fetchCurrencies: function fetchCurrencies() {
+      var _this = this;
+
+      axios.get(this.fetchCurrenciesRequestUrl(), {
+        params: {
+          locale: this.locale
+        }
+      }).then(function (resp) {
+        if (resp.status === 200 || resp.status === 201) {
+          _this.currencies = resp.data;
+        }
+      })["catch"]()["finally"]();
+    },
+    fetchCurrenciesRequestUrl: function fetchCurrenciesRequestUrl() {
+      return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
     }
   }
 });
@@ -43575,7 +43611,127 @@ var render = function() {
                         })
                       ]),
                       _vm._v(" "),
-                      _vm._m(4),
+                      _vm.currencies.length
+                        ? _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col" }, [
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(4),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.item.relationships.price.attributes
+                                          .price,
+                                      expression:
+                                        "item.relationships.price.attributes.price"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    id: "frm_price",
+                                    name: "price",
+                                    placeholder: "",
+                                    type: "number",
+                                    maxlength: "100"
+                                  },
+                                  domProps: {
+                                    value:
+                                      _vm.item.relationships.price.attributes
+                                        .price
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.item.relationships.price.attributes,
+                                        "price",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col" }, [
+                              _c("div", { staticClass: "form-group" }, [
+                                _vm._m(5),
+                                _vm._v(" "),
+                                _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value:
+                                          _vm.item.relationships.price
+                                            .relationships.currency,
+                                        expression:
+                                          "item.relationships.price.relationships.currency"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { id: "frm_currency" },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.item.relationships.price
+                                            .relationships,
+                                          "currency",
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "option",
+                                      { attrs: { disabled: "", value: "" } },
+                                      [_vm._v("Выберите один из вариантов")]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.currencies, function(
+                                      currency,
+                                      index
+                                    ) {
+                                      return _c(
+                                        "option",
+                                        { domProps: { value: currency } },
+                                        [
+                                          _vm._v(
+                                            _vm._s(currency.attributes.title)
+                                          )
+                                        ]
+                                      )
+                                    })
+                                  ],
+                                  2
+                                )
+                              ])
+                            ])
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm._m(6),
                       _vm._v(" "),
                       _c("hr"),
                       _vm._v(" "),
@@ -43715,6 +43871,32 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "frm_description" } }, [
       _vm._v("Полное описание"),
+      _c(
+        "span",
+        { staticClass: "required-star", attrs: { title: "Обязательное поле" } },
+        [_vm._v("*")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "frm_price" } }, [
+      _vm._v("Стоимость"),
+      _c(
+        "span",
+        { staticClass: "required-star", attrs: { title: "Обязательное поле" } },
+        [_vm._v("*")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "frm_currency" } }, [
+      _vm._v("Валюта"),
       _c(
         "span",
         { staticClass: "required-star", attrs: { title: "Обязательное поле" } },

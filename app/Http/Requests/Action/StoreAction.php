@@ -31,6 +31,10 @@ class StoreAction extends FormRequest
             'attributes.intro' => 'required|min:3|max:199',
             'attributes.description' => 'required|min:5',
             'attributes.active' => 'required|integer',
+
+            'relationships.price.attributes.price' => 'required|integer|min:0',
+            'relationships.price.relationships.currency.id' => 'required|integer|exists:currencies,id',
+
         ];
     }
     public function messages()

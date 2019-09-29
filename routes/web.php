@@ -94,13 +94,13 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
     // routes with city
     
     // place show
-    Route::get('places/{place}', 'PlaceController@show')->middleware('RequestStringToUrl')
+    Route::get('places/{place}', 'PlaceController@show')
         ->name('places.show');
 
 
     Route::group(['prefix' => App\Http\Middleware\LocationMiddleware::getLocation()], function () {
 
-        Route::get('/', 'PageController@index')->middleware('request.string.to.url')->name('index');
+        Route::get('/', 'PageController@index')->name('index');
 
         //Route::get('/posts', 'PostController@getPosts')->name('posts');
         //Route::get('/home', 'HomeController@index')->name('home');
@@ -108,42 +108,35 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         // Actions show route
         Route::get('ideas/{categories}/-{idea}/actions/{action}', 'IdeaActionController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$', 'action' => '^[a-zA-Z0-9-_\/]+$'])
-            ->middleware('request.string.to.url')
             ->name('actions.show');
 
         // idea index, show routes -----------------------------------------------------------------------------------------
         Route::get('ideas/{categories?}/-{idea}/actions', 'IdeaActionController@index')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$'])
-            ->middleware('request.string.to.url')
             ->name('ideas.actions_index');
         Route::get('ideas/{categories}/-{idea}', 'IdeaController@show')
             ->where(['categories' => '^[a-zA-Z0-9-_\/]+$', 'idea' => '^[a-zA-Z0-9-_\/]+$'])
             ->name('ideas.show');
         Route::get('ideas/{categories?}', 'IdeaController@index')
             ->where('categories', '^[a-zA-Z0-9-_\/]+$')
-            ->middleware('request.string.to.url')
             ->name('ideas.index');
 
         // place ------------------------------------------------------------------------------------------------------
 
         Route::get('/places/{placeType?}', 'PlaceController@index')
-            ->middleware('request.string.to.url')
             ->name('places.index');
 
         // blog -----------------------------------------------
 
         Route::get('/blog', 'PostController@index')
-            ->middleware('request.string.to.url')
             ->name('posts.index');
 
         Route::get('/blog/{post}', 'PostController@show')
-            ->middleware('request.string.to.url')
             ->name('posts.show');
 
         // actions  -----------------------------------------------------------------------------------------
         Route::get('actions/{categories?}', 'ActionController@index')
             ->where('categories', '^[a-zA-Z0-9-_\/]+$')
-            ->middleware('request.string.to.url')
             ->name('actions.index');
 
         Route::group(['prefix' => 'admin'], function () {
