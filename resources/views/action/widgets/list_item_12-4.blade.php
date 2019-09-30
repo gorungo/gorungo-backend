@@ -8,7 +8,9 @@
                     <h5 class="card-title">{{$item->title}}</h5>
                     <p class="card-text">{{$item->intro}} {{$item->id}}</p>
                     @isset($item->actionPrice)
-                        {{$item->actionPrice->price}} {{$item->actionPrice->currency->shortTitle}}
+                        @if($item->actionPrice->price !== 0)
+                            <span class="price">{{$item->actionPrice->price}} <span class="price-currency">{{$item->actionPrice->currency->shortTitle}}</span></span>
+                        @endif
                     @endisset
                 </div>
             </a>
