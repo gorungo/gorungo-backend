@@ -17,7 +17,7 @@ class AddCurrenciesSeeds extends Migration
     public function up()
     {
         if(!Currency::all()->count()){
-            Artisan::call('db:seed', array('--class' => 'CurrenciesTableSeeder'));
+            //Artisan::call('db:seed', array('--class' => 'CurrenciesTableSeeder'));
             //Artisan::call('db:seed', array('--class' => 'CurrencyDescriptionsTableSeeder'));
         }
     }
