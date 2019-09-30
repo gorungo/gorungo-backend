@@ -92,7 +92,7 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="frm_price">Стоимость<span title="Обязательное поле" class="required-star">*</span></label>
-                                        <input id="frm_price" name="price" class="form-control" placeholder="" type="number" maxlength="100" v-model="item.relationships.price.attributes.price" />
+                                        <input v-money="money" id="frm_price" name="price" class="form-control" placeholder="" type="text" maxlength="100" v-model.lazy="item.relationships.price.attributes.price" />
                                     </div>
                                 </div>
                                 <div class="col">
@@ -143,6 +143,8 @@
     import IdeaSelector from '../idea/IdeaSelector.vue';
     import LocaleSelector from '../LocaleSelector.vue';
 
+    import {Money} from 'v-money';
+
 
     export default {
 
@@ -152,7 +154,7 @@
         mixins: [ Editable ],
 
         components: {
-            PhotoUploader, IdeaSelector, DateSelector, PlaceSelector, LocaleSelector
+            PhotoUploader, IdeaSelector, DateSelector, PlaceSelector, LocaleSelector, Money
         },
 
         mounted(){
@@ -163,6 +165,15 @@
             return{
                 type: 'actions',
                 currencies: [],
+
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: '',
+                    suffix: '',
+                    precision: 2,
+                    masked: false
+                }
             }
         },
 

@@ -131,6 +131,18 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'relationships.idea.id' => [
+            'required' => 'Select idea.',
+        ],
+        'relationships.places' => [
+            'required' => 'Select place.',
+        ],
+        'relationships.dates' => [
+            'required' => 'Select date.',
+        ],
+        'relationships.dates.*.attributes.start_datetime_utc' => [
+            'date' => 'Select real date.',
+        ],
     ],
 
     /*

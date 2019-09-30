@@ -33,12 +33,8 @@ class Action extends Model
     protected $with = ['localisedActionDescription', 'actionPlaces', 'actionPrice'];
 
     protected $attributes = [
-        'title' => '',
-        'intro' => '',
-        'description' => '',
         'active' => 0,
         'slug' => '',
-        'main_category_id' => null,
     ];
 
 
@@ -362,12 +358,12 @@ class Action extends Model
         $actionPrice = $request->input('relationships.price');
         if($actionPrice['id'] !== null){
             $this->actionPrice()->whereId($actionPrice['id'])->update([
-                'price' => $actionPrice['attributes']['price'],
+                'price' => (int)$actionPrice['attributes']['price'],
                 'currency_id' => $actionPrice['relationships']['currency']['id'],
             ]);
         }else{
             $this->actionPrice()->create([
-                'price' => $actionPrice['attributes']['price'],
+                'price' => (int)$actionPrice['attributes']['price'],
                 'currency_id' => $actionPrice['relationships']['currency']['id'],
             ]);
         }

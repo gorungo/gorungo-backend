@@ -25,7 +25,7 @@
                         <p><img class="mr-2" alt="" src="/images/interface/icos/location_ico.svg" style="height: 16px;"/>{{$action->actionPlace()->title}}</p>
                     @endif
                     @if($action->actionPrice->price !== 0)
-                        <span class="price">{{$action->actionPrice->price}} <span class="price-currency">{{$action->actionPrice->currency->shortTitle}}</span></span>
+                        <span class="price">{{$action->actionPrice->FormattedPrice}} <span class="price-currency">{{$action->actionPrice->currency->shortTitle}}</span></span>
                     @endif
                     <p class="text-secondary item-intro">{!! $action->intro !!}</p>
                 </div>

@@ -107,6 +107,18 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'relationships.idea.id' => [
+            'required' => 'Выберите идею.',
+        ],
+        'relationships.places' => [
+            'required' => 'Выберите место.',
+        ],
+        'relationships.dates' => [
+            'required' => 'Выберите дату.',
+        ],
+        'relationships.dates.*.attributes.start_datetime_utc' => [
+            'date' => 'Укажите верную дату.',
+        ],
     ],
     /*
     |--------------------------------------------------------------------------
@@ -125,19 +137,14 @@ return [
     |
     */
     'attributes'           => [
-        'attributes.job_position_id' => '',
-        'attributes.company_id' => 'id компании',
 
-        'attributes.position_category' => 'категория должности',
-        'attributes.business_interaction' => 'бизнес-взаимодействие',
-        'attributes.job_complexity' => 'сложность выполняемой работы',
-        'attributes.job_independence' => 'самостоятельность в работе',
-        'attributes.subordinate_management' => 'управлние подчиненными',
-        'attributes.functions_description' => 'общее описание рабочих функций',
-        'attributes.area_of_responsibility' => 'сфера ответственности и полномочий',
-        'attributes.education' => 'образование',
-        'attributes.experience' => 'опыт',
-        'attributes.special_knowledge' => 'специальные знания',
-        'attributes.special_skills' => 'специальные навыки',
+        'attributes.title' => 'заголовок',
+        'attributes.intro' => 'короткое описание',
+        'attributes.description' => 'описание',
+
+        'relationships.places' => 'места',
+        'relationships.idea.id' => 'идея',
+
+        'relationships.price.attributes.price' => 'стоимость',
     ],
 ];

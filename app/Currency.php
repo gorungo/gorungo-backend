@@ -24,7 +24,7 @@ class Currency extends Model
             ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
-    Public function getTitleAttribute()
+    Public function getLongTitleAttribute()
     {
         if ($this->localisedCurrencyDescription != null) {
             return $this->localisedCurrencyDescription->title;
