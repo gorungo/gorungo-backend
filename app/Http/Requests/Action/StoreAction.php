@@ -37,7 +37,7 @@ class StoreAction extends FormRequest
             'attributes.description' => 'required|min:5',
             'attributes.active' => 'required|integer',
 
-            'relationships.price.attributes.price' => 'nullable|regex:/^(\d+(,\d{1,2})?)?$/',
+            'relationships.price.attributes.price' => 'nullable',
             'relationships.price.relationships.currency.id' => 'required|integer|exists:currencies,id',
 
         ];

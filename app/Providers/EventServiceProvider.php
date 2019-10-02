@@ -18,6 +18,27 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\SetDefaultUserRole',
             'App\Listeners\CreateDefaultUserProfile',
         ],
+
+        'App\Events\Action\ActionCreated' => [
+            'App\Listeners\Action\ClearActionCache',
+        ],
+        'App\Events\Action\ActionUpdated' => [
+            'App\Listeners\Action\ClearActionCache',
+        ],
+
+        'App\Events\Idea\IdeaCreated' => [
+            'App\Listeners\Idea\ClearIdeaCache',
+        ],
+        'App\Events\Idea\IdeaUpdated' => [
+            'App\Listeners\Idea\ClearIdeaCache',
+        ],
+
+        'App\Events\Place\PlaceCreated' => [
+            'App\Listeners\Place\ClearPlaceCache',
+        ],
+        'App\Events\Place\PlaceUpdated' => [
+            'App\Listeners\Place\ClearPlaceCache',
+        ],
     ];
 
     /**

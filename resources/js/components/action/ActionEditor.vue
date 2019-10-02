@@ -168,7 +168,7 @@
 
                 money: {
                     decimal: ',',
-                    thousands: '.',
+                    thousands: '',
                     prefix: '',
                     suffix: '',
                     precision: 2,

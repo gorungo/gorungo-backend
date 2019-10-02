@@ -191,7 +191,7 @@ class Idea extends Model
         }
 
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::remember('ideas_' . LocaleMiddleware::getLocale() . '_category_' . $activeCategoryId . '_' . request()->getQueryString(), 0, function () use ($activeCategory) {
+        return Cache::tags(['ideas'])->remember('ideas_' . LocaleMiddleware::getLocale() . '_category_' . $activeCategoryId . '_' . request()->getQueryString(), 0, function () use ($activeCategory) {
             return self::whereCategory($activeCategory)
                 ->joinDescription()
                 ->WhereTags(MainFilter::getFiltersTagsArray())

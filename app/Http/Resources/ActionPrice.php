@@ -25,7 +25,7 @@ class ActionPrice extends JsonResource
             'locale' => LocaleMiddleware::getLocale() ,
 
             'attributes' => [
-                'price' => $this->price,
+                'price' => $this->formattedPrice,
                 'currency_id' => $this->currency_id,
             ],
 

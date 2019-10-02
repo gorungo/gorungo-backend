@@ -2770,7 +2770,7 @@ __webpack_require__.r(__webpack_exports__);
       currencies: [],
       money: {
         decimal: ',',
-        thousands: '.',
+        thousands: '',
         prefix: '',
         suffix: '',
         precision: 2,
