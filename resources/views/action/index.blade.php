@@ -1,10 +1,10 @@
 @extends ('layouts.app')
 
 @isset($page)
-@section('title', htmlspecialchars(strip_tags($page->title)) or '')
-@section('description', htmlspecialchars(strip_tags($page->description)) or '')
-@section('keywords', htmlspecialchars(strip_tags($page->keywords)) or '')
-@endif
+@section('title', strip_tags($page->title))
+@section('description', strip_tags($page->description))
+@section('keywords', strip_tags($page->keywords))
+@endisset
 
 @section('header')
     @include('parts.header')

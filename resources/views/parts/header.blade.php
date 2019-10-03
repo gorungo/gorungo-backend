@@ -2,7 +2,7 @@
     <div class="row w-100">
         <div class="col-sm-4">
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ route('index') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
+            <a class="navbar-brand" href="{{ route('ideas.index') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
         </div>
         <div class="col-sm-4">
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">

@@ -1,7 +1,7 @@
 @isset($backgroundImage)
     <div class="header-image bg-dark" style="background-image: url({{$backgroundImage}});">
         @include('parts.section_title', [
-        'sectionTitle' => __('action.title'),
+        'sectionTitle' => __('action.description'),
         'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Action::class) ? route('actions.create'): null,
         'addItemTitle' => __('action.create'),
         'style' => 'dark'

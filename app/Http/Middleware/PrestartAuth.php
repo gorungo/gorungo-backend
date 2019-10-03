@@ -23,7 +23,7 @@ class PrestartAuth
         }
 
         if (!App::environment('local') && $request->getRequestUri() !=='/' && !session()->has('prestart')) {
-            return redirect()->route('index');
+            return redirect()->route('prestart');
         }
 
         return $next($request);

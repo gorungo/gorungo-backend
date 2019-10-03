@@ -19,6 +19,12 @@ Route::get('/prestart', function(){
 
 });
 
+
+Route::get('/', function(){
+    dd('');
+    return Redirect::to('/ideas' , 301);
+});
+
 /*
  * -------------------------------------------------------------------------
  */
@@ -26,6 +32,10 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     Auth::routes();
     Auth::routes(['verify' => true]);
+
+    Route::get('/', function(){
+        return Redirect::to('/ideas' , 301);
+    });
 
     //social login
 
@@ -100,7 +110,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
     Route::group(['prefix' => App\Http\Middleware\LocationMiddleware::getLocation()], function () {
 
-        Route::get('/', 'PageController@index')->name('index');
+        Route::get('/', 'PageController@index')->name('prestart');
 
         //Route::get('/posts', 'PostController@getPosts')->name('posts');
         //Route::get('/home', 'HomeController@index')->name('home');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Page;
 use App\Place;
 use App\PlaceType;
 use App\PlaceDescription;
@@ -33,8 +34,11 @@ class PlaceController extends Controller
      */
     public function index(Request $request, ?PlaceType $placeType)
     {
+        $page = new Page();
+        $page->title = config('app.name') . ' - ' . __('place.description') . '.';
+
         $activePlace = Place::activePlace();
-        $sectionTitle = __('place.title');
+        $sectionTitle = __('place.description');
 
         if($activePlace){
             $sectionTitle =__('place.places_close_to') .' '. $activePlace->title;
@@ -42,6 +46,7 @@ class PlaceController extends Controller
 
 
         return view('place.index', [
+            'page' => $page,
             'places' => Place::itemsList($request),
             'sectionTitle' => $sectionTitle,
             'activePlace' => $activePlace,

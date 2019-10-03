@@ -3,7 +3,7 @@
 return[
     'title' => 'Ideas',
     'item_title' => 'Idea',
-    'description' => 'Find your idea',
+    'description' => '1000 ideas how to spend free time',
 
     'create' => 'Add idea',
     'edit' => 'Edit idea',

@@ -1,8 +1,8 @@
 @extends ('layouts.app')
 
-@section('title', 'Тудуся знает, как хорошо провести время')
-@section('description', '')
-@section('keywords', '')
+@section('title', __('general.description'))
+@section('description', __('general.full_description'))
+@section('keywords', __('general.keywords'))
 
 @section('header')
     @include('parts.header')

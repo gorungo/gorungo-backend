@@ -11,9 +11,11 @@ return [
     */
 
     'name' => 'Gorungo',
-    'description' => 'The sea of ideas how to spend time',
-    'full_description' => 'Spend time ideas find service',
+    'description' => '1000 ideas how to spend free time',
+    'full_description' => 'How to spend free time or vacations service',
     'copyrights' => '© 2019 Copyright Gorungo',
+
+    'keywords' => 'how to spend time, vacations',
 
 
 

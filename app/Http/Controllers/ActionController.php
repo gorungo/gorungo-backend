@@ -33,7 +33,7 @@ class ActionController extends Controller
     public function index(Request $request, $categoriesUrl = null)
     {
         $page = new Page();
-        $page->title = __('action.title');
+        $page->title = config('app.name') . ' - ' . __('action.description') . '.';
 
         $categoriesArray = null;
         $activeCategory = null;
@@ -50,6 +50,9 @@ class ActionController extends Controller
                 abort('404');
             }
             $subCategory = $activeCategory->categoryParent;
+
+            if($activeCategory)
+                $page->title = $page->title . ' ' . $activeCategory->title . '.';
         }
 
         $categories = Category::getCategoriesForSelector($activeCategory);
