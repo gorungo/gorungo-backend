@@ -154,6 +154,11 @@ class Action extends Model
 
     }
 
+    public function getFullUrlAttribute()
+    {
+        return $this->url . MainFilter::queryString();
+    }
+
     public function getEditUrlAttribute()
     {
         return route('actions.edit', [$this->slug]);

@@ -38,7 +38,10 @@ class Idea extends Model
         if ($this->localisedIdeaDescription != null) {
             return $this->localisedIdeaDescription->title;
         } else {
-            return '';
+            $ideaDescription = $this->ideaDescriptions()->first();
+            if ($ideaDescription) {
+                return $ideaDescription->title;
+            }
         }
 
     }
@@ -48,7 +51,10 @@ class Idea extends Model
         if ($this->localisedIdeaDescription != null) {
             return $this->localisedIdeaDescription->intro;
         } else {
-            return '';
+            $ideaDescription = $this->ideaDescriptions()->first();
+            if ($ideaDescription) {
+                return $ideaDescription->intro;
+            }
         }
 
     }
@@ -58,7 +64,10 @@ class Idea extends Model
         if ($this->localisedIdeaDescription != null) {
             return $this->localisedIdeaDescription->description;
         } else {
-            return '';
+            $ideaDescription = $this->ideaDescriptions()->first();
+            if ($ideaDescription) {
+                return $ideaDescription->description;
+            }
         }
 
     }
@@ -75,6 +84,11 @@ class Idea extends Model
     public function getEditUrlAttribute()
     {
         return route('ideas.edit', [$this->slug]);
+    }
+
+    public function getFullUrlAttribute()
+    {
+        return $this->url . MainFilter::queryString();
     }
 
     /**

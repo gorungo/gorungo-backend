@@ -83,6 +83,11 @@ class Place extends Model
         return route('places.show', [$this->id]);
     }
 
+    public function getFullUrlAttribute()
+    {
+        return $this->url. MainFilter::queryString();
+    }
+
     public function getEditUrlAttribute()
     {
         return route('places.edit', [$this->id]);

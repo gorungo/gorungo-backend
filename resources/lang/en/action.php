@@ -2,7 +2,7 @@
 
 return[
     'title' => 'Actions',
-    'description' => 'Ready offers',
+    'description' => 'From idea to action',
     'item_title' => 'Action',
 
     'create' => 'Add action',

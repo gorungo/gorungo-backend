@@ -2,7 +2,7 @@
 @if($item->title !== null)
     <div class="col-md-4">
         <div class="card list-item mb-4">
-            <a href="{{$item->Url}}">
+            <a href="{{$item->FullUrl}}">
                 @include('photo.tmb.16x9_fullsize', ['imgUrl' => $item->TmbImgPath])
                 <div class="card-body">
                     <h5 class="card-title">{{$item->title}}</h5>
