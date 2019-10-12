@@ -1,12 +1,12 @@
 <template>
     <div id="place-selector" class="place-selector">
-        <h5>{{Lang.get('place.title')}}</h5>
+        <h5 class="text-capitalize">{{Lang.get('place.title')}}</h5>
         <!-- Place selector -->
         <div class="row">
             <div class="col-sm-4" v-for="(place, index) in places">
                 <div class="card card-body">
                     <div>
-                        {{place.attributes.title}}
+                        <span class="text-capitalize">{{place.attributes.title}}</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="removePlace(index)">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <span class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
+                <span class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </div>
         </div>
         <!-- Modal -->

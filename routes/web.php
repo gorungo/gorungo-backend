@@ -152,6 +152,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::group(['prefix' => 'admin'], function () {
 
         });
+
+        Auth::routes();
     });
 
 
@@ -228,9 +230,6 @@ Route::get('setlocale/{lang}', function ($lang) {
     return redirect($url); //Перенаправляем назад на ту же страницу
 
 })->name('setlocale');
-
-
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 

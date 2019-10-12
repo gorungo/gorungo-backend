@@ -1,11 +1,25 @@
 <?php
 
 return[
-    'title' => 'Профиль',
-    'description' => 'Профиль пользователя',
+    'title' => 'профиль',
+    'description' => 'профиль пользователя',
 
-    'item_title' => 'Идея',
+    'label_photo' => 'фото профиля',
+    'label_photo_change' => 'сменить фото',
 
-    'password_set' => 'Новый пароль установлен',
-    'password_not_set' => 'Ошибка при сохранении пароля',
+    'label_name' => 'имя',
+    'label_user_name' => 'имя пользователя(ник)',
+    'label_email' => 'email',
+    'label_site' => 'сайт',
+    'label_phone' => 'телефон',
+    'label_description' => 'описание профиля',
+    'label_sex' => 'пол',
+    'label_sex_not_selected' => 'укажите ваш пол',
+    'label_sex_male' => 'мужской',
+    'label_sex_female' => 'женский',
+    'label_password' => 'пароль',
+    'label_old_password' => 'старый пароль',
+    'label_new_password' => 'ноый пароль',
+    'label_confirm_password' => 'подтвердите пароль',
+
 ];

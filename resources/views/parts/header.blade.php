@@ -8,13 +8,13 @@
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item @if(Route::currentRouteName() == 'ideas.index') active @endif">
-                        <a class="nav-link" href="{{route('ideas.index') . MainFilter::queryString()}}">{{__('idea.title')}}</a>
+                        <a class="nav-link text-first-uppercase" href="{{route('ideas.index') . MainFilter::queryString()}}">{{__('idea.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'actions.index') active @endif">
-                        <a class="nav-link" href="{{route('actions.index') . MainFilter::queryString()}}">{{__('action.title')}}</a>
+                        <a class="nav-link text-first-uppercase" href="{{route('actions.index') . MainFilter::queryString()}}">{{__('action.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'places.index') active @endif">
-                        <a class="nav-link" href="{{route('places.index') . MainFilter::queryString()}}">{{__('place.title')}}</a>
+                        <a class="nav-link text-first-uppercase" href="{{route('places.index') . MainFilter::queryString()}}">{{__('place.title')}}</a>
                     </li>
                 </ul>
 
@@ -33,10 +33,10 @@
                     <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
-                            <a href="{{ route('profile.edit', Auth()->User()) }}" class="dropdown-item profile" >{{__('profile.title')}}</a>
+                            <a href="{{ route('profile.edit', Auth()->User()) }}" class="dropdown-item profile text-first-uppercase" >{{__('profile.title')}}</a>
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                               class="dropdown-item" >{{__('auth.logout')}}</a>
+                               class="dropdown-item text-first-uppercase" >{{__('auth.logout')}}</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>

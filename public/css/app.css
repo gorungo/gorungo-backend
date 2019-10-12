@@ -91756,6 +91756,12 @@ a.text-dark:focus {
   font-weight: bold;
 }
 
+.text-first-uppercase::first-letter,
+label::first-letter,
+.nav-link::first-letter {
+  text-transform: uppercase;
+}
+
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

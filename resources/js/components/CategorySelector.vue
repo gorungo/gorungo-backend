@@ -1,7 +1,7 @@
 <template>
     <div id="place-selector" class="place-selector">
-        <h5 v-if="isSingleCategoryMode">Главная категория</h5>
-        <h5 v-else>Категории</h5>
+        <h5 class="text-capitalize" v-if="isSingleCategoryMode">{{Lang.get('editor.label_main_category')}}</h5>
+        <h5 class="text-capitalize" v-else>{{Lang.get('editor.label_categories')}}</h5>
         <!-- Place selector -->
         <div class="row">
             <div class="col-sm-3" v-for="(category, index) in categories">
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <span v-if="canAddCategory" v-on:click="showSelectorWindow()" class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
+                <span v-if="canAddCategory" v-on:click="showSelectorWindow()" class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.label_add')}}</span>
             </div>
         </div>
         <!-- Modal -->
@@ -23,12 +23,12 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content search-list">
                     <div class="modal-header">
-                        <input name="searchTitle" class="w-100 form-control input-cool" v-model="searchTitle" placeholder="Введите название категории"/>
+                        <input name="searchTitle" class="w-100 form-control input-cool" v-model="searchTitle" :placeholder="Lang.get('editor.label_tape_category_name')"/>
                         <button v-if="!loading" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div class="spinner-grow text-dark float-right" role="status" v-if="loading" style="width: 1.5rem; height: 1.5rem;">
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only">{{Lang.get('editor.loading')}}...</span>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -36,11 +36,11 @@
                             <ul class="list-group list-group-flush" v-if="allCategories.length && !loading">
                                 <li class="list-group-item" v-for="(category ,index) in allCategories" v-on:click="addCategory(index)">
                                     {{category.attributes.title}}
-                                    <span class="btn btn-link float-right">Выбрать</span>
+                                    <span class="btn btn-link float-right">{{Lang.get('editor.label_select')}}</span>
                                 </li>
                             </ul>
                             <div v-if="noSearchResults" class="mt-2">
-                                Ничего не нашли, измените ваш запрос
+                                {{Lang.get('editor.label_nothing_found')}}
                             </div>
                         </div>
                     </div>
@@ -51,9 +51,10 @@
 </template>
 
 <script>
-
+    import Localized from '../mixins/Localized.js';
     export default {
         name: "CategorySelector",
+        mixins: [Localized],
 
 //------DATA-----------------------------------------------------------------------------------------------
 

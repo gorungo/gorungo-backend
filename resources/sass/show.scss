@@ -13,3 +13,6 @@
   font-weight: bold;
 }
 
+.text-first-uppercase::first-letter, label::first-letter, .nav-link::first-letter {
+  text-transform: uppercase;
+}

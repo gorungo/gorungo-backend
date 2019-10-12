@@ -7,9 +7,9 @@
             </a>
             <div class="card-body">
                 <a href="{{$item->FullUrl}}">
-                <h4 class="card-title">{{$item->title}}</h4>
+                <h4 class="card-title text-first-uppercase">{{$item->title}}</h4>
                 </a>
-                <p class="card-text text-secondary">{{$item->intro}} @auth @if(Auth()->user()->hasRole('super-admin')){{$item->id}}@endif @endauth</p>
+                <p class="card-text text-secondary text-first-uppercase">{{$item->intro}} @auth @if(Auth()->user()->hasRole('super-admin')){{$item->id}}@endif @endauth</p>
             </div>
             <div class="list-item-dropdown">
                 @include('idea.widgets.item_dropdown')

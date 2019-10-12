@@ -1,23 +1,25 @@
 <?php
 
 return[
-    'title' => 'Ideas',
-    'item_title' => 'Idea',
+    'title' => 'ideas',
+    'item_title' => 'idea',
     'description' => '1000 ideas how to spend free time',
 
-    'create' => 'Add idea',
-    'edit' => 'Edit idea',
-    'created' => 'Idea was created successfully',
-    'updated' => 'Idea was successfully updated',
-    'not_created' => 'Idea was not created successfully',
-    'not_updated' => 'Idea was not updated successfully',
+    'create' => 'add idea',
+    'edit' => 'edit idea',
+    'created' => 'idea was created successfully',
+    'updated' => 'idea was successfully updated',
+    'not_created' => 'idea was not created successfully',
+    'not_updated' => 'idea was not updated successfully',
 
-    'idea_for_you' => 'Idea for you',
-    'random_idea' => 'Random idea',
-    'other_idea' => 'Other idea',
+    'idea_description' => 'idea description',
 
-    'type_idea_title' => 'Type idea title',
+    'idea_for_you' => 'idea for you',
+    'random_idea' => 'random idea',
+    'other_idea' => 'other idea',
 
-    'see_actions' => 'See actions',
-    'see_all_actions' => 'See all actions',
+    'type_idea_title' => 'type idea title',
+
+    'see_actions' => 'see actions',
+    'see_all_actions' => 'see all actions',
 ];

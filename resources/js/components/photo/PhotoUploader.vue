@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card" :class="{dragging: isDragging}">
+        <div class="card mb-2" :class="{dragging: isDragging}">
             <div class="card-body">
                 <div v-if="itemId > 0">
                     <div class="picture-edit-wrap"
@@ -12,7 +12,7 @@
                         <div class="picture_edit clearfix">
                             <div v-if="!files.length && !filesOrder.length" class="text-center">
                                 <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
-                                <p>Перетащите cюда фотографии, либо нажмите кнопку "Загрузить изображение"</p>
+                                <p class="text-capitalize">{{Lang.get('editor.label_drag_images_or_press_upload')}}</p>
                             </div>
                             <div class="tmb-sml" v-for="(file, index) in files">
                                 <div class="del-btn" v-on:click="deletePhoto(index)">
@@ -41,10 +41,10 @@
                         </div>
                         <hr v-if="!loading">
                         <div class="file-upload bs">
-                            <i class="fas fa-upload"></i> Загрузить изображение
+                            <i class="fas fa-upload"></i> {{Lang.get('editor.label_load_image')}}
                             <input type="file" name="image" id="file_uploader" multiple="" accept="image/*" @change="fileInputChange" />
                         </div>
-                        <div v-if="files.length > 0" class="blue_info_block">Выберите фото и нажмите <img id="img_star" src="/images/interface/icos/ico_star.png">, чтобы сделать изображение главным</div>
+                        <div v-if="files.length > 0" class="blue_info_block">{{Lang.get('editor.label_select_image_and_press_star_to_make_main')}} <img id="img_star" src="/images/interface/icos/ico_star.png"></div>
                         <div class="row" v-if="loading">
                             <div class="col-sm-6">
                                 <h5 class="text-center">Файлы в очереди ({{ filesOrder.length}})</h5>
@@ -57,7 +57,7 @@
                 </div>
                 <div v-else class="text-center">
                     <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
-                    <p>Возможность добавить фотографии появится после сохранения</p>
+                    <p class="text-capitalize">{{Lang.get('editor.label_can_add_image_after_saving')}}</p>
                 </div>
             </div>
         </div>
@@ -66,11 +66,12 @@
 </template>
 
 <script>
-
+    import Localized from '../../mixins/Localized';
     export default {
 
         name: "PhotoUploader",
         props: ['type', 'itemId'],
+        mixins: [Localized],
 
 
         data: function() {

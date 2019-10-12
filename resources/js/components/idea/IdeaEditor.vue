@@ -18,10 +18,10 @@
                             <div class="d-flex justify-content-center">
                                 <ul class="nav nav-pills">
                                     <li role="presentation" id="tab_main" class="active">
-                                        <a class="nav-link active" id="edit-main-block-tab" data-toggle="tab" href="#edit-main-block" role="tab" aria-controls="profile" aria-selected="true"><span class="glyphicon glyphicon-pencil"> </span>Основное</a>
+                                        <a class="nav-link active" id="edit-main-block-tab" data-toggle="tab" href="#edit-main-block" role="tab" aria-controls="profile" aria-selected="true"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.tab_main')}}</a>
                                     </li>
                                     <li role="presentation" id="tab_photo">
-                                        <a class="nav-link" id="edit-images-block-tab" data-toggle="tab" href="#edit-images-block" role="tab" aria-controls="profile" aria-selected="false"><span class="glyphicon glyphicon-picture"> </span>Изображения</a>
+                                        <a class="nav-link" id="edit-images-block-tab" data-toggle="tab" href="#edit-images-block" role="tab" aria-controls="profile" aria-selected="false"><span class="glyphicon glyphicon-picture"> </span>{{Lang.get('editor.tab_pictures')}}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -39,7 +39,7 @@
                         <form id="frm_form" name="frm_form" method="post" autocomplete="off">
                             <input type="hidden" name="city_id" :value="this.cityId"/>
 
-                            <h5>Активность</h5>
+                            <h5>{{Lang.get('editor.label_activity')}}</h5>
 
                             <div class="row">
                                 <div class="col-sm-12">
@@ -49,12 +49,12 @@
                                                 <div class="col-sm-4 col-6">
                                                     <input type="radio" class="radio" name="active" id="active_0"
                                                            value="0" v-model="item.attributes.active"/>
-                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> Черновик</label>
+                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
                                                 </div>
                                                 <div class="col-sm-4 col-6">
                                                     <input type="radio" class="radio" name="active" id="active_1"
                                                            value="1"  v-model="item.attributes.active"/>
-                                                    <label dsk="active_1" for="active_1"> Опубликовать</label>
+                                                    <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
                                                 </div>
                                             </div>
 
@@ -70,22 +70,22 @@
                                     @change="categoryChanged"
                             ></category-selector>
                             <hr/>
-                            <h5>Описание идеи</h5>
+                            <h5>{{Lang.get('idea.idea_description')}}</h5>
                             <div class="form-group">
-                                <label for="frm_title">Заголовок<span title="Обязательное поле" class="required-star">*</span></label>
+                                <label for="frm_title">{{Lang.get('editor.label_title')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
                                 <input id="frm_title" name="title" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.title" />
                             </div>
                             <div class="form-group">
-                                <label for="frm_intro">Короткое описание<span title="Обязательное поле" class="required-star">*</span></label>
+                                <label for="frm_intro">{{Lang.get('editor.label_intro')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
                                 <textarea class="form-control" placeholder="" name="intro" id="frm_intro" rows="6" v-model="item.attributes.intro"></textarea>
                             </div>
                             <div class="form-group">
-                                <label>Полное описание<span title="Обязательное поле" class="required-star">*</span></label>
+                                <label>{{Lang.get('editor.label_description')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
                                 <ckeditor :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
                             </div>
 
                             <div>
-                                <span class="text-secondary">(<span class="required-star">*</span>) отмечены необходимые поля</span>
+                                <span class="text-secondary">(<span class="required-star">*</span>) {{Lang.get('editor.stars_required')}}</span>
                             </div>
                             <hr/>
                             <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
@@ -105,7 +105,6 @@
 </template>
 
 <script>
-    // MIXINGS
     import Editable from '../../mixins/Editable.js';
 
     import PhotoUploader from '../photo/PhotoUploader.vue';
@@ -135,9 +134,9 @@
             documentTitle: function(){
                 if(this.dataLoaded){
                     if(!this.item.id) {
-                        return 'Новая идея'
+                        return Lang.get('editor.new_idea');
                     }else{
-                        return 'Редактирование идеи';
+                        return Lang.get('editor.edit_idea');
                     }
                 }
             },

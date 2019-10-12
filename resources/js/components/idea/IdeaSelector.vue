@@ -1,6 +1,6 @@
 <template>
     <div id="ideas-selector" class="ideas-selector">
-        <h5>{{Lang.get('idea.title')}}</h5>
+        <h5 class="text-capitalize">{{Lang.get('idea.title')}}</h5>
         <!-- Idea selector -->
         <div class="row">
             <div v-if="idea && multiselect" class="col-sm-4" v-for="(ideaItem, index) in idea">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="col-sm-4" v-if="needAddButton">
-                <span class="btn btn-link" data-toggle="modal" data-target="#ideasSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
+                <span class="btn btn-link" data-toggle="modal" data-target="#ideasSelectorModal"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </div>
         </div>
         <!-- Modal -->
@@ -60,10 +60,11 @@
 </template>
 
 <script>
-
+    import Localized from '../../mixins/Localized.js';
     export default {
 
         name: "IdeaSelector",
+        mixins: [Localized],
 
 //------DATA-----------------------------------------------------------------------------------------------
 

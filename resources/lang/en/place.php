@@ -1,38 +1,38 @@
 <?php
 
 return[
-    'title' => 'Places',
-    'description' => 'Places to visit',
+    'title' => 'places',
+    'description' => 'places to visit',
 
     'item_title' => 'Place',
 
-    'create' => 'Add place',
-    'edit' => 'Edit place',
-    'created' => 'Place created successfully',
-    'updated' => 'Place updated successfully',
-    'not_created' => 'Place not created',
-    'not_updated' => 'Place not updated',
+    'create' => 'add place',
+    'edit' => 'edit place',
+    'created' => 'place created successfully',
+    'updated' => 'place updated successfully',
+    'not_created' => 'place not created',
+    'not_updated' => 'place not updated',
 
     // not found
-    'no_items' => 'No places',
-    'no_item_found' => 'Place not found',
-    'no_items_found' => 'Places not found',
+    'no_items' => 'no places',
+    'no_item_found' => 'place not found',
+    'no_items_found' => 'places not found',
 
-    'places_close_to' => 'Places close to',
-    'close_to' => 'Close to',
-    'places_close' => 'Places near',
-    'see_places' => 'See places',
-    'see_all_places' => 'See all place',
+    'places_close_to' => 'places close to',
+    'close_to' => 'close to',
+    'places_close' => 'places near',
+    'see_places' => 'see places',
+    'see_all_places' => 'see all place',
 
     // place main filter
-    'select_place' => 'Select place',
-    'type_place_name' => 'Type in place title',
-    'recently_viewed' => 'Recently viewed',
+    'select_place' => 'select place',
+    'type_place_name' => 'type in place title',
+    'recently_viewed' => 'recently viewed',
     'distance' => [
-        'any' => 'Any distance',
-        'popular' => 'Popular',
-        'at' => 'At home',
-        'close' => 'Nearby',
-        'far' => 'Far',
+        'any' => 'any distance',
+        'popular' => 'popular',
+        'at' => 'at home',
+        'close' => 'nearby',
+        'far' => 'far',
     ],
 ];

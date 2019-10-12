@@ -17,10 +17,14 @@ return [
     'login' => 'login',
     'login_slogan' => 'Welcome to life',
     'logout' => 'logout',
+    'name' => 'login name',
     'email_address' => 'email',
     'password' => 'password',
+    'confirm_password' => 'confirm password',
     'remember_me' => 'remember me',
     'forgot_your_password' => 'forgot your password',
+    'register_policies_text' => 'Нажимая кнопку зарегистрироваться, вы подтверждаете согласие с <a class="text-primary" href=":policyUrl">правилами сайта</a> и <a class="text-primary" href="":confidentialUrl>политикой конфиденциальности</a>.',
+    'register_caution_text' => 'Caution! Perhaps the acquisition of meaning in life.',
 
 
     'failed' => 'These credentials do not match our records.',

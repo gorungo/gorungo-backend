@@ -22,8 +22,10 @@ return [
         'place',
         'pagination',
         'passwords',
+        'profile',
         'tag',
         'validation',
+
     ],
 
     /*

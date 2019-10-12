@@ -35,11 +35,6 @@
 @include('parts.footer')
 
 
-@yield('scripts')
-@stack('scripts')
-@include('parts.status')
-@include('parts.footer')
-
 </body>
 
 </html>

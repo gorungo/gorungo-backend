@@ -5,8 +5,8 @@
             <a href="{{$item->FullUrl}}">
                 @include('photo.tmb.16x9_fullsize', ['imgUrl' => $item->TmbImgPath])
                 <div class="card-body">
-                    <h5 class="card-title">{{$item->title}}</h5>
-                    <p class="card-text">{{$item->intro}} {{$item->id}}</p>
+                    <h5 class="card-title text-first-uppercase">{{$item->title}}</h5>
+                    <p class="card-text text-first-uppercase">{{$item->intro}} {{$item->id}}</p>
                     @isset($item->actionPrice)
                         @if($item->actionPrice->price !== 0)
                             <span class="price">{{$item->actionPrice->FormattedPrice}} <span class="price-currency">{{$item->actionPrice->currency->shortTitle}}</span></span>

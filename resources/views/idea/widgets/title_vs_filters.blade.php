@@ -1,8 +1,8 @@
 @isset($backgroundImage)
     <div class="header-image bg-dark" style="background-image: url({{$backgroundImage}});">
         @include('parts.section_title', [
-            'sectionTitle' => __('idea.title'),
-            'sectionDescription' => __('idea.description'),
+            'sectionTitle' => ucfirst(__('idea.title')),
+            'sectionDescription' => ucfirst(__('idea.description')),
             'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.create'): null,
             'addItemTitle' => __('idea.create'),
             'style' => 'dark'

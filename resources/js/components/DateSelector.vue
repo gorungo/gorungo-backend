@@ -1,6 +1,6 @@
 <template>
     <div id="date-selector" class="date-selector">
-        <h5>Даты</h5>
+        <h5 class="text-capitalize">{{Lang.get('editor.label_dates')}}</h5>
         <!-- Date selector -->
         <div class="row">
             <div class="col-sm-4" v-for="(date, index) in dates">
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <span class="btn btn-link" v-on:click="newDate"><span class="glyphicon glyphicon-pencil"> </span>Добавить</span>
+                <span class="btn btn-link" v-on:click="newDate"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </div>
         </div>
 
@@ -24,23 +24,23 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content search-list">
                     <div class="modal-header">
-                        <h5 class="modal-title">Редактирование даты</h5>
-                        <button type="button" class="close" v-on:click="closeSelectorWindow" aria-label="Закрыть">
+                        <h5 class="modal-title">{{Lang.get('editor.label_date_editing')}}</h5>
+                        <button type="button" class="close" v-on:click="closeSelectorWindow" :aria-label="Lang.get('editor.close')">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body" v-if="editDate != null">
                         <div class="form-group">
                             <select v-model="dateType" class="form-control">
-                                <option value="1">Единоразовое событие</option>
-                                <option value="2">Диапозон дат</option>
-                                <option value="3">Повторяющееся событие</option>
+                                <option value="1">{{Lang.get('editor.label_date_1_time')}}</option>
+                                <option value="2">{{Lang.get('editor.label_dates_range')}}</option>
+                                <option value="3">{{Lang.get('editor.label_dates_recurring')}}</option>
                             </select>
                         </div>
                         <form>
                         <div class="form-row" v-if="dateType === '1'">
                             <div class="col">
-                            <datepicker input-class="form-control" v-model="editDate.attributes.start_date" format="dd.MM.yyyy" placeholder="Дата начала"></datepicker>
+                            <datepicker input-class="form-control" v-model="editDate.attributes.start_date" format="dd.MM.yyyy" :placeholder="Lang.get('editor.label_start_date')"></datepicker>
                             </div>
                             <div class="col">
                                 <time-selector v-model="editDate.attributes.start_time" />
@@ -48,14 +48,14 @@
                             <div class="col">
                                  <div class="custom-control custom-switch">
                                      <input id="f_all_day" class="custom-control-input" type="checkbox" v-model="editDate.attributes.is_all_day"/>
-                                     <label class="custom-control-label" for="f_all_day">Весь день</label>
+                                     <label class="custom-control-label" for="f_all_day">{{Lang.get('editor.label_all_day')}}</label>
                                  </div>
                             </div>
                         </div>
                             <div v-if="dateType === '2'">
                                 <div class="form-row">
                                     <div class="col">
-                                        <datepicker input-class="form-control" v-model="editDate.attributes.start_date" format="dd.MM.yyyy" placeholder="Дата начала"></datepicker>
+                                        <datepicker input-class="form-control" v-model="editDate.attributes.start_date" format="dd.MM.yyyy" :placeholder="Lang.get('editor.label_start_date')"></datepicker>
                                     </div>
                                     <div class="col">
                                         <time-selector v-model="editDate.attributes.start_time" />
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="form-row mt-2">
                                     <div class="col">
-                                        <datepicker input-class="form-control" v-model="editDate.attributes.end_date" format="dd.MM.yyyy" placeholder="Дата начала"></datepicker>
+                                        <datepicker input-class="form-control" v-model="editDate.attributes.end_date" format="dd.MM.yyyy" :placeholder="Lang.get('editor.label_finish_date')"></datepicker>
                                     </div>
                                     <div class="col">
                                         <time-selector v-model="editDate.attributes.end_time" />
@@ -72,7 +72,7 @@
                                 <div class="col">
                                     <div class="custom-control custom-switch">
                                         <input id="f_all_day" class="custom-control-input" type="checkbox" v-model="editDate.attributes.is_all_day"/>
-                                        <label class="custom-control-label" for="f_all_day">Весь день</label>
+                                        <label class="custom-control-label" for="f_all_day">{{Lang.get('editor.label_all_day')}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +81,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" v-on:click="closeSelectorWindow">Закрыть</button>
-                        <button type="button" class="btn btn-primary" v-on:click="saveDate">Сохранить</button>
+                        <button type="button" class="btn btn-secondary" v-on:click="closeSelectorWindow">{{Lang.get('editor.close')}}</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveDate">{{Lang.get('editor.save')}}</button>
                     </div>
                 </div>
             </div>
@@ -91,6 +91,8 @@
 </template>
 
 <script>
+
+    import Localized from '../mixins/Localized.js';
     import Datepicker from 'vuejs-datepicker';
     import TimeSelector from './TimeSelector';
     import go from '../go.js';
@@ -100,7 +102,7 @@
         components: {Datepicker,TimeSelector} ,
 
         props: ['locale', 'dates'],
-
+        mixins: [Localized],
         model:{
             prop: 'dates',
             event: 'change',

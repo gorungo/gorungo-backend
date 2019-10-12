@@ -1,23 +1,25 @@
 <?php
 
 return[
-    'title' => 'Actions',
-    'description' => 'From idea to action',
-    'item_title' => 'Action',
+    'title' => 'actions',
+    'description' => 'from idea to action',
+    'item_title' => 'action',
 
-    'create' => 'Add action',
-    'edit' => 'Edit action',
-    'created' => 'Action was created successfully',
-    'updated' => 'Action was successfully updated',
-    'not_created' => 'Action was not created successfully',
-    'not_updated' => 'Action was not updated successfully',
+    'create' => 'add action',
+    'edit' => 'edit action',
+    'created' => 'action was created successfully',
+    'updated' => 'action was successfully updated',
+    'not_created' => 'action was not created successfully',
+    'not_updated' => 'action was not updated successfully',
 
-    'no_items' => 'No actions for idea',
+    'no_items' => 'no actions for idea',
+
+    'action_description' => 'action description',
 
     // request
 
     'request'=> [
-        'idea_id_required' => 'Select idea',
+        'idea_id_required' => 'select idea',
     ],
 
 ];

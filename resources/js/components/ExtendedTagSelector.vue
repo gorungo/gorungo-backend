@@ -1,7 +1,7 @@
 <template>
     <div id="extended-tag-block" v-if="extendedTags && extendedTags.tagsSeasonsGroup">
         <div>
-            <h5>Для сезона</h5>
+            <h5>{{Lang.get('editor.label_for_season')}}</h5>
             <span v-for="(tag, index) in extendedTags.tagsSeasonsGroup">
             <input type="checkbox"
                    :id="'tag-seasons-' + index"
@@ -12,7 +12,7 @@
         </span>
         </div>
         <div>
-            <h5>Для времени суток</h5>
+            <h5>{{Lang.get('editor.label_for_time')}}</h5>
             <span v-for="(tag, index) in extendedTags.tagsDayTimeGroup">
             <input type="checkbox"
                    :id="'tag-daytime-' + index"
@@ -26,9 +26,11 @@
 </template>
 
 <script>
+    import Localized from '../mixins/Localized.js';
     export default {
         name: "ExtendedTagSelector",
         props: ['tags'],
+        mixins: [Localized],
 
         model: {
             prop: 'tags',
