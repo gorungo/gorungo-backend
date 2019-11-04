@@ -11,4 +11,5 @@ return [
     */
 
     'subscription_title' => 'Get connected with us on social networks!',
+    'for' => 'for',
 ];

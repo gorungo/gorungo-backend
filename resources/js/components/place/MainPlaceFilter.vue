@@ -21,10 +21,10 @@
                     <div class="modal-body">
                         <div class="">
                             <div v-if="searchTitle.length === 0" id="mainPlaceFilterModalDistanceSelector" style="justify-content: space-evenly;" class="d-flex distance-selector">
-                                <span v-if="propSection === 'places'" @click="activeDistanceFilter = 'popular'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'popular'}">{{Lang.get('place.distance.popular')}}</span>
+                                <span @click="activeDistanceFilter = 'popular'" v-if="propSection === 'places'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'popular'}">{{Lang.get('place.distance.popular')}}</span>
                                 <span @click="activeDistanceFilter = null" class="distance-selector__item" :class="{active: activeDistanceFilter === null}">{{Lang.get('place.distance.any')}}</span>
-                                <span v-if="activePlace == null" @click="activeDistancseFilter = 'close'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.distance.close')}}</span>
-                                <span v-if="activePlace != null" @click="activeDistancseFilter = 'close'" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.close_to')}}</span>
+                                <span @click="activeDistanceFilter = 'close'" v-if="activePlace == null" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.distance.close')}}</span>
+                                <span @click="activeDistanceFilter = 'close'" v-if="activePlace != null" class="distance-selector__item" :class="{active: activeDistanceFilter === 'close'}">{{Lang.get('place.close_to')}}</span>
                             </div>
                             <hr>
                             <p v-if="activePlace != null" class="active-place">{{activePlace.attributes.title}} <span class="btn btn-link float-right">{{Lang.get('editor.select')}}</span></p>
@@ -108,6 +108,14 @@
                 if(this.activePlace){
                     return this.activePlace.attributes.title;
                 }
+                if(this.activeDistanceFilter){
+                    if(this.activeDistanceFilter === 'popular'){
+                        return this.Lang.get('place.distance.popular');
+                    }
+                    if(this.activeDistanceFilter === 'close'){
+                        return this.Lang.get('place.distance.close');
+                    }
+                }
                 return this.Lang.get('place.select_place');
             },
 
@@ -119,6 +127,7 @@
                 },
                 // сеттер:
                 set: function (newValue) {
+                    console.log(newValue);
                     if(newValue){
                         let newUrl = new URL(window.location.href);
                         newUrl.searchParams.set( 'distance', newValue );

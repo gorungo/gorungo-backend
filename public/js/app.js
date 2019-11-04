@@ -4079,6 +4079,16 @@ __webpack_require__.r(__webpack_exports__);
         return this.activePlace.attributes.title;
       }
 
+      if (this.activeDistanceFilter) {
+        if (this.activeDistanceFilter === 'popular') {
+          return this.Lang.get('place.distance.popular');
+        }
+
+        if (this.activeDistanceFilter === 'close') {
+          return this.Lang.get('place.distance.close');
+        }
+      }
+
       return this.Lang.get('place.select_place');
     },
     activeDistanceFilter: {
@@ -4089,6 +4099,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       // сеттер:
       set: function set(newValue) {
+        console.log(newValue);
+
         if (newValue) {
           var newUrl = new URL(window.location.href);
           newUrl.searchParams.set('distance', newValue);
@@ -46341,7 +46353,7 @@ var render = function() {
                                   },
                                   on: {
                                     click: function($event) {
-                                      _vm.activeDistancseFilter = "close"
+                                      _vm.activeDistanceFilter = "close"
                                     }
                                   }
                                 },
@@ -46363,7 +46375,7 @@ var render = function() {
                                   },
                                   on: {
                                     click: function($event) {
-                                      _vm.activeDistancseFilter = "close"
+                                      _vm.activeDistanceFilter = "close"
                                     }
                                   }
                                 },

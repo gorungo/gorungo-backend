@@ -1,5 +1,5 @@
 @isset($backgroundImage)
-    <div class="header-image bg-dark" style="background-image: url({{$backgroundImage}});">
+    <div class="header-image header-image-short bg-dark" style="background-image: url({{$backgroundImage}});">
         @include('parts.section_title', [
         'activePlace' => $activePlace,
         'sectionTitle' => $sectionTitle,

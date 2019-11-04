@@ -1,1 +1,1 @@
-<h5>{{__('idea.no_items')}}</h5>
+<h5 class="text-first-uppercase">{{__('idea.no_items')}}</h5>
