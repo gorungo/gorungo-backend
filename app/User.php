@@ -121,8 +121,6 @@ class User extends Authenticatable  implements MustVerifyEmail
                 Log::info('https://ipinfo.io/geo service unavailable');
             }
 
-
-
             $coordinates = [
                 'lat' => $lat ?? 0,
                 'lng' => $lang ?? 0,

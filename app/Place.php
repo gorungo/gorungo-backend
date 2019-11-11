@@ -95,26 +95,22 @@ class Place extends Model
 
     Public function getTitleAttribute()
     {
-
-            if($this->localisedPlaceDescription != null){
-                return $this->localisedPlaceDescription->title;
-            }else if($this->placeDescriptions()->first()){
-                return $this->placeDescriptions()->first()->title;
-            }
-
+        if($this->localisedPlaceDescription != null){
+            return $this->localisedPlaceDescription->title;
+        }else if($this->placeDescriptions()->first()){
+            return $this->placeDescriptions()->first()->title;
+        }
 
         return '';
     }
 
     Public function getIntroAttribute()
     {
-
         if($this->localisedPlaceDescription != null){
             return $this->localisedPlaceDescription->intro;
         }else if($this->placeDescriptions()->first()){
             return $this->placeDescriptions()->first()->intro;
         }
-
 
         return '';
     }

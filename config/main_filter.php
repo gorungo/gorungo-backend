@@ -4,10 +4,10 @@ return [
 
     // filter distance in km
     'distance' => [
-        'default' => 100, // if no distance filter we will use this value
+        'default' => env('DISTANCE_DEFAULT', 200), // if no distance filter we will use this value
 
-        'at' => 0,
-        'close' => 15,
+        'at' => 10,
+        'close' => 35,
         'far' => 40000,
     ],
 ];

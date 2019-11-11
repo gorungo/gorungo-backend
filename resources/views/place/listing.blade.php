@@ -1,4 +1,5 @@
 <div class="section-wrap bg-gray pt-4">
+    @include('place.widgets.search_position')
     <div class="container">
         @hasanyrole('moderator|super-admin')
         <div id="place-sort" class="dropdown">
