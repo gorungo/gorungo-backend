@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-use App\Http\Requests\Place\GetFilterItems;
+use App\Http\Requests\Filter\GetFilterItems;
 use App\Http\Middleware\LocaleMiddleware;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
