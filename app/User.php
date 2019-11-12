@@ -105,7 +105,6 @@ class User extends Authenticatable  implements MustVerifyEmail
             $coordinates = session()->get('current_user_position');
             if(strtotime($currentDateTime) - strtotime($coordinates['time'] > $updatePeriod)){
                 $coordinates = null;
-                Log::info('From session');
             }
         }
 
@@ -130,6 +129,7 @@ class User extends Authenticatable  implements MustVerifyEmail
             ];
 
             session()->put('current_user_position', $coordinates);
+            Log::info('Position Updated @'.$coordinates['lat'].' '.$coordinates['lng']);
         }
 
         return new Point($coordinates['lng'], $coordinates['lat']);
