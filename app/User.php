@@ -112,7 +112,7 @@ class User extends Authenticatable  implements MustVerifyEmail
             // Получаем координаты пользователя если их нет в сессии
 
             try{
-                $client = new \GuzzleHttp\Client();
+                $client = new \GuzzleHttp\Client(['curl' => [ CURLOPT_INTERFACE => 'eth0:1' ]]);
                 $body = $client->get('https://ipinfo.io/geo')->getBody();
                 $obj = json_decode($body);
 
