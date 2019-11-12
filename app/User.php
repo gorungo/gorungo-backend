@@ -112,16 +112,13 @@ class User extends Authenticatable  implements MustVerifyEmail
         if(!$coordinates){
             // Получаем координаты пользователя если их нет в сессии
 
-            $ip = request()->ip() === '127.0.0.1' ? '5.100.94.143' : request()->ip();
-
-            Log::info($ip);
+            $ip = request()->ip() == '127.0.0.1' ? '5.100.94.143' : request()->ip();
 
             try{
-                $client = new \GuzzleHttp\Client(['curl' => [ CURLOPT_INTERFACE => 'eth0:1' ]]);
+                $client = new \GuzzleHttp\Client();
                 $body = $client->get('https://ipinfo.io/'. $ip .'/geo')->getBody();
                 $obj = json_decode($body);
 
-                Log::info($body);
                 [$lat, $lang] = explode(',', $obj->loc);
             }catch(\Exception $exception){
                 Log::info('https://ipinfo.io/geo service unavailable');
