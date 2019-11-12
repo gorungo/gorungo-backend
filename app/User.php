@@ -115,6 +115,8 @@ class User extends Authenticatable  implements MustVerifyEmail
                 $client = new \GuzzleHttp\Client();
                 $body = $client->get('https://ipinfo.io/geo')->getBody();
                 $obj = json_decode($body);
+
+                Log::info($body);
                 [$lat, $lang] = explode(',', $obj->loc);
             }catch(\Exception $exception){
                 Log::info('https://ipinfo.io/geo service unavailable');
