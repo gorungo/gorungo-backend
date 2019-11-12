@@ -114,6 +114,8 @@ class User extends Authenticatable  implements MustVerifyEmail
 
             $ip = request()->ip() === '127.0.0.1' ? '5.100.94.143' : request()->ip();
 
+            Log::info($ip);
+
             try{
                 $client = new \GuzzleHttp\Client(['curl' => [ CURLOPT_INTERFACE => 'eth0:1' ]]);
                 $body = $client->get('https://ipinfo.io/'. $ip .'/geo')->getBody();
