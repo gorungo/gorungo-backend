@@ -311,6 +311,62 @@ class PlaceTypeDescriptionsTableSeeder extends Seeder
                 'locale_id' => 1,
                 'title' => 'Museum',
             ),
+            42 => 
+            array (
+                'id' => 43,
+                'place_type_id' => 22,
+                'locale_id' => 1,
+                'title' => 'Volcano',
+            ),
+            43 => 
+            array (
+                'id' => 44,
+                'place_type_id' => 22,
+                'locale_id' => 2,
+                'title' => 'Вулкан',
+            ),
+            44 => 
+            array (
+                'id' => 45,
+                'place_type_id' => 23,
+                'locale_id' => 1,
+                'title' => 'Nature Reserve',
+            ),
+            45 => 
+            array (
+                'id' => 46,
+                'place_type_id' => 23,
+                'locale_id' => 2,
+                'title' => 'Природный заповедник',
+            ),
+            46 => 
+            array (
+                'id' => 47,
+                'place_type_id' => 24,
+                'locale_id' => 1,
+                'title' => 'Art Museum',
+            ),
+            47 => 
+            array (
+                'id' => 48,
+                'place_type_id' => 24,
+                'locale_id' => 2,
+                'title' => 'Художественный музей',
+            ),
+            48 => 
+            array (
+                'id' => 51,
+                'place_type_id' => 25,
+                'locale_id' => 1,
+                'title' => 'Cave',
+            ),
+            49 => 
+            array (
+                'id' => 52,
+                'place_type_id' => 25,
+                'locale_id' => 2,
+                'title' => 'Пещера',
+            ),
         ));
         
         

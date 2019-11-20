@@ -143,6 +143,30 @@ class PlaceTypesTableSeeder extends Seeder
                 'place_type_group_id' => 2,
                 'slug' => 'museum',
             ),
+            21 => 
+            array (
+                'id' => 22,
+                'place_type_group_id' => 3,
+                'slug' => 'volcano',
+            ),
+            22 => 
+            array (
+                'id' => 23,
+                'place_type_group_id' => 3,
+                'slug' => 'nature reserve',
+            ),
+            23 => 
+            array (
+                'id' => 24,
+                'place_type_group_id' => 3,
+                'slug' => 'art museum',
+            ),
+            24 => 
+            array (
+                'id' => 25,
+                'place_type_group_id' => 3,
+                'slug' => 'cave',
+            ),
         ));
         
         
