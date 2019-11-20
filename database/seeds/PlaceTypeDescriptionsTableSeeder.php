@@ -12,7 +12,7 @@ class PlaceTypeDescriptionsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         \DB::table('place_type_descriptions')->delete();
         
@@ -368,6 +368,8 @@ class PlaceTypeDescriptionsTableSeeder extends Seeder
                 'title' => 'Пещера',
             ),
         ));
+
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         
     }
