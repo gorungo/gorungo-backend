@@ -156,7 +156,7 @@ class Action extends Model
 
     public function getFullUrlAttribute()
     {
-        return $this->url . MainFilter::queryString();
+        return $this->url.MainFilter::queryString();
     }
 
     public function getEditUrlAttribute()
@@ -317,9 +317,9 @@ class Action extends Model
             ];
 
             $this->update($storeData);
-            if($this->localisedActionDescription){
+            if ($this->localisedActionDescription) {
                 $this->localisedActionDescription()->update($descriptionStoreData);
-            }else{
+            } else {
                 $this->localisedActionDescription()->create($descriptionStoreData);
             }
 
@@ -361,14 +361,14 @@ class Action extends Model
     private function savePrice(StoreAction $request): void
     {
         $actionPrice = $request->input('relationships.price');
-        if($actionPrice['id'] !== null){
+        if ($actionPrice['id'] !== null) {
             $this->actionPrice()->whereId($actionPrice['id'])->update([
-                'price' => (int)$actionPrice['attributes']['price'],
+                'price' => (int) $actionPrice['attributes']['price'],
                 'currency_id' => $actionPrice['relationships']['currency']['id'],
             ]);
-        }else{
+        } else {
             $this->actionPrice()->create([
-                'price' => (int)$actionPrice['attributes']['price'],
+                'price' => (int) $actionPrice['attributes']['price'],
                 'currency_id' => $actionPrice['relationships']['currency']['id'],
             ]);
         }

@@ -44,6 +44,7 @@ class StorePlace extends FormRequest
         return [
             'relationships.coordinates.array' => __('action.request.idea_id_required'),
             'relationships.address_id.integer' => __('action.request.idea_id_required'),
+            'relationships.placeType.id.required' => __('action.request.place_type_id_required'),
 
         ];
     }

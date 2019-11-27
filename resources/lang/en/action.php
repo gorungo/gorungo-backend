@@ -19,7 +19,8 @@ return[
     // request
 
     'request'=> [
-        'idea_id_required' => 'select idea',
+        'idea_id_required' => 'Select idea.',
+        'place_type_id_required' => 'Select place type.',
     ],
 
 ];

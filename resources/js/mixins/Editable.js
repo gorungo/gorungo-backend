@@ -1,9 +1,16 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Errors from '../components/Errors.vue';
+import Authorized from './Authorized';
+
 export default {
 
-    props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
-    components: {Errors},
+    props: ['propTitle', 'propItemId', 'propLocale'],
+
+    components: {
+        Errors
+    },
+
+    mixins: [ Authorized ],
 
     data(){
         return{
@@ -183,6 +190,8 @@ export default {
                         }
 
 
+                    }else{
+                        userui.showNotification('Ошибка', 'red');
                     }
 
                 }).catch( (error) => {
@@ -196,6 +205,8 @@ export default {
                     if (error.response === undefined) {
                         userui.showNoInternetNotification();
                     }
+
+                    userui.showNotification('Ошибка', 'red');
 
 
                 }).finally( () => {

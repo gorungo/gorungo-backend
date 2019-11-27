@@ -2,10 +2,16 @@
 
 namespace App\Http\Resources;
 
+
 use App\Idea as IdeaModel;
 use App\Http\Middleware\LocaleMiddleware;
-use App\Http\Resources\Idea as IdeaResource;
+
 use App\Http\Resources\Category as CategoryResource;
+use App\Http\Resources\IdeaPrice as IdeaPriceResource;
+use App\Http\Resources\Date as DateResource;
+use App\Http\Resources\Idea as IdeaResource;
+use App\Http\Resources\Place as PlaceResource;
+use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Idea extends JsonResource
@@ -36,8 +42,12 @@ class Idea extends JsonResource
             ],
 
             'relationships' => [
-                'idea' => new IdeaResource($this->whenLoaded('idea')),
+                'idea' => new IdeaResource($this->whenLoaded('ideaParentIdea')),
                 'categories' => $this->id ? CategoryResource::collection($this->whenLoaded('ideaCategories')) : [],
+                'author' => new UserResource($this->whenLoaded('author')),
+                'price' => new IdeaPriceResource($this->whenLoaded('ideaPrice')),
+                'places' => PlaceResource::collection($this->whenLoaded('ideaPlaces')),
+                'dates' => DateResource::collection($this->whenLoaded('ideaDates')),
                 'tags' => $this->id ? $this->getItemTags() : IdeaModel::emptyTagsArray(),
             ],
         ];

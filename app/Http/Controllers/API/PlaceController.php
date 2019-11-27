@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Requests\Filter\GetFilterItems;
+use App\Http\Requests\Place\StorePlace;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Resources\Place as PlaceResource;
 use App\Http\Resources\PlaceNoRelationships as PlaceNoRelationshipsResource;
@@ -48,7 +49,7 @@ class PlaceController extends Controller
      * @param  Place $place
      * @return PlaceResource
      */
-    public function store(GetFilterItems $request, Place $place)
+    public function store(StorePlace $request, Place $place)
     {
         return new PlaceResource($place->createAndSync($request));
     }
@@ -61,7 +62,7 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        return new PlaceResource($place);
+        return new PlaceResource($place->loadMissing('placeType'));
     }
 
     /**
@@ -72,7 +73,7 @@ class PlaceController extends Controller
      */
     public function edit(Place $place)
     {
-        return new PlaceResource($place);
+        return new PlaceResource($place->loadMissing('placeType'));
     }
 
     /**

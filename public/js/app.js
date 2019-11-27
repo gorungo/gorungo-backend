@@ -1793,7 +1793,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CategorySelector",
@@ -1918,7 +1917,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TimeSelector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TimeSelector */ "./resources/js/components/TimeSelector.vue");
 /* harmony import */ var _go_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../go.js */ "./resources/js/go.js");
 /* harmony import */ var _go_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_go_js__WEBPACK_IMPORTED_MODULE_3__);
-//
 //
 //
 //
@@ -3139,9 +3137,14 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_Editable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Editable.js */ "./resources/js/mixins/Editable.js");
 /* harmony import */ var _photo_PhotoUploader_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../photo/PhotoUploader.vue */ "./resources/js/components/photo/PhotoUploader.vue");
-/* harmony import */ var _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../LocaleSelector.vue */ "./resources/js/components/LocaleSelector.vue");
-/* harmony import */ var _ExtendedTagSelector_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ExtendedTagSelector.vue */ "./resources/js/components/ExtendedTagSelector.vue");
-/* harmony import */ var _CategorySelector_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../CategorySelector.vue */ "./resources/js/components/CategorySelector.vue");
+/* harmony import */ var _ExtendedTagSelector_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ExtendedTagSelector.vue */ "./resources/js/components/ExtendedTagSelector.vue");
+/* harmony import */ var _CategorySelector_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../CategorySelector.vue */ "./resources/js/components/CategorySelector.vue");
+/* harmony import */ var _DateSelector_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../DateSelector.vue */ "./resources/js/components/DateSelector.vue");
+/* harmony import */ var _place_PlaceSelector_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../place/PlaceSelector.vue */ "./resources/js/components/place/PlaceSelector.vue");
+/* harmony import */ var _idea_IdeaSelector_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../idea/IdeaSelector.vue */ "./resources/js/components/idea/IdeaSelector.vue");
+/* harmony import */ var _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../LocaleSelector.vue */ "./resources/js/components/LocaleSelector.vue");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_8__);
 //
 //
 //
@@ -3248,6 +3251,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
 
 
 
@@ -3255,18 +3290,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "IdeaEditor",
-  props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
+  props: {
+    propTitle: String,
+    propItemId: Number,
+    propLocale: String
+  },
   mixins: [_mixins_Editable_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
   components: {
     PhotoUploader: _photo_PhotoUploader_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    LocaleSelector: _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    CategorySelector: _CategorySelector_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    ExtendedTagSelector: _ExtendedTagSelector_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+    LocaleSelector: _LocaleSelector_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    CategorySelector: _CategorySelector_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    ExtendedTagSelector: _ExtendedTagSelector_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Money: v_money__WEBPACK_IMPORTED_MODULE_8__["Money"],
+    IdeaSelector: _idea_IdeaSelector_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    DateSelector: _DateSelector_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    PlaceSelector: _place_PlaceSelector_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
-      type: 'ideas'
+      type: 'ideas',
+      currencies: [],
+      money: {
+        decimal: ',',
+        thousands: '',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false
+      }
     };
+  },
+  mounted: function mounted() {
+    this.fetchCurrencies();
   },
   computed: {
     documentTitle: function documentTitle() {
@@ -3277,6 +3332,9 @@ __webpack_require__.r(__webpack_exports__);
           return Lang.get('editor.edit_idea');
         }
       }
+    },
+    ideaId: function ideaId() {
+      return this.propIdeaId;
     }
   },
   methods: {
@@ -3286,6 +3344,22 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.item.attributes.main_category_id = null;
       }
+    },
+    fetchCurrencies: function fetchCurrencies() {
+      var _this = this;
+
+      axios.get(this.fetchCurrenciesRequestUrl(), {
+        params: {
+          locale: this.locale
+        }
+      }).then(function (resp) {
+        if (resp.status === 200 || resp.status === 201) {
+          _this.currencies = resp.data;
+        }
+      })["catch"]()["finally"]();
+    },
+    fetchCurrenciesRequestUrl: function fetchCurrenciesRequestUrl() {
+      return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
     }
   }
 });
@@ -3302,7 +3376,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_Localized_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Localized.js */ "./resources/js/mixins/Localized.js");
-//
 //
 //
 //
@@ -4366,6 +4439,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PlaceSelector",
@@ -4380,13 +4456,22 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       selectedPlace: {},
       searchTitle: '',
-      foundPlaces: []
+      foundPlaces: [],
+      places: []
     };
   },
   //------PROPERTIES-----------------------------------------------------------------------------------------------
-  props: ['places', 'locale'],
+  props: ['propPlaces', 'locale'],
+  model: {
+    prop: 'propPlaces',
+    event: 'change'
+  },
   //------METHODS-----------------------------------------------------------------------------------------------
   mounted: function mounted() {
+    if (this.propPlaces) {
+      this.places = this.propPlaces;
+    }
+
     $('#placeSelectorModal').on('hidden.bs.modal', function (e) {
       this.foundPlaces = [];
       this.searchTitle = '';
@@ -4403,10 +4488,12 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addPlace: function addPlace(index) {
       this.places.push(this.foundPlaces[index]);
+      this.$emit('change', this.places);
       this.closeSelectorWindow();
     },
     removePlace: function removePlace(index) {
       this.places.splice(index, 1);
+      this.$emit('change', this.places);
     },
     closeSelectorWindow: function closeSelectorWindow() {
       $('#placeSelectorModal').modal('hide');
@@ -4448,10 +4535,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PlaceTypeSelector",
-  props: ['allPlaceTypes', 'PlaceTypeGroups', 'placeType'],
+  props: ['allPlaceTypes', 'PlaceTypeGroups', 'propPlaceType'],
   model: {
-    prop: 'placeType',
+    prop: 'propPlaceType',
     event: 'change'
+  },
+  data: function data() {
+    return {
+      placeType: null
+    };
+  },
+  mounted: function mounted() {
+    if (this.propPlaceType) {
+      this.placeType = this.propPlaceType;
+    }
   },
   methods: {
     onChange: function onChange() {
@@ -9340,7 +9437,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.btn-edit[data-v-74695c01]{\n    margin-left: 10px;\n    cursor:pointer;\n    opacity: 0.3;\n}\n.btn-edit[data-v-74695c01]:hover{\n    opacity: 0.6;\n}\n", ""]);
+exports.push([module.i, "\n.btn-edit[data-v-74695c01]{\n    margin-left: 10px;\n    cursor:pointer;\n    opacity: 0.3;\n}\n.btn-edit[data-v-74695c01]:hover{\n    opacity: 0.6;\n}\n.ck.ck-editor__editable_inline[data-v-74695c01] {\n    min-height: 500px !important;\n}\n", ""]);
 
 // exports
 
@@ -41884,54 +41981,14 @@ var render = function() {
             _vm._v(_vm._s(_vm.Lang.get("editor.label_main_category")))
           ])
         : _c("h5", { staticClass: "text-capitalize" }, [
-            _vm._v(_vm._s(_vm.Lang.get("editor.label_categories")))
-          ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "row" },
-        [
-          _vm._l(_vm.categories, function(category, index) {
-            return _c("div", { staticClass: "col-sm-3" }, [
-              _c("div", { staticClass: "card card-body" }, [
-                _c("div", [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(category.attributes.title) +
-                      "\n                    "
-                  ),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "close",
-                      attrs: {
-                        type: "button",
-                        "data-dismiss": "modal",
-                        "aria-label": "Close"
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.removeCategory(index)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("×")
-                      ])
-                    ]
-                  )
-                ])
-              ])
-            ])
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-3" }, [
+            _vm._v(
+              _vm._s(_vm.Lang.get("editor.label_categories")) + "\n        "
+            ),
             _vm.canAddCategory
               ? _c(
                   "span",
                   {
-                    staticClass: "btn btn-link",
+                    staticClass: "float-right text-primary",
                     attrs: {
                       "data-toggle": "modal",
                       "data-target": "#placeSelectorModal"
@@ -41948,9 +42005,45 @@ var render = function() {
                   ]
                 )
               : _vm._e()
+          ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        _vm._l(_vm.categories, function(category, index) {
+          return _c("div", [
+            _c("div", { staticClass: "card card-body" }, [
+              _c("div", [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(category.attributes.title) +
+                    "\n                    "
+                ),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: {
+                      type: "button",
+                      "data-dismiss": "modal",
+                      "aria-label": "Close"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.removeCategory(index)
+                      }
+                    }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ])
+            ])
           ])
-        ],
-        2
+        }),
+        0
       ),
       _vm._v(" "),
       _c(
@@ -42126,99 +42219,96 @@ var render = function() {
     { staticClass: "date-selector", attrs: { id: "date-selector" } },
     [
       _c("h5", { staticClass: "text-capitalize" }, [
-        _vm._v(_vm._s(_vm.Lang.get("editor.label_dates")))
+        _vm._v(_vm._s(_vm.Lang.get("editor.label_dates")) + "\n        "),
+        _c(
+          "span",
+          {
+            staticClass: "float-right text-primary",
+            on: { click: _vm.newDate }
+          },
+          [
+            _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
+            _c("span", { staticClass: "text-capitalize" }, [
+              _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
+            ])
+          ]
+        )
       ]),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row" },
-        [
-          _vm._l(_vm.dates, function(date, index) {
-            return _c("div", { staticClass: "col-sm-4" }, [
-              _c(
-                "div",
-                {
-                  key: index,
-                  staticClass: "card card-body",
-                  on: {
-                    click: function($event) {
-                      return _vm.showDate(index)
-                    }
+        _vm._l(_vm.dates, function(date, index) {
+          return _c("div", [
+            _c(
+              "div",
+              {
+                key: index,
+                staticClass: "card card-body",
+                on: {
+                  click: function($event) {
+                    return _vm.showDate(index)
                   }
-                },
-                [
-                  _c("div", [
-                    !date.attributes.end_datetime_utc
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(
-                              _vm.go.localizeMySqlDate(
-                                date.attributes.start_datetime_utc
-                              )
+                }
+              },
+              [
+                _c("div", [
+                  !date.attributes.end_datetime_utc
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(
+                            _vm.go.localizeMySqlDate(
+                              date.attributes.start_datetime_utc
                             )
                           )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    date.attributes.end_datetime_utc
-                      ? _c("span", [
-                          _vm._v(
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  date.attributes.end_datetime_utc
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(
+                            _vm.go.localizeMySqlDate(
+                              date.attributes.start_datetime_utc
+                            )
+                          ) +
+                            " — " +
                             _vm._s(
                               _vm.go.localizeMySqlDate(
-                                date.attributes.start_datetime_utc
+                                date.attributes.end_datetime_utc
                               )
-                            ) +
-                              " — " +
-                              _vm._s(
-                                _vm.go.localizeMySqlDate(
-                                  date.attributes.end_datetime_utc
-                                )
-                              )
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "close",
-                        attrs: {
-                          type: "button",
-                          "data-dismiss": "modal",
-                          "aria-label": "Close"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.removeDate(index)
-                          }
-                        }
+                            )
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close",
+                      attrs: {
+                        type: "button",
+                        "data-dismiss": "modal",
+                        "aria-label": "Close"
                       },
-                      [
-                        _c("span", { attrs: { "aria-hidden": "true" } }, [
-                          _vm._v("×")
-                        ])
-                      ]
-                    )
-                  ])
-                ]
-              )
-            ])
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-4" }, [
-            _c(
-              "span",
-              { staticClass: "btn btn-link", on: { click: _vm.newDate } },
-              [
-                _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
-                _c("span", { staticClass: "text-capitalize" }, [
-                  _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
+                      on: {
+                        click: function($event) {
+                          return _vm.removeDate(index)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("×")
+                      ])
+                    ]
+                  )
                 ])
               ]
             )
           ])
-        ],
-        2
+        }),
+        0
       ),
       _vm._v(" "),
       _c(
@@ -42760,7 +42850,9 @@ var render = function() {
         _c(
           "div",
           [
-            _c("h5", [_vm._v(_vm._s(_vm.Lang.get("editor.label_for_season")))]),
+            _c("h5", { staticClass: "text-first-uppercase" }, [
+              _vm._v(_vm._s(_vm.Lang.get("editor.label_for_season")))
+            ]),
             _vm._v(" "),
             _vm._l(_vm.extendedTags.tagsSeasonsGroup, function(tag, index) {
               return _c("span", [
@@ -42831,7 +42923,9 @@ var render = function() {
         _c(
           "div",
           [
-            _c("h5", [_vm._v(_vm._s(_vm.Lang.get("editor.label_for_time")))]),
+            _c("h5", { staticClass: "text-first-uppercase" }, [
+              _vm._v(_vm._s(_vm.Lang.get("editor.label_for_time")))
+            ]),
             _vm._v(" "),
             _vm._l(_vm.extendedTags.tagsDayTimeGroup, function(tag, index) {
               return _c("span", [
@@ -45131,290 +45225,588 @@ var render = function() {
                           domProps: { value: this.cityId }
                         }),
                         _vm._v(" "),
-                        _c("h5", [
-                          _vm._v(_vm._s(_vm.Lang.get("editor.label_activity")))
-                        ]),
-                        _vm._v(" "),
                         _c("div", { staticClass: "row" }, [
-                          _c("div", { staticClass: "col-sm-12" }, [
-                            _c("div", { staticClass: "row panel" }, [
-                              _c("div", { staticClass: "col-sm-6" }, [
-                                _c("div", { staticClass: "row form-group" }, [
-                                  _c("div", { staticClass: "col-sm-4 col-6" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.item.attributes.active,
-                                          expression: "item.attributes.active"
-                                        }
-                                      ],
-                                      staticClass: "radio",
-                                      attrs: {
-                                        type: "radio",
-                                        name: "active",
-                                        id: "active_0",
-                                        value: "0"
-                                      },
-                                      domProps: {
-                                        checked: _vm._q(
-                                          _vm.item.attributes.active,
-                                          "0"
-                                        )
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          return _vm.$set(
-                                            _vm.item.attributes,
-                                            "active",
-                                            "0"
-                                          )
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "label",
-                                      {
-                                        staticStyle: { "margin-right": "12px" },
-                                        attrs: {
-                                          dusk: "active_0",
-                                          for: "active_0"
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          " " +
-                                            _vm._s(
-                                              _vm.Lang.get("editor.label_draft")
-                                            )
-                                        )
-                                      ]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "col-sm-4 col-6" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.item.attributes.active,
-                                          expression: "item.attributes.active"
-                                        }
-                                      ],
-                                      staticClass: "radio",
-                                      attrs: {
-                                        type: "radio",
-                                        name: "active",
-                                        id: "active_1",
-                                        value: "1"
-                                      },
-                                      domProps: {
-                                        checked: _vm._q(
-                                          _vm.item.attributes.active,
-                                          "1"
-                                        )
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          return _vm.$set(
-                                            _vm.item.attributes,
-                                            "active",
-                                            "1"
-                                          )
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "label",
-                                      {
-                                        attrs: {
-                                          dsk: "active_1",
-                                          for: "active_1"
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          " " +
-                                            _vm._s(
-                                              _vm.Lang.get(
-                                                "editor.label_published"
-                                              )
-                                            )
-                                        )
-                                      ]
-                                    )
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("hr"),
-                        _vm._v(" "),
-                        _vm.item !== null
-                          ? _c("category-selector", {
-                              on: { change: _vm.categoryChanged },
-                              model: {
-                                value: _vm.item.relationships.categories,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.item.relationships,
-                                    "categories",
-                                    $$v
-                                  )
-                                },
-                                expression: "item.relationships.categories"
-                              }
-                            })
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("hr"),
-                        _vm._v(" "),
-                        _c("h5", [
-                          _vm._v(_vm._s(_vm.Lang.get("idea.idea_description")))
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("label", { attrs: { for: "frm_title" } }, [
-                            _vm._v(_vm._s(_vm.Lang.get("editor.label_title"))),
-                            _c(
-                              "span",
-                              {
-                                staticClass: "required-star",
-                                attrs: {
-                                  title: _vm.Lang.get("editor.required_field")
-                                }
-                              },
-                              [_vm._v("*")]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.item.attributes.title,
-                                expression: "item.attributes.title"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "frm_title",
-                              name: "title",
-                              placeholder: "",
-                              type: "text",
-                              maxlength: "100"
-                            },
-                            domProps: { value: _vm.item.attributes.title },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.item.attributes,
-                                  "title",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("label", { attrs: { for: "frm_intro" } }, [
-                            _vm._v(_vm._s(_vm.Lang.get("editor.label_intro"))),
-                            _c(
-                              "span",
-                              {
-                                staticClass: "required-star",
-                                attrs: {
-                                  title: _vm.Lang.get("editor.required_field")
-                                }
-                              },
-                              [_vm._v("*")]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("textarea", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.item.attributes.intro,
-                                expression: "item.attributes.intro"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              placeholder: "",
-                              name: "intro",
-                              id: "frm_intro",
-                              rows: "6"
-                            },
-                            domProps: { value: _vm.item.attributes.intro },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.item.attributes,
-                                  "intro",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "form-group" },
-                          [
-                            _c("label", [
+                          _c("div", { staticClass: "col-sm-8" }, [
+                            _c("h5", { staticClass: "text-first-uppercase" }, [
                               _vm._v(
-                                _vm._s(_vm.Lang.get("editor.label_description"))
-                              ),
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "required-star",
-                                  attrs: {
-                                    title: _vm.Lang.get("editor.required_field")
-                                  }
-                                },
-                                [_vm._v("*")]
+                                _vm._s(_vm.Lang.get("idea.idea_description"))
                               )
                             ]),
                             _vm._v(" "),
-                            _c("ckeditor", {
-                              attrs: {
-                                editor: _vm.editor,
-                                config: _vm.editorConfig,
-                                id: "frm_description"
-                              },
-                              model: {
-                                value: _vm.item.attributes.description,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.item.attributes,
-                                    "description",
-                                    $$v
-                                  )
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "frm_title" } }, [
+                                _vm._v(
+                                  _vm._s(_vm.Lang.get("editor.label_title"))
+                                ),
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "required-star",
+                                    attrs: {
+                                      title: _vm.Lang.get(
+                                        "editor.required_field"
+                                      )
+                                    }
+                                  },
+                                  [_vm._v("*")]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.item.attributes.title,
+                                    expression: "item.attributes.title"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "frm_title",
+                                  name: "title",
+                                  placeholder: "",
+                                  type: "text",
+                                  maxlength: "100"
                                 },
-                                expression: "item.attributes.description"
-                              }
-                            })
-                          ],
-                          1
-                        ),
+                                domProps: { value: _vm.item.attributes.title },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes,
+                                      "title",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "frm_intro" } }, [
+                                _vm._v(
+                                  _vm._s(_vm.Lang.get("editor.label_intro"))
+                                ),
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "required-star",
+                                    attrs: {
+                                      title: _vm.Lang.get(
+                                        "editor.required_field"
+                                      )
+                                    }
+                                  },
+                                  [_vm._v("*")]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.item.attributes.intro,
+                                    expression: "item.attributes.intro"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  maxlength: "255",
+                                  placeholder: "",
+                                  name: "intro",
+                                  id: "frm_intro",
+                                  rows: "2"
+                                },
+                                domProps: { value: _vm.item.attributes.intro },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.item.attributes,
+                                      "intro",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "form-group" },
+                              [
+                                _c("label", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.Lang.get("editor.label_description")
+                                    )
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "required-star",
+                                      attrs: {
+                                        title: _vm.Lang.get(
+                                          "editor.required_field"
+                                        )
+                                      }
+                                    },
+                                    [_vm._v("*")]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("ckeditor", {
+                                  attrs: {
+                                    height: "200",
+                                    editor: _vm.editor,
+                                    config: _vm.editorConfig,
+                                    id: "frm_description"
+                                  },
+                                  model: {
+                                    value: _vm.item.attributes.description,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.item.attributes,
+                                        "description",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "item.attributes.description"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col-sm-4" },
+                            [
+                              _c("div", { staticClass: "row form-group" }, [
+                                _c("div", { staticClass: "col-sm-4 col-6" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.item.attributes.active,
+                                        expression: "item.attributes.active"
+                                      }
+                                    ],
+                                    staticClass: "radio",
+                                    attrs: {
+                                      type: "radio",
+                                      name: "active",
+                                      id: "active_0",
+                                      value: "0"
+                                    },
+                                    domProps: {
+                                      checked: _vm._q(
+                                        _vm.item.attributes.active,
+                                        "0"
+                                      )
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.$set(
+                                          _vm.item.attributes,
+                                          "active",
+                                          "0"
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "label",
+                                    {
+                                      staticStyle: { "margin-right": "12px" },
+                                      attrs: {
+                                        dusk: "active_0",
+                                        for: "active_0"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            _vm.Lang.get("editor.label_draft")
+                                          )
+                                      )
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-sm-4 col-6" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.item.attributes.active,
+                                        expression: "item.attributes.active"
+                                      }
+                                    ],
+                                    staticClass: "radio",
+                                    attrs: {
+                                      type: "radio",
+                                      name: "active",
+                                      id: "active_1",
+                                      value: "1"
+                                    },
+                                    domProps: {
+                                      checked: _vm._q(
+                                        _vm.item.attributes.active,
+                                        "1"
+                                      )
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.$set(
+                                          _vm.item.attributes,
+                                          "active",
+                                          "1"
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "label",
+                                    {
+                                      attrs: {
+                                        dsk: "active_1",
+                                        for: "active_1"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            _vm.Lang.get(
+                                              "editor.label_published"
+                                            )
+                                          )
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _vm.item !== null &&
+                              _vm.activeUser.attributes.superuser
+                                ? _c("category-selector", {
+                                    on: { change: _vm.categoryChanged },
+                                    model: {
+                                      value: _vm.item.relationships.categories,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.item.relationships,
+                                          "categories",
+                                          $$v
+                                        )
+                                      },
+                                      expression:
+                                        "item.relationships.categories"
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("hr"),
+                              _vm._v(" "),
+                              _vm.item !== null
+                                ? _c("idea-selector", {
+                                    attrs: { locale: _vm.locale },
+                                    model: {
+                                      value: _vm.item.relationships.idea,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.item.relationships,
+                                          "idea",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "item.relationships.idea"
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("hr"),
+                              _vm._v(" "),
+                              _vm.item !== null
+                                ? _c("place-selector", {
+                                    attrs: { locale: _vm.locale },
+                                    model: {
+                                      value: _vm.item.relationships.places,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.item.relationships,
+                                          "places",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "item.relationships.places"
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("hr"),
+                              _vm._v(" "),
+                              _vm.item !== null &&
+                              _vm.item.relationships.dates !== undefined
+                                ? _c("date-selector", {
+                                    attrs: { locale: _vm.locale },
+                                    model: {
+                                      value: _vm.item.relationships.dates,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.item.relationships,
+                                          "dates",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "item.relationships.dates"
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("hr"),
+                              _vm._v(" "),
+                              _vm.item
+                                ? _c("extended-tag-selector", {
+                                    model: {
+                                      value: _vm.item.relationships.tags,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.item.relationships,
+                                          "tags",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "item.relationships.tags"
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("hr"),
+                              _vm._v(" "),
+                              _vm.currencies.length
+                                ? _c("div", { staticClass: "row" }, [
+                                    _c("div", { staticClass: "col-8" }, [
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "frm_price" } },
+                                          [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass: "text-capitalize"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.Lang.get(
+                                                      "editor.label_price"
+                                                    )
+                                                  )
+                                                )
+                                              ]
+                                            ),
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass: "required-star",
+                                                attrs: {
+                                                  title: _vm.Lang.get(
+                                                    "editor.required_field"
+                                                  )
+                                                }
+                                              },
+                                              [_vm._v("*")]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "money",
+                                              rawName: "v-money",
+                                              value: _vm.money,
+                                              expression: "money"
+                                            },
+                                            {
+                                              name: "model",
+                                              rawName: "v-model.lazy",
+                                              value:
+                                                _vm.item.relationships.price
+                                                  .attributes.price,
+                                              expression:
+                                                "item.relationships.price.attributes.price",
+                                              modifiers: { lazy: true }
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: {
+                                            id: "frm_price",
+                                            name: "price",
+                                            placeholder: "",
+                                            type: "text",
+                                            maxlength: "100"
+                                          },
+                                          domProps: {
+                                            value:
+                                              _vm.item.relationships.price
+                                                .attributes.price
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.$set(
+                                                _vm.item.relationships.price
+                                                  .attributes,
+                                                "price",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "col-4" }, [
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "frm_currency" } },
+                                          [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass: "text-capitalize"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.Lang.get(
+                                                      "editor.label_currency"
+                                                    )
+                                                  )
+                                                )
+                                              ]
+                                            ),
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass: "required-star",
+                                                attrs: {
+                                                  title: "Обязательное поле"
+                                                }
+                                              },
+                                              [_vm._v("*")]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "select",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value:
+                                                  _vm.item.relationships.price
+                                                    .relationships.currency,
+                                                expression:
+                                                  "item.relationships.price.relationships.currency"
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: { id: "frm_currency" },
+                                            on: {
+                                              change: function($event) {
+                                                var $$selectedVal = Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function(o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function(o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                                _vm.$set(
+                                                  _vm.item.relationships.price
+                                                    .relationships,
+                                                  "currency",
+                                                  $event.target.multiple
+                                                    ? $$selectedVal
+                                                    : $$selectedVal[0]
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "option",
+                                              {
+                                                attrs: {
+                                                  disabled: "",
+                                                  value: ""
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.Lang.get(
+                                                      "editor.label_select_one"
+                                                    )
+                                                  )
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _vm._l(_vm.currencies, function(
+                                              currency,
+                                              index
+                                            ) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: { value: currency }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      currency.attributes.title
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            })
+                                          ],
+                                          2
+                                        )
+                                      ])
+                                    ])
+                                  ])
+                                : _vm._e()
+                            ],
+                            1
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("div", [
                           _c("span", { staticClass: "text-secondary" }, [
@@ -45429,21 +45821,8 @@ var render = function() {
                           ])
                         ]),
                         _vm._v(" "),
-                        _c("hr"),
-                        _vm._v(" "),
-                        _vm.item
-                          ? _c("extended-tag-selector", {
-                              model: {
-                                value: _vm.item.relationships.tags,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.item.relationships, "tags", $$v)
-                                },
-                                expression: "item.relationships.tags"
-                              }
-                            })
-                          : _vm._e()
-                      ],
-                      1
+                        _c("hr")
+                      ]
                     )
                   ]
                 ),
@@ -45500,16 +45879,33 @@ var render = function() {
     { staticClass: "ideas-selector", attrs: { id: "ideas-selector" } },
     [
       _c("h5", { staticClass: "text-capitalize" }, [
-        _vm._v(_vm._s(_vm.Lang.get("idea.title")))
+        _vm._v(_vm._s(_vm.Lang.get("idea.item_title")) + "\n        "),
+        _vm.needAddButton
+          ? _c(
+              "span",
+              {
+                staticClass: "float-right text-primary",
+                attrs: {
+                  "data-toggle": "modal",
+                  "data-target": "#ideasSelectorModal"
+                }
+              },
+              [
+                _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
+                _c("span", { staticClass: "text-capitalize" }, [
+                  _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
+                ])
+              ]
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row" },
         [
           _vm._l(_vm.idea, function(ideaItem, index) {
             return _vm.idea && _vm.multiselect
-              ? _c("div", { staticClass: "col-sm-4" }, [
+              ? _c("div", [
                   _c("div", { staticClass: "card card-body" }, [
                     _c("div", [
                       _vm._v(
@@ -45545,7 +45941,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _vm.idea && !_vm.multiselect
-            ? _c("div", { staticClass: "col-sm-4" }, [
+            ? _c("div", [
                 _c("div", { staticClass: "card card-body" }, [
                   _c("div", [
                     _vm._v(
@@ -45576,27 +45972,6 @@ var render = function() {
                     )
                   ])
                 ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.needAddButton
-            ? _c("div", { staticClass: "col-sm-4" }, [
-                _c(
-                  "span",
-                  {
-                    staticClass: "btn btn-link",
-                    attrs: {
-                      "data-toggle": "modal",
-                      "data-target": "#ideasSelectorModal"
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
-                    _c("span", { staticClass: "text-capitalize" }, [
-                      _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
-                    ])
-                  ]
-                )
               ])
             : _vm._e()
         ],
@@ -47239,15 +47614,30 @@ var render = function() {
     { staticClass: "place-selector", attrs: { id: "place-selector" } },
     [
       _c("h5", { staticClass: "text-capitalize" }, [
-        _vm._v(_vm._s(_vm.Lang.get("place.title")))
+        _vm._v(_vm._s(_vm.Lang.get("place.title")) + "\n        "),
+        _c(
+          "span",
+          {
+            staticClass: "float-right cursor-pointer text-primary pb-1",
+            attrs: {
+              "data-toggle": "modal",
+              "data-target": "#placeSelectorModal"
+            }
+          },
+          [
+            _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
+            _c("span", { staticClass: "text-capitalize" }, [
+              _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
+            ])
+          ]
+        )
       ]),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row" },
         [
           _vm._l(_vm.places, function(place, index) {
-            return _c("div", { staticClass: "col-sm-4" }, [
+            return _c("div", [
               _c("div", { staticClass: "card card-body" }, [
                 _c("div", [
                   _c("span", { staticClass: "text-capitalize" }, [
@@ -47280,24 +47670,7 @@ var render = function() {
             ])
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "col-sm-4" }, [
-            _c(
-              "span",
-              {
-                staticClass: "btn btn-link",
-                attrs: {
-                  "data-toggle": "modal",
-                  "data-target": "#placeSelectorModal"
-                }
-              },
-              [
-                _c("span", { staticClass: "glyphicon glyphicon-pencil" }),
-                _c("span", { staticClass: "text-capitalize" }, [
-                  _vm._v(_vm._s(_vm.Lang.get("editor.label_add")))
-                ])
-              ]
-            )
-          ])
+          _c("div")
         ],
         2
       ),
@@ -47508,9 +47881,9 @@ var render = function() {
             _vm._v("Выберите тип объекта")
           ]),
           _vm._v(" "),
-          _vm._l(_vm.allPlaceTypes, function(placeType, index) {
-            return _c("option", { domProps: { value: placeType } }, [
-              _vm._v(_vm._s(placeType.attributes.slug))
+          _vm._l(_vm.allPlaceTypes, function(vPlaceType, index) {
+            return _c("option", { domProps: { value: vPlaceType } }, [
+              _vm._v(_vm._s(vPlaceType.attributes.slug))
             ])
           })
         ],
@@ -64692,6 +65065,25 @@ module.exports.setLocation = setLocation;
 
 /***/ }),
 
+/***/ "./resources/js/mixins/Authorized.js":
+/*!*******************************************!*\
+  !*** ./resources/js/mixins/Authorized.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  computed: {
+    activeUser: function activeUser() {
+      return window.activeUser !== undefined ? window.activeUser : null;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/mixins/Editable.js":
 /*!*****************************************!*\
   !*** ./resources/js/mixins/Editable.js ***!
@@ -64704,13 +65096,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ckeditor/ckeditor5-build-classic */ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Errors_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Errors.vue */ "./resources/js/components/Errors.vue");
+/* harmony import */ var _Authorized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Authorized */ "./resources/js/mixins/Authorized.js");
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
+  props: ['propTitle', 'propItemId', 'propLocale'],
   components: {
     Errors: _components_Errors_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
+  mixins: [_Authorized__WEBPACK_IMPORTED_MODULE_2__["default"]],
   data: function data() {
     return {
       // system state
@@ -64857,6 +65252,8 @@ __webpack_require__.r(__webpack_exports__);
             } else {
               userui.showNoInternetNotification();
             }
+          } else {
+            userui.showNotification('Ошибка', 'red');
           }
         })["catch"](function (error) {
           if (error.response) {
@@ -64868,6 +65265,8 @@ __webpack_require__.r(__webpack_exports__);
           if (error.response === undefined) {
             userui.showNoInternetNotification();
           }
+
+          userui.showNotification('Ошибка', 'red');
         })["finally"](function () {
           _this2.loading = false;
         });

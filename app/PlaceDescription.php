@@ -19,3 +19,4 @@ class PlaceDescription extends Model
         return $this->belongsTo('App\Place', 'place_id');
     }
 }
+

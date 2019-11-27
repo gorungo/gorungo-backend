@@ -1,9 +1,13 @@
 <template>
     <div id="place-selector" class="place-selector">
-        <h5 class="text-capitalize">{{Lang.get('place.title')}}</h5>
+        <h5 class="text-capitalize">{{Lang.get('place.title')}}
+            <span class="float-right cursor-pointer text-primary pb-1" data-toggle="modal" data-target="#placeSelectorModal">
+                <span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span>
+            </span>
+        </h5>
         <!-- Place selector -->
-        <div class="row">
-            <div class="col-sm-4" v-for="(place, index) in places">
+        <div>
+            <div v-for="(place, index) in places">
                 <div class="card card-body">
                     <div>
                         <span class="text-capitalize">{{place.attributes.title}}</span>
@@ -13,8 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <span class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
+            <div>
             </div>
         </div>
         <!-- Modal -->
@@ -68,16 +71,27 @@
                 selectedPlace: {},
                 searchTitle: '',
                 foundPlaces: [],
+                places: [],
             }
         },
 
 //------PROPERTIES-----------------------------------------------------------------------------------------------
 
-        props: ['places', 'locale'],
+        props: ['propPlaces', 'locale'],
+
+        model: {
+            prop: 'propPlaces',
+            event: 'change',
+        },
 
 //------METHODS-----------------------------------------------------------------------------------------------
 
         mounted: function(){
+
+            if(this.propPlaces){
+                this.places = this.propPlaces;
+            }
+
             $('#placeSelectorModal').on('hidden.bs.modal', function (e) {
                 this.foundPlaces = [];
                 this.searchTitle = '';
@@ -97,11 +111,14 @@
 
             addPlace: function(index){
                 this.places.push(this.foundPlaces[index]);
+                this.$emit('change', this.places);
+
                 this.closeSelectorWindow();
             },
 
             removePlace: function(index){
                 this.places.splice(index,1);
+                this.$emit('change', this.places);
             },
 
             closeSelectorWindow: function(){

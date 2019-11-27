@@ -1,10 +1,12 @@
 <template>
     <div id="place-selector" class="place-selector">
         <h5 class="text-capitalize" v-if="isSingleCategoryMode">{{Lang.get('editor.label_main_category')}}</h5>
-        <h5 class="text-capitalize" v-else>{{Lang.get('editor.label_categories')}}</h5>
+        <h5 class="text-capitalize" v-else>{{Lang.get('editor.label_categories')}}
+            <span class="float-right text-primary" v-if="canAddCategory" v-on:click="showSelectorWindow()" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.label_add')}}</span>
+        </h5>
         <!-- Place selector -->
-        <div class="row">
-            <div class="col-sm-3" v-for="(category, index) in categories">
+        <div>
+            <div v-for="(category, index) in categories">
                 <div class="card card-body">
                     <div>
                         {{category.attributes.title}}
@@ -13,9 +15,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <span v-if="canAddCategory" v-on:click="showSelectorWindow()" class="btn btn-link" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.label_add')}}</span>
             </div>
         </div>
         <!-- Modal -->

@@ -77,7 +77,7 @@ class IdeaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Idea $idea)
     {
         return view('idea.edit' , ['idea']);
     }

@@ -1,15 +1,7 @@
 export default {
-
-    props: ['activeUser'],
-
-    data(){
-        return{
-            user: null,
+    computed: {
+        activeUser(){
+            return window.activeUser !== undefined ? window.activeUser : null;
         }
     },
-
-    mounted: function () {
-        this.user = this.activeUser;
-    },
-
 }

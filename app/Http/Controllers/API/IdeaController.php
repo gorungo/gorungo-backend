@@ -38,7 +38,13 @@ class IdeaController extends Controller
      */
     public function create(Idea $idea)
     {
-        return new IdeaResource($idea);
+        return new IdeaResource($idea->loadMissing([
+            'ideaPrice',
+            'ideaPlaces',
+            'ideaDates',
+            'ideaParentIdea',
+            'ideaCategories'
+        ]));
     }
 
     /**
@@ -50,7 +56,13 @@ class IdeaController extends Controller
      */
     public function store(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->createAndSync($request)->loadMissing('ideaCategories'));
+        return new IdeaResource($idea->createAndSync($request)->loadMissing([
+            'ideaPrice',
+            'ideaPlaces',
+            'ideaDates',
+            'ideaParentIdea',
+            'ideaCategories'
+        ]));
     }
 
     /**
@@ -61,7 +73,13 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        return new IdeaResource($idea->loadMissing('ideaCategories'));
+        return new IdeaResource($idea->loadMissing([
+            'ideaPrice',
+            'ideaPlaces',
+            'ideaDates',
+            'ideaParentIdea',
+            'ideaCategories'
+        ]));
     }
 
     /**
@@ -72,7 +90,13 @@ class IdeaController extends Controller
      */
     public function edit(Idea $idea)
     {
-        return new IdeaResource($idea->loadMissing('ideaCategories'));
+        return new IdeaResource($idea->loadMissing([
+            'ideaPrice',
+            'ideaPlaces',
+            'ideaDates',
+            'ideaParentIdea',
+            'ideaCategories'
+        ]));
     }
 
     /**
@@ -84,7 +108,13 @@ class IdeaController extends Controller
      */
     public function update(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->updateAndSync($request)->loadMissing('ideaCategories'));
+        return new IdeaResource($idea->updateAndSync($request)->loadMissing([
+            'ideaPrice',
+            'ideaPlaces',
+            'ideaDates',
+            'ideaParentIdea',
+            'ideaCategories'
+        ]));
     }
 
     /**

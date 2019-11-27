@@ -182,6 +182,7 @@ class Place extends Model
         return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page . '_distance_' . request()->distance, 0, function (){
             return self::distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
                 ->joinDescription()
+                ->search()
                 ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc')
                 ->sortable()
                 ->paginate();
@@ -324,6 +325,15 @@ class Place extends Model
         return $query;
     }
 
+    public function scopeSearch($query){
+        if(request()->has('q')){
+            return $query->whereHas('placeDescriptions', function ($query) {
+                $query->where('title', 'like' , '%' . request()->q . '%');
+            });
+        }
+        return $query;
+    }
+
     public function distanceSortable($query, $direction)
     {
         return $query->orderByDistance('coordinates', MainFilter::searchPoint(), $direction);
@@ -368,6 +378,18 @@ class Place extends Model
         }
 
         return $place;
+    }
+
+    /**
+     * Get last created place of authorized user
+     */
+    public static function lastCreatedPlaceOfAuthUser()
+    {
+        if(Auth()->User()){
+            return self::orderBy('id', 'desc')->first();
+        }
+
+        return null;
     }
 
 

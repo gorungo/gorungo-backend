@@ -32,6 +32,17 @@ class StoreIdea extends FormRequest
             'relationships.categories' => 'required|array',
             'relationships.categories.*.id' => 'required|numeric|exists:categories',
 
+            'relationships.idea.id' => 'required|integer',
+
+            'relationships.places' => 'array|required',
+            'relationships.places.*.id' => 'required|exists:places,id',
+
+            'relationships.dates' => 'array|required',
+            'relationships.dates.*.attributes.start_datetime_utc' => 'date',
+
+            'relationships.price.attributes.price' => 'nullable',
+            'relationships.price.relationships.currency.id' => 'required|integer|exists:currencies,id',
+
         ];
     }
 

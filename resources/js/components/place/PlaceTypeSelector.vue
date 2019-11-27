@@ -4,7 +4,7 @@
         <div class="form-group">
         <select class="form-control" @change="onChange" v-model="placeType">
             <option disabled value="null">Выберите тип объекта</option>
-            <option v-for="(placeType, index) in allPlaceTypes" :value="placeType">{{placeType.attributes.slug}}</option>
+            <option v-for="(vPlaceType, index) in allPlaceTypes" :value="vPlaceType">{{vPlaceType.attributes.slug}}</option>
         </select>
         </div>
     </div>
@@ -13,11 +13,23 @@
 <script>
     export default {
         name: "PlaceTypeSelector",
-        props: ['allPlaceTypes', 'PlaceTypeGroups', 'placeType'],
+        props: ['allPlaceTypes', 'PlaceTypeGroups', 'propPlaceType'],
 
         model:{
-            prop: 'placeType',
+            prop: 'propPlaceType',
             event: 'change'
+        },
+
+        data(){
+           return {
+               placeType: null,
+           }
+        },
+
+        mounted(){
+            if(this.propPlaceType){
+                this.placeType = this.propPlaceType;
+            }
         },
 
         methods:{

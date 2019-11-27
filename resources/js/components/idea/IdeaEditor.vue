@@ -38,57 +38,85 @@
                     <div class="tab-pane fade show active" id="edit-main-block" role="tabpanel" aria-labelledby="edit-main-block-tab">
                         <form id="frm_form" name="frm_form" method="post" autocomplete="off">
                             <input type="hidden" name="city_id" :value="this.cityId"/>
-
-                            <h5>{{Lang.get('editor.label_activity')}}</h5>
-
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="row panel">
-                                        <div class="col-sm-6">
-                                            <div class="row form-group">
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_0"
-                                                           value="0" v-model="item.attributes.active"/>
-                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
-                                                </div>
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_1"
-                                                           value="1"  v-model="item.attributes.active"/>
-                                                    <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
-                                                </div>
+                                <div class="col-sm-8">
+                                    <h5 class="text-first-uppercase">{{Lang.get('idea.idea_description')}}</h5>
+                                    <div class="form-group">
+                                        <label for="frm_title">{{Lang.get('editor.label_title')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
+                                        <input id="frm_title" name="title" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.title" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="frm_intro">{{Lang.get('editor.label_intro')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
+                                        <textarea class="form-control" maxlength="255" placeholder="" name="intro" id="frm_intro" rows="2" v-model="item.attributes.intro"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{{Lang.get('editor.label_description')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
+                                        <ckeditor height="200" :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <div class="col-sm-4 col-6">
+                                            <input type="radio" class="radio" name="active" id="active_0"
+                                                   value="0" v-model="item.attributes.active"/>
+                                            <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
+                                        </div>
+                                        <div class="col-sm-4 col-6">
+                                            <input type="radio" class="radio" name="active" id="active_1"
+                                                   value="1"  v-model="item.attributes.active"/>
+                                            <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
+                                        </div>
+                                    </div>
+                                    <category-selector
+                                            v-if="item !== null && activeUser.attributes.superuser"
+                                            v-model = "item.relationships.categories"
+                                            @change="categoryChanged"
+                                    ></category-selector>
+                                    <hr/>
+                                    <idea-selector
+                                            v-if="item !== null"
+                                            :locale = "locale"
+                                            v-model = "item.relationships.idea"
+                                    ></idea-selector>
+                                    <hr>
+                                    <place-selector
+                                            v-if="item !== null"
+                                            :locale = "locale"
+                                            v-model = "item.relationships.places"
+                                    ></place-selector>
+                                    <hr>
+                                    <date-selector
+                                            v-if="item !== null && item.relationships.dates !== undefined"
+                                            :locale = "locale"
+                                            v-model = "item.relationships.dates"
+                                    ></date-selector>
+                                    <hr>
+                                    <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
+                                    <hr>
+                                    <div class="row" v-if="currencies.length">
+                                        <div class="col-8">
+                                            <div class="form-group">
+                                                <label for="frm_price"><span class="text-capitalize">{{Lang.get('editor.label_price')}}</span><span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
+                                                <input v-money="money" id="frm_price" name="price" class="form-control" placeholder="" type="text" maxlength="100" v-model.lazy="item.relationships.price.attributes.price" />
                                             </div>
-
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="frm_currency"><span class="text-capitalize">{{Lang.get('editor.label_currency')}}</span><span title="Обязательное поле" class="required-star">*</span></label>
+                                                <select id="frm_currency" class="form-control" v-model="item.relationships.price.relationships.currency">
+                                                    <option disabled value="">{{Lang.get('editor.label_select_one')}}</option>
+                                                    <option :value="currency" v-for="(currency, index) in currencies">{{currency.attributes.title}}</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <hr/>
-                            <category-selector
-                                    v-if="item !== null"
-                                    v-model = "item.relationships.categories"
-                                    @change="categoryChanged"
-                            ></category-selector>
-                            <hr/>
-                            <h5>{{Lang.get('idea.idea_description')}}</h5>
-                            <div class="form-group">
-                                <label for="frm_title">{{Lang.get('editor.label_title')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                <input id="frm_title" name="title" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.title" />
-                            </div>
-                            <div class="form-group">
-                                <label for="frm_intro">{{Lang.get('editor.label_intro')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                <textarea class="form-control" placeholder="" name="intro" id="frm_intro" rows="6" v-model="item.attributes.intro"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>{{Lang.get('editor.label_description')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                <ckeditor :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
                             </div>
 
                             <div>
                                 <span class="text-secondary">(<span class="required-star">*</span>) {{Lang.get('editor.stars_required')}}</span>
                             </div>
                             <hr/>
-                            <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
 
                         </form>
                     </div>
@@ -106,28 +134,58 @@
 
 <script>
     import Editable from '../../mixins/Editable.js';
-
     import PhotoUploader from '../photo/PhotoUploader.vue';
-    import LocaleSelector from '../LocaleSelector.vue';
     import ExtendedTagSelector from '../ExtendedTagSelector.vue';
     import CategorySelector from '../CategorySelector.vue';
+    import DateSelector from '../DateSelector.vue';
+    import PlaceSelector from '../place/PlaceSelector.vue';
+    import IdeaSelector from '../idea/IdeaSelector.vue';
+    import LocaleSelector from '../LocaleSelector.vue';
+    import {Money} from 'v-money';
 
 
     export default {
 
         name: "IdeaEditor",
-        props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
+
+        props: {
+            propTitle : String,
+            propItemId : Number,
+            propLocale : String,
+        },
 
         mixins: [ Editable ],
 
         components: {
-            PhotoUploader, LocaleSelector, CategorySelector, ExtendedTagSelector
+            PhotoUploader,
+            LocaleSelector,
+            CategorySelector,
+            ExtendedTagSelector,
+            Money,
+            IdeaSelector,
+            DateSelector,
+            PlaceSelector
         },
 
         data(){
             return{
                 type: 'ideas',
+
+                currencies: [],
+
+                money: {
+                    decimal: ',',
+                    thousands: '',
+                    prefix: '',
+                    suffix: '',
+                    precision: 2,
+                    masked: false
+                }
             }
+        },
+
+        mounted(){
+            this.fetchCurrencies();
         },
 
         computed: {
@@ -140,6 +198,9 @@
                     }
                 }
             },
+            ideaId(){
+                return this.propIdeaId;
+            }
 
         },
 
@@ -153,6 +214,26 @@
                 }
             },
 
+            fetchCurrencies(){
+                axios.get(
+                    this.fetchCurrenciesRequestUrl(), { params: {
+                            locale: this.locale,
+                        }}
+                ).then((resp) => {
+                    if (resp.status === 200 || resp.status === 201){
+                        this.currencies = resp.data;
+                    }
+                }).catch(
+
+                ).finally(
+
+                );
+            },
+
+            fetchCurrenciesRequestUrl(){
+                return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
+            }
+
         }
     }
 </script>
@@ -165,5 +246,8 @@
     }
     .btn-edit:hover{
         opacity: 0.6;
+    }
+    .ck.ck-editor__editable_inline {
+        min-height: 500px !important;
     }
 </style>

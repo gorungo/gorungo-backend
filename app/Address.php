@@ -13,43 +13,65 @@ class Address extends Model
 
     public $timestamps = false;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
 
-    Public function getLocalityAttribute() {
-        if ( $this->addressDescriptions()->count() ) {
-            if($this->localisedAddressDescription != null){
-                return $this->localisedAddressDescription->locality;
-            }else if($this->addressDescriptions()->first()){
-                return $this->addressDescriptions()->first()->locality;
-            }
-
+        if(!$this->id){
+            $this->attributes['country_code'] = 'RU';
+            $this->attributes['postal_code'] = '000000';
         }
-        return '';
     }
+
 
     Public function getFullAddressAttribute() {
         return $this->locality;
     }
 
-    Public function getIntroAttribute() {
-        if ( $this->addressDescriptions()->count() ) {
-            if($this->localisedAddressDescription != null){
-                return $this->localisedAddressDescription->intro;
-            }else if($this->addressDescriptions()->first()){
-                return $this->addressDescriptions()->first()->intro;
+    Public function getAddressAttribute() {
+        if ($this->localisedAddressDescription != null) {
+            return $this->localisedAddressDescription->address;
+        } else {
+            $addressDescriptions = $this->addressDescriptions()->first();
+            if ($addressDescriptions) {
+                return $addressDescriptions->address;
             }
-
         }
         return '';
     }
 
-    Public function getDescriptionAttribute() {
-        if ( $this->addressDescriptions()->count() ) {
-            if($this->localisedAddressDescription != null){
-                return $this->localisedAddressDescription->description;
-            }else if($this->addressDescriptions()->first()){
-                return $this->addressDescriptions()->first()->description;
+    Public function getCountryAttribute() {
+        if ($this->localisedAddressDescription != null) {
+            return $this->localisedAddressDescription->country;
+        } else {
+            $addressDescriptions = $this->addressDescriptions()->first();
+            if ($addressDescriptions) {
+                return $addressDescriptions->country;
             }
+        }
+        return '';
+    }
 
+    Public function getRegionAttribute() {
+        if ($this->localisedAddressDescription != null) {
+            return $this->localisedAddressDescription->region;
+        } else {
+            $addressDescriptions = $this->addressDescriptions()->first();
+            if ($addressDescriptions) {
+                return $addressDescriptions->region;
+            }
+        }
+        return '';
+    }
+
+    Public function getCityAttribute() {
+        if ($this->localisedAddressDescription != null) {
+            return $this->localisedAddressDescription->city;
+        } else {
+            $addressDescriptions = $this->addressDescriptions()->first();
+            if ($addressDescriptions) {
+                return $addressDescriptions->city;
+            }
         }
         return '';
     }
@@ -57,7 +79,6 @@ class Address extends Model
     public function addressDescriptions() {
         return $this->hasMany( 'App\AddressDescription', 'address_id', 'id' );
     }
-
 
     public function localisedAddressDescription() {
         return $this
@@ -77,6 +98,23 @@ class Address extends Model
             ->hasOne( 'App\AddressDescription', 'address_id', 'id' )
             ->where( 'locale_id', $localeId )->count();
 
+    }
+
+    public function defaultAddressAttributes()
+    {
+        $lastPlace = Place::lastCreatedPlaceOfAuthUser();
+
+        return [
+            // Address
+            'postal_code' => $lastPlace ? $lastPlace->placeAddress->postal_code : '000000',
+            'country_code' => $lastPlace ? $lastPlace->placeAddress->country_code : 'RU',
+
+            // AddressDescription
+            'address' => $lastPlace ? $lastPlace->placeAddress->address : '',
+            'country' => $lastPlace ? $lastPlace->placeAddress->country : '',
+            'region' => $lastPlace ? $lastPlace->placeAddress->region : '',
+            'city' => $lastPlace ? $lastPlace->placeAddress->city : '',
+        ];
     }
 
 }

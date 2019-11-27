@@ -1,9 +1,11 @@
 <template>
     <div id="ideas-selector" class="ideas-selector">
-        <h5 class="text-capitalize">{{Lang.get('idea.title')}}</h5>
+        <h5 class="text-capitalize">{{Lang.get('idea.item_title')}}
+            <span v-if="needAddButton" class="float-right text-primary" data-toggle="modal" data-target="#ideasSelectorModal"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
+        </h5>
         <!-- Idea selector -->
-        <div class="row">
-            <div v-if="idea && multiselect" class="col-sm-4" v-for="(ideaItem, index) in idea">
+        <div >
+            <div v-if="idea && multiselect" v-for="(ideaItem, index) in idea">
                 <div class="card card-body">
                     <div>
                         {{ideaItem.attributes.title}}
@@ -13,7 +15,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4" v-if="idea && !multiselect">
+            <div v-if="idea && !multiselect">
                 <div class="card card-body">
                     <div>
                         {{idea.attributes.title}}
@@ -22,9 +24,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4" v-if="needAddButton">
-                <span class="btn btn-link" data-toggle="modal" data-target="#ideasSelectorModal"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </div>
         </div>
         <!-- Modal -->

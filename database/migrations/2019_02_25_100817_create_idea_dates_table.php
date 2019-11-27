@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActionDatesTable extends Migration
+class CreateIdeaDatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateActionDatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('action_dates', function (Blueprint $table) {
+        Schema::create('idea_dates', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('action_id')->unsigned();
-            $table->dateTime('start_date_utc');
-            $table->dateTime('end_date_utc')->nullable();
+            $table->integer('idea_id')->unsigned();
+            $table->dateTime('start_datetime_utc');
+            $table->dateTime('end_datetime_utc')->nullable();
             $table->boolean('is_all_day')->default(0);
+            $table->integer('time_zone_offset')->nullable();
             $table->integer('duration');
             $table->integer('is_recurring')->default(0);
-            $table->string('recurrence_pattern', 255);
+            $table->string('recurrence_pattern', 255)->nullable();
 
-            $table->foreign('action_id')->references('id')->on('actions')->onDelete('cascade');
+            $table->foreign('idea_id')->references('id')->on('ideas')->onDelete('cascade');
         });
     }
 
@@ -34,6 +35,6 @@ class CreateActionDatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('action_dates');
+        Schema::dropIfExists('idea_dates');
     }
 }

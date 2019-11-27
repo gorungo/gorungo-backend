@@ -1,9 +1,11 @@
 <template>
     <div id="date-selector" class="date-selector">
-        <h5 class="text-capitalize">{{Lang.get('editor.label_dates')}}</h5>
+        <h5 class="text-capitalize">{{Lang.get('editor.label_dates')}}
+            <span class="float-right text-primary" v-on:click="newDate"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
+        </h5>
         <!-- Date selector -->
-        <div class="row">
-            <div class="col-sm-4" v-for="(date, index) in dates">
+        <div>
+            <div v-for="(date, index) in dates">
                 <div class="card card-body" v-on:click="showDate(index)" :key="index">
                     <div>
                         <span v-if="!date.attributes.end_datetime_utc">{{go.localizeMySqlDate(date.attributes.start_datetime_utc)}}</span>
@@ -13,9 +15,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <span class="btn btn-link" v-on:click="newDate"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </div>
         </div>
 

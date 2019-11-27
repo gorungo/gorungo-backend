@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Requests\Action\StoreAction;
 use DB;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Traits\Imageble;
@@ -31,7 +32,8 @@ class Idea extends Model
 
     protected $fillable = ['author_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug'];
 
-    protected $with = ['localisedIdeaDescription', 'ideaMainCategory'];
+    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice'];
+
 
     Public function getTitleAttribute()
     {
@@ -135,9 +137,38 @@ class Idea extends Model
         return $this->active == 1;
     }
 
-    public function ideaActions()
+    public function ideaPlace()
     {
-        return $this->hasMany('App\Action');
+        return $this->ideaPlaces()->first();
+    }
+
+    public function ideaPlaces()
+    {
+        return $this->belongsToMany('App\Place', 'idea_place', 'idea_id', 'place_id');
+    }
+
+    public function ideaDates()
+    {
+        return $this->hasMany('App\IdeaDate');
+    }
+
+    public function ideaIdeas()
+    {
+        return $this->hasMany('App\Idea');
+    }
+
+    public function ideaParentIdea()
+    {
+        return $this->belongsTo('App\Idea', 'idea_id');
+    }
+
+    public function ideaPrice()
+    {
+        return $this->hasOne('App\IdeaPrice')
+            ->withDefault([
+                'price' => 0,
+                'currency_id' => 3
+            ]);
     }
 
     public function ideaDescriptions()
@@ -244,7 +275,6 @@ class Idea extends Model
         return self::inRandomOrder()->first();
     }
 
-
     public function createAndSync(StoreIdea $request)
     {
 
@@ -255,11 +285,15 @@ class Idea extends Model
             $localeId = LocaleMiddleware::getLocaleId();
 
             $storeData = [
-                'author_id' => 1,
-                'main_category_id' => $request->input('attributes.main_category_id'),
+                'author_id' => Auth()->User()->id,
+                'idea_id' => $request->input('relationships.idea.id'),
                 'active' => $request->input('attributes.active'),
                 'slug' => $this->generateSlug($request->input('attributes.title')),
             ];
+
+            if($request->input('attributes.main_category_id') !== null){
+                $storeData ['main_category_id'] = $request->input('attributes.main_category_id');
+            }
 
             $descriptionStoreData = [
                 'title' => $request->input('attributes.title'),
@@ -322,6 +356,76 @@ class Idea extends Model
     {
         $this->saveCategories($request);
         $this->saveTags($request);
+        $this->savePlaces($request);
+        $this->saveDates($request);
+        $this->savePrice($request);
+    }
+
+    private function savePlaces(StoreIdea $request): void
+    {
+        $places = $request->input('relationships.places');
+        $placeIds = [];
+
+        if (count($places)) {
+            foreach ($places as $place) {
+                if ($place['id'] != '') {
+                    $placeIds[] = $place['id'];
+                }
+            }
+
+            if (count($placeIds)) {
+                $this->ideaPlaces()->syncWithoutDetaching($placeIds);
+            }
+
+        }
+    }
+
+    private function savePrice(StoreIdea $request): void
+    {
+        $actionPrice = $request->input('relationships.price');
+        if ($actionPrice['id'] !== null) {
+            $this->ideaPrice()->whereId($actionPrice['id'])->update([
+                'price' => (int) $actionPrice['attributes']['price'],
+                'currency_id' => $actionPrice['relationships']['currency']['id'],
+            ]);
+        } else {
+            $this->ideaPrice()->create([
+                'price' => (int) $actionPrice['attributes']['price'],
+                'currency_id' => $actionPrice['relationships']['currency']['id'],
+            ]);
+        }
+    }
+
+    private function saveDates(StoreIdea $request): void
+    {
+        $dates = $request->input('relationships.dates');
+
+        if ($dates) {
+            foreach ($dates as $date) {
+                if ($date['id'] !== null) {
+                    $this->ideaDates()->whereId($date['id'])->update([
+                        'start_datetime_utc' => $date['attributes']['start_datetime_utc'],
+                        'end_datetime_utc' => $date['attributes']['end_datetime_utc'],
+                        'time_zone_offset' => $date['attributes']['time_zone_offset'],
+                        'is_all_day' => $date['attributes']['is_all_day'],
+                        'duration' => $date['attributes']['duration'],
+                        'is_recurring' => $date['attributes']['is_recurring'],
+                        'recurrence_pattern' => $date['attributes']['recurrence_pattern'],
+                    ]);
+                } else {
+                    $this->ideaDates()->create([
+                        'start_datetime_utc' => $date['attributes']['start_datetime_utc'],
+                        'end_datetime_utc' => $date['attributes']['end_datetime_utc'],
+                        'time_zone_offset' => $date['attributes']['time_zone_offset'],
+                        'is_all_day' => $date['attributes']['is_all_day'],
+                        'duration' => $date['attributes']['duration'],
+                        'is_recurring' => $date['attributes']['is_recurring'],
+                        'recurrence_pattern' => $date['attributes']['recurrence_pattern'],
+                    ]);
+                }
+            }
+
+        }
     }
 
     private function saveCategories(StoreIdea $request): void
@@ -463,6 +567,26 @@ class Idea extends Model
     public function scopeWhereTags($query, Array $tags)
     {
         return $query->withAllTags($tags);
+    }
+
+    public function scopeDateFilter($query)
+    {
+        return $query->inFuture()->inProgress();
+    }
+
+    public function scopeInFuture($query)
+    {
+        return $query->whereHas('ideaDates', function ($query) {
+            $query->whereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND (TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND (`end_datetime_utc` is not null))")
+                ->orWhereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND `end_datetime_utc` is null");
+        })->orDoesntHave('ideaDates');
+    }
+
+    public function scopeInProgress($query)
+    {
+        return $query->orWhereHas('ideaDates', function ($query) {
+            $query->whereRaw("TO_DAYS(NOW()) > TO_DAYS(`start_datetime_utc`) AND TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND TO_DAYS(`start_datetime_utc`) != TO_DAYS(`end_datetime_utc`)");
+        })->orDoesntHave('ideaDates');
     }
 
     public static function emptyTagsArray()

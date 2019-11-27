@@ -56,6 +56,17 @@ class IdeaPolicy
     }
 
     /**
+     * Determine whether the user can create main ideas.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function createMainIdea(User $user)
+    {
+        return $user->hasPermissionTo('edit ideas');
+    }
+
+    /**
      * Determine whether the user can update the idea.
      *
      * @param  \App\User  $user

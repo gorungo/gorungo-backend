@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <idea-editor  :prop-item-id="@isset($idea->id){{$idea->id}}@else null @endisset" :user="{{json_encode(Auth()->user())}}"></idea-editor>
+    <idea-editor  :prop-item-id="@isset($idea->id){{$idea->id}}@else null @endisset" :prop-user="{{json_encode(Auth()->user())}}"></idea-editor>
 @endsection
 
 

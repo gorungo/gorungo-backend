@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ActionPrice extends Model
+class IdeaPrice extends Model
 {
-    protected $table = 'action_prices';
+    protected $table = 'idea_prices';
     protected $guarded = [];
 
     public $timestamps = false;

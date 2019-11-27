@@ -10,8 +10,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use PHPUnit\Runner\Exception;
 use Spatie\Permission\Traits\HasRoles;
-
+use Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\User as UserResource;
 
 class User extends Authenticatable  implements MustVerifyEmail
 {
@@ -149,6 +150,11 @@ class User extends Authenticatable  implements MustVerifyEmail
     {
         $this->password = bcrypt($request->input('password.new'));
         return $this->save();
+    }
+
+    public static function activeUserResource()
+    {
+        return new UserResource(Auth()->User());
     }
 
 }

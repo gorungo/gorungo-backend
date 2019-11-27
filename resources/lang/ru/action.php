@@ -23,7 +23,8 @@ return[
     // request
 
     'request'=> [
-        'idea_id_required' => 'выберите идею',
+        'idea_id_required' => 'Выберите идею.',
+        'place_type_id_required' => 'Выберите тип объекта.',
     ],
 
 ];
