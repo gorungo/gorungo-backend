@@ -247,7 +247,7 @@ class Idea extends Model
 
     public function actionItemsList()
     {
-        return $this->ideaActions()->isActive()->paginate();
+        return $this->ideaIdeas()->isActive()->paginate();
     }
 
     public static function backgroundImage()
