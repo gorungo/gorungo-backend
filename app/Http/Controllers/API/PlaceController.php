@@ -45,7 +45,7 @@ class PlaceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  GetFilterItems $request
+     * @param  StorePlace $request
      * @param  Place $place
      * @return PlaceResource
      */
@@ -83,7 +83,7 @@ class PlaceController extends Controller
      * @param  Place $place
      * @return PlaceResource
      */
-    public function update(GetFilterItems $request, Place $place)
+    public function update(StorePlace $request, Place $place)
     {
         return new PlaceResource($place->updateAndSync($request));
     }

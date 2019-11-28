@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Requests\Place\StorePlace;
 use App\Traits\Imageble;
 use DB;
 use GeoJson\Geometry\Geometry;
@@ -194,7 +195,7 @@ class Place extends Model
         return '/images/bg/mountains_blue.svg';
     }
 
-    public function createAndSync( GetFilterItems $request ){
+    public function createAndSync( StorePlace $request ){
 
         $createResult = DB::transaction(function () use ($request) {
 
@@ -227,7 +228,7 @@ class Place extends Model
         return $createResult;
     }
 
-    public function updateAndSync( GetFilterItems $request ) {
+    public function updateAndSync( StorePlace $request ) {
 
         $updateResult = DB::transaction( function () use ( $request ) {
 
@@ -265,7 +266,7 @@ class Place extends Model
 
     }
 
-    private function updateRelationships( GetFilterItems $request ) : void
+    private function updateRelationships( StorePlace $request ) : void
     {
         $this->saveAddress( $request );
     }
