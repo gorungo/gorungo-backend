@@ -79,7 +79,7 @@ class PlaceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  GetFilterItems $request
+     * @param  StorePlace $request
      * @param  Place $place
      * @return PlaceResource
      */
