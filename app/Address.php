@@ -13,17 +13,6 @@ class Address extends Model
 
     public $timestamps = false;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if(!$this->id){
-            $this->attributes['country_code'] = 'RU';
-            $this->attributes['postal_code'] = '000000';
-        }
-    }
-
-
     Public function getFullAddressAttribute() {
         return $this->locality;
     }
