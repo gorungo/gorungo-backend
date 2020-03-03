@@ -78,7 +78,7 @@ class Photo extends Model
     }
 
 
-    public function createAndStore(UploadPhoto $request, Model $model){
+    public function createAndStore(UploadPhoto $request, Model $model, $setMain=false){
 
         $newPhoto = null;
 
@@ -220,6 +220,9 @@ class Photo extends Model
             if($this->item_type == 'Post'){
                 $img->fit(400,300);
 
+            }else if($this->item_type == 'Idea'){
+                $img->fit(600,800);
+
             }else{
                 $img->resize( $this->thmbWidth, null, function ($constraint) {
                     $constraint->aspectRatio();
@@ -245,6 +248,60 @@ class Photo extends Model
         return [
             'type' => 'error',
         ];
+
+    }
+
+    public function uploadMainPhoto($request)
+    {
+        $newPhoto = null;
+
+        $image = $request->file('image');
+        $rnd = str_random(5);
+
+        $newFileNameBig = mb_strtolower('img' . $rnd . '.' . $image->getClientOriginalExtension());
+        $newFileNameSmall = mb_strtolower('img' . $rnd . '_sml.' . $image->getClientOriginalExtension());
+
+        $uploadPathBig = 'images/profile/' . $this->id . '/' . $newFileNameBig;
+        $uploadPathSmall = 'images/profile/' . $this->id . '/' . $newFileNameSmall;
+
+        // сохраняем изображение на диске в нужной папке, если нужно ресайзим
+
+        if ($request->hasFile('image')) {
+
+            try {
+
+                array_map( 'unlink', glob( public_path( 'storage/images/profile/' . $this->id ) . "/img*.*" ) );
+
+
+                $image = $request->file('image');
+                $img = Image::make($image->getRealPath())->orientate();
+
+                // сохраняем аватарку 200 на 200
+
+                $img->fit( 200, 200 );
+                $img->stream();
+                Storage::disk( 'public' )->put( $uploadPathBig, $img, 'public' );
+
+                // сохраняем аватарку 50 на 50
+
+                $img->fit( 50, 50 );
+                $img->stream();
+                Storage::disk( 'public' )->put( $uploadPathSmall, $img, 'public' );
+
+                if(file_exists('storage/'. $uploadPathBig) && file_exists('storage/'. $uploadPathSmall)){
+                    $this->thmb_file_name = $newFileNameBig;
+                    $this->save();
+                }
+
+            } catch (\Exception $e){
+                Log::error($e);
+            }
+
+        }
+
+
+
+        return $this->imageUrl;
 
     }
 

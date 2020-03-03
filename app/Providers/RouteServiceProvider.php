@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Idea;
-use App\Category;
+use App\Place;
+use \Hashids\Hashids;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -25,7 +27,23 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::bind('idea', function($value, $route)
+        {
+            $hashids = new Hashids(config('app.name'), 7);
+
+            $id = $hashids->decode($value)[0];
+
+            return Idea::findOrFail($id);
+        });
+
+        Route::bind('place', function($value, $route)
+        {
+            $hashids = new Hashids(config('app.name'), 7);
+
+            $id = $hashids->decode($value)[0];
+
+            return Place::findOrFail($id);
+        });
 
         parent::boot();
 

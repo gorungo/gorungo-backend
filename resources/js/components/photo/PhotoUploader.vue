@@ -1,64 +1,58 @@
 <template>
-    <div>
-        <div class="card mb-2" :class="{dragging: isDragging}">
-            <div class="card-body">
-                <div v-if="itemId > 0">
-                    <div class="picture-edit-wrap"
-                         @dragover.prevent
-                         @drop="onDrop"
-                         @dragenter="onDragEnter"
-                         @dragleave="onDragLeave"
-                         >
-                        <div class="picture_edit clearfix">
-                            <div v-if="!files.length && !filesOrder.length" class="text-center">
-                                <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
-                                <p class="text-capitalize">{{Lang.get('editor.label_drag_images_or_press_upload')}}</p>
+    <div id="images-editor" class="images-uploader">
+        <div class="pb-4" :class="{dragging: isDragging}">
+            <div v-if="itemId">
+                <h4 class="text-capitalize mb-4">{{Lang.get('editor.label_pictures')}}</h4>
+                <div class="picture-edit-wrap"
+                     @dragover.prevent
+                     @drop="onDrop"
+                     @dragenter="onDragEnter"
+                     @dragleave="onDragLeave"
+                     >
+                    <div class="picture_edit clearfix">
+                        <div v-if="!files.length && !filesOrder.length" class="text-center">
+                            <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
+                            <p class="text-capitalize">{{Lang.get('editor.label_drag_images_or_press_upload')}}</p>
+                        </div>
+                        <div class="tmb-sml" v-for="(file, index) in files">
+                            <div class="del-btn" v-on:click="deletePhoto(index)">
+                                <img src="/images/interface/icos/ico_del.png"/>
                             </div>
-                            <div class="tmb-sml" v-for="(file, index) in files">
-                                <div class="del-btn" v-on:click="deletePhoto(index)">
-                                    <img src="/images/interface/icos/ico_del.png"/>
-                                </div>
-                                <div class="star-btn"  v-on:click="setMainPhoto(index)">
-                                    <img src="/images/interface/icos/ico_star.png">
-                                </div>
-                                <div class="tmb-sml-in">
-                                    <img :src="file.url" border=0 height="100%"/>
-                                </div>
+                            <div class="star-btn"  v-on:click="setMainPhoto(index)">
+                                <img src="/images/interface/icos/ico_star.png">
                             </div>
-                            <div class="tmb-sml" v-for="(file, index) in imagesOrder">
-                                <div class="tmb-sml-in">
-                                    <img src="/images/interface/loaders/loader.gif" class="img-loader" height="50px"/>
-                                    <img :src="file" class="img-is-loading" border=0 height="100%"/>
-                                </div>
+                            <div class="tmb-sml-in">
+                                <img :src="file.url" border=0 height="100%"/>
                             </div>
                         </div>
-
-
-                    </div>
-                    <div class="">
-                        <div v-if="loading" class="progress" style="height: 1px">
-                            <div class="progress-bar" role="progressbar" :style="{ width: fileProgress + '%'}"></div>
-                        </div>
-                        <hr v-if="!loading">
-                        <div class="file-upload bs">
-                            <i class="fas fa-upload"></i> {{Lang.get('editor.label_load_image')}}
-                            <input type="file" name="image" id="file_uploader" multiple="" accept="image/*" @change="fileInputChange" />
-                        </div>
-                        <div v-if="files.length > 0" class="blue_info_block">{{Lang.get('editor.label_select_image_and_press_star_to_make_main')}} <img id="img_star" src="/images/interface/icos/ico_star.png"></div>
-                        <div class="row" v-if="loading">
-                            <div class="col-sm-6">
-                                <h5 class="text-center">Файлы в очереди ({{ filesOrder.length}})</h5>
-                            </div>
-                            <div class="col-sm-6">
-                                <h5 class="text-center">Загруженные файлы ({{ filesFinish.length}})</h5>
+                        <div class="tmb-sml" v-for="(file, index) in imagesOrder">
+                            <div class="tmb-sml-in">
+                                <img src="/images/interface/loaders/loader.gif" class="img-loader" height="50px"/>
+                                <img :src="file" class="img-is-loading" border=0 height="100%"/>
                             </div>
                         </div>
                     </div>
+
                 </div>
-                <div v-else class="text-center">
-                    <i class="fas fa-camera" style="font-size: 100px; color: #c4e7f9;"></i>
-                    <p class="text-capitalize">{{Lang.get('editor.label_can_add_image_after_saving')}}</p>
+                <div class="">
+                    <div v-if="loading" class="progress" style="height: 1px">
+                        <div class="progress-bar" role="progressbar" :style="{ width: fileProgress + '%'}"></div>
+                    </div>
+                    <hr v-if="!loading">
+                    <div class="file-upload bs">
+                        <i class="fas fa-upload"></i> {{Lang.get('editor.label_load_image')}}
+                        <input type="file" name="image" id="file_uploader" multiple="" accept="image/*" @change="fileInputChange" />
+                    </div>
+                    <div v-if="files.length > 0" class="blue_info_block">{{Lang.get('editor.label_select_image_and_press_star_to_make_main')}} <img id="img_star" src="/images/interface/icos/ico_star.png"></div>
                 </div>
+            </div>
+            <div v-else class="clearfix d-flex" style="justify-content: center;">
+                <el-col :span="12">
+                    <el-card class="box-card text-center" shadow="never">
+                        <h3 class="text-first-uppercase">{{go.firstToUpperCase(Lang.get('editor.label_idea_images'))}}</h3>
+                        <p class="text-first-uppercase">{{go.firstToUpperCase(Lang.get('editor.label_can_add_image_after_saving'))}}</p>
+                    </el-card>
+                </el-col>
             </div>
         </div>
         <img style="display: none;" src="/images/interface/loaders/loader.gif" class="img-loader" border=0 />
@@ -70,7 +64,11 @@
     export default {
 
         name: "PhotoUploader",
-        props: ['type', 'itemId'],
+        props: {
+            type: String,
+            itemId: Number,
+            hid: String,
+        },
         mixins: [Localized],
 
 
@@ -86,6 +84,8 @@
 
                 isDragging: false,
                 dragCount: 0,
+
+                maxFileSize: 10000000,
             }
         },
 
@@ -95,28 +95,38 @@
         },
 
         computed: {
-
+            go(){
+                return window.go;
+            },
         },
 
         methods: {
             async fileInputChange(){
 
                 let files = Array.from(event.target.files);
-
                 this.filesOrder = files.slice();
 
                 files.forEach(file => this.addImage(file));
 
-                for( let item of files){
-                    await this.uploadFile(item);
+                for( let file of files){
+                    await this.uploadFile(file);
                 }
 
             },
 
-            async uploadFile(item){
+            async uploadFile(file){
+
+                if(!this.checkFileSize(file)) {
+                    this.fileProgress = 0;
+                    this.fileCurrent = '';
+                    this.filesFinish.push(file);
+                    this.filesOrder.splice(file, 1);
+                    this.imagesOrder.splice(file, 1);
+                    return false;
+                }
 
                 let form = new FormData();
-                form.append('image', item);
+                form.append('image', file);
 
                 this.loading = true;
 
@@ -131,9 +141,9 @@
                     if (resp.status === 200) {
                         this.fileProgress = 0;
                         this.fileCurrent = '';
-                        this.filesFinish.push(item);
-                        this.filesOrder.splice(item, 1);
-                        this.imagesOrder.splice(item, 1);
+                        this.filesFinish.push(file);
+                        this.filesOrder.splice(file, 1);
+                        this.imagesOrder.splice(file, 1);
 
                         this.files.push(resp.data.file);
 
@@ -267,7 +277,23 @@
                 }
             },
 
+            checkFileSize(file) {
+                if(file.size > this.maxFileSize) {
+                    return false;
+                }
+                return true;
+            },
+
+            showMaxFileSizeLimitMessage(){
+                this.$message.error(Lang.get('editor.max_file_size_limit') + ' ' + this.maxFileSize / 100000 + ' ' + Lang.get('editor.megabyte')+'.');
+            },
+
             addImage(file){
+
+                if(!this.checkFileSize(file)) {
+                    this.showMaxFileSizeLimitMessage();
+                    return false;
+                }
 
                 if(!file.type.match('image.*')){
                     console.log('${file.name} is not an image');

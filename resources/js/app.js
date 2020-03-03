@@ -7,8 +7,19 @@
 
 require('./bootstrap');
 
+import ElementUI from 'element-ui';
 import CKEditor from '@ckeditor/ckeditor5-vue';
-Vue.use( CKEditor );
+import enlLocale from 'element-ui/lib/locale/lang/en';
+import rulLocale from 'element-ui/lib/locale/lang/ru-RU';
+import cnlLocale from 'element-ui/lib/locale/lang/zh-CN';
+import locale from 'element-ui/lib/locale'
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(CKEditor);
+Vue.use(ElementUI, { locale });
+
+// configure language
+locale.use(enlLocale);
 
 //vuex --------------------
 //import Vuex from 'vuex';
@@ -29,13 +40,19 @@ Vue.use( CKEditor );
 Vue.component('CategoryEditor', require('./components/category/CategoryEditor.vue').default);
 Vue.component('ActionEditor', require('./components/action/ActionEditor.vue').default);
 Vue.component('PlaceEditor', require('./components/place/PlaceEditor.vue').default);
+
 Vue.component('IdeaEditor', require('./components/idea/IdeaEditor.vue').default);
+Vue.component('DatesAndPricesEditor', require('./components/idea/DatesAndPricesEditor.vue').default);
+Vue.component('ItineraryEditor', require('./components/idea/ItineraryEditor.vue').default);
+
 Vue.component('ProfileEditor', require('./components/profile/ProfileEditor.vue').default);
 
 Vue.component('RandomIdea', require('./components/idea/RandomIdea.vue').default);
 Vue.component('MainPlaceFilter', require('./components/place/MainPlaceFilter.vue').default);
 Vue.component('SeasonFilter', require('./components/filter/SeasonFilter.vue').default);
 Vue.component('TimeFilter', require('./components/filter/TimeFilter.vue').default);
+
+Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').default);
 
 
 /**

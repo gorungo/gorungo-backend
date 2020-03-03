@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\IdeaPrice as IdeaPriceResource;
 
 class Date extends JsonResource
 {
@@ -22,17 +23,15 @@ class Date extends JsonResource
             'locale' => LocaleMiddleware::getLocale() ,
 
             'attributes' => [
-                'start_datetime_utc' => $this->start_datetime_utc,
-                'end_datetime_utc' => $this->end_datetime_utc,
+                'start_date' => $this->start_date,
+                'start_time' => $this->start_time,
                 'time_zone_offset' => $this->time_zone_offset,
-
-                'is_all_day' => $this->is_all_day,
-                'duration' => $this->duration,
-                'is_recurring' => $this->is_recurring,
-                'recurrence_pattern' => $this->recurrence_pattern,
             ],
 
-            'relationships' => null
+            'relationships' => [
+                //'ideaPrices' => IdeaPriceResource::collection($this->whenLoaded('ideaPrices')),
+                'ideaPrice' => new IdeaPriceResource($this->whenLoaded('ideaPrice')),
+            ]
         ];
     }
 }

@@ -10,28 +10,30 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^5.10.2",
+        "@fortawesome/fontawesome-free": "^5.12.0",
         "axios": "^0.18.1",
-        "bootstrap": "^4.3.1",
-        "cross-env": "^5.1",
+        "bootstrap": "^4.4.1",
+        "cross-env": "^5.2.1",
         "jquery": "^3.4.1",
-        "laravel-mix": "^4.1.2",
+        "laravel-mix": "^4.1.4",
         "lodash": "^4.17.15",
-        "popper.js": "^1.15.0",
+        "node-sass": "^4.13.1",
+        "popper.js": "^1.16.1",
         "resolve-url-loader": "^2.3.2",
-        "sass": "^1.22.10",
+        "sass": "^1.25.0",
         "sass-loader": "^7.3.1",
-        "vue": "^2.6.10",
-        "vue-template-compiler": "^2.6.10",
+        "vue": "^2.6.11",
+        "vue-template-compiler": "^2.6.11",
         "webpack-shell-plugin": "^0.5.0"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-alignment": "^11.1.3",
-        "@ckeditor/ckeditor5-build-classic": "^12.3.1",
-        "@ckeditor/ckeditor5-vue": "^1.0.0-beta.2",
+        "@ckeditor/ckeditor5-alignment": "^11.2.0",
+        "@ckeditor/ckeditor5-build-classic": "^12.4.0",
+        "@ckeditor/ckeditor5-vue": "^1.0.1",
+        "element-ui": "^2.13.0",
         "lang.js": "^1.1.14",
         "v-money": "^0.8.1",
         "vuejs-datepicker": "^1.6.2",
-        "vuex": "^3.1.1"
+        "vuex": "^3.1.2"
     }
 }

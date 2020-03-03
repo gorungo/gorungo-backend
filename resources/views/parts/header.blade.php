@@ -7,11 +7,13 @@
         <div class="col-sm-4">
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
+                    @auth
+                    <li class="nav-item @if(Route::currentRouteName() == 'feed') active @endif">
+                        <a class="nav-link text-first-uppercase" href="{{route('feed') . MainFilter::queryString()}}">{{__('feed.title')}}</a>
+                    </li>
+                    @endauth
                     <li class="nav-item @if(Route::currentRouteName() == 'ideas.index') active @endif">
                         <a class="nav-link text-first-uppercase" href="{{route('ideas.index') . MainFilter::queryString()}}">{{__('idea.title')}}</a>
-                    </li>
-                    <li class="nav-item @if(Route::currentRouteName() == 'actions.index') active @endif">
-                        <a class="nav-link text-first-uppercase" href="{{route('actions.index') . MainFilter::queryString()}}">{{__('action.title')}}</a>
                     </li>
                     <li class="nav-item @if(Route::currentRouteName() == 'places.index') active @endif">
                         <a class="nav-link text-first-uppercase" href="{{route('places.index') . MainFilter::queryString()}}">{{__('place.title')}}</a>

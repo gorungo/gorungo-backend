@@ -63,8 +63,6 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/ideas/{idea}/edit', 'API\IdeaController@edit')->name('api.ideas.edit');
         Route::post('/ideas', 'API\IdeaController@store')->name('api.ideas.store');
 
-        Route::get('/ideas/extended_tags', 'API\IdeaController@getAllAvailableTags')->name('api.ideas.get_all_available_tags');
-
         Route::patch('/ideas/{idea}', 'API\IdeaController@update')->name('api.ideas.update');
         Route::delete('/ideas/{idea}', 'API\IdeaController@destroy')->name('api.ideas.destroy');
 
@@ -89,6 +87,9 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/categories/{categoryId}/fullcategorieslisting', 'Api\CategoryController@fullCategoriesListing')->name('api.category.fullcategorieslisting');
         Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
 
+
+        // tags
+        Route::get('/tags/allMain', 'API\TagController@allMainTagsCollection')->name('api.tags.all_main_tags_collection');
 
 
         /*
@@ -158,6 +159,32 @@ Route::group(['prefix' => 'v1'], function() {
 
         /*
          * -------------------------------------------------------------------------
+         * IDEA ITINERARY PHOTOS ROUTING
+         * -------------------------------------------------------------------------
+         */
+
+        //Get listing of photos
+        Route::get('/ideas/{idea}/itineraries/{itinerary}/photos', "API\Photo\IdeaItineraryController@index")
+            ->name('api.ideas.photos_index');
+
+        //Upload photo
+        Route::post('/ideas/{idea}/itineraries/{itinerary}/photos', 'API\Photo\IdeaItineraryController@upload')
+            ->name('api.ideas.photos_upload');
+
+        //Upload and set main photo
+        Route::post('/ideas/{idea}/itineraries/{itinerary}/photo', 'API\Photo\IdeaItineraryController@uploadMain')
+            ->name('api.ideas.photos_upload');
+
+        //Set item main photos
+        Route::patch('/ideas/{idea}/itineraries/{itinerary}/photos/{photo}/set_main', 'API\Photo\IdeaItineraryController@setMain')
+            ->name('api.ideas.photos_set_main');
+
+        //Delete item main photos
+        Route::delete('/ideas/{idea}/itineraries/{itinerary}/photos/{photo}', 'API\Photo\IdeaItineraryController@destroy')
+            ->name('api.ideas.photos_destroy');
+
+        /*
+         * -------------------------------------------------------------------------
          * PLACES PHOTOS ROUTING
          * -------------------------------------------------------------------------
          */
@@ -177,6 +204,7 @@ Route::group(['prefix' => 'v1'], function() {
         //Delete item main photos
         Route::delete('/places/{place}/photos/{photo}', 'API\Photo\PlaceController@destroy')
             ->name('api.ideas.photos_destroy');
+
 
         /*
          * -------------------------------------------------------------------------
@@ -215,7 +243,11 @@ Route::group(['prefix' => 'v1'], function() {
 
     //Get listing of places by title
     Route::get('/ideas/getByTitle', "API\IdeaController@getByTitle")
-        ->name('api.place.get_by_title');
+        ->name('api.idea.get_by_title');
+
+    //Get listing of places by title
+    Route::get('/ideas/main', "API\IdeaController@getMain")
+        ->name('api.idea.main');
 
     Route::get('/ideas/randomIdea', 'API\IdeaController@randomIdea')->name('api.ideas.random_idea');
 

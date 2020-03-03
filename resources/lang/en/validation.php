@@ -128,6 +128,7 @@ return [
     */
 
     'custom' => [
+        'required' => 'The field is required.',
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -138,7 +139,10 @@ return [
             'required' => 'Select place.',
         ],
         'relationships.dates' => [
-            'required' => 'Select date.',
+            'required' => 'Fill out dates.',
+        ],
+        'relationships.itineraries' => [
+            'required' => 'Fill out itineraries.',
         ],
         'relationships.dates.*.attributes.start_datetime_utc' => [
             'date' => 'Select real date.',
@@ -161,6 +165,8 @@ return [
         'attributes.intro'=> 'intro',
         'attributes.description'=> 'description',
         'relationships.categories' => 'categories',
+
+        'relationships.itineraries' => 'itineraries',
 
     ],
 

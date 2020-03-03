@@ -24,8 +24,9 @@ export default {
             item: null,
 
             // --------------------------------------
+            autoSaveChanges: false, // enable changes autoSaving
+            hasPageChanges: false, //
             dataLoaded: false,
-            hasPageChanges: false,
             loading: false,
             errors: null,
 
@@ -64,7 +65,16 @@ export default {
         itemId: function(val){
             document.title = this.documentTitle;
             this.title = this.documentTitle;
-        }
+        },
+
+        item: {
+            handler: function (val, oldVal) {
+               if(oldVal !== null) {
+                   this.hasPageChanges = true;
+               }
+            },
+            deep: true
+        },
 
     },
 
@@ -78,6 +88,18 @@ export default {
 
             if(this.propItemId !== undefined && this.propItemId !== null){
                 return this.propItemId;
+            }
+
+            return null;
+        },
+
+        hid(){
+            if(this.item !== null && this.item.hid !== null) {
+                return this.item.hid;
+            }
+
+            if(this.propHid !== undefined && this.propHid !== null){
+                return this.propHid;
             }
 
             return null;
@@ -137,12 +159,13 @@ export default {
                         if (resp.status === 200) {
                             this.dataLoaded = true;
                             this.item = resp.data.data;
+                            this.hasPageChanges = false;
                         }
 
                     }).catch( (error) => {
 
                     if (error.response === undefined) {
-                        userui.showNoInternetNotification();
+                        this.showNoInternetNotification();
                     }
                     this.loading = false;
 
@@ -183,15 +206,14 @@ export default {
                             }
 
                             this.afterSave();
-
-                            userui.showNotification('Успешно сохранено', 'green');
+                            this.showNotification('Сохранение', 'Успешно сохранено');
                         }else{
-                            userui.showNoInternetNotification();
+                            this.showNoConnectionNotification();
                         }
 
 
                     }else{
-                        userui.showNotification('Ошибка', 'red');
+                        this.showNotification('Ошибка', 'Произошла ошибка', 'error');
                     }
 
                 }).catch( (error) => {
@@ -203,10 +225,10 @@ export default {
                     }
 
                     if (error.response === undefined) {
-                        userui.showNoInternetNotification();
+                        this.showNoInternetNotification();
                     }
 
-                    userui.showNotification('Ошибка', 'red');
+                    this.showNotification('Ошибка', 'Произошла ошибка', 'error');
 
 
                 }).finally( () => {
@@ -249,7 +271,11 @@ export default {
             if(this.itemId === null){
                 return '/api/' + window.systemInfo.apiVersion + '/' + this.type ;
             }else{
-                return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/' + this.itemId;
+                if(this.hid){
+                    return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/' + this.hid;
+                }else{
+                    return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/' + this.itemId;
+                }
             }
 
 
@@ -265,8 +291,25 @@ export default {
             return saveMethod;
         },
 
-        afterSave(){
+        showNotification(title, message, type = 'success'){
+            let notificationPosition = 'bottom-left';
+            let offset = 0;
 
+            this.$notify({
+                title: title,
+                message: message,
+                type: type,
+                position: notificationPosition,
+                offset: offset,
+            });
+        },
+
+        showNoConnectionNotification(){
+            this.showNotification('error', 'There was an error', 'error');
+        },
+
+        afterSave(){
+            this.hasPageChanges = false;
         },
 
         getBrowserLocale: function() {

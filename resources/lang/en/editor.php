@@ -29,8 +29,11 @@ return [
 
     'yes_delete' => 'yes, delete',
 
+    // tabs
     'tab_main' => 'main',
     'tab_pictures' => 'pictures',
+    'tab_itinerary' => 'itinerary',
+    'tab_dates' => 'dates',
 
     'label_add' => 'add',
     'label_category' => 'category',
@@ -46,12 +49,17 @@ return [
     'label_not_active' => 'not active',
     'label_more_information' => 'more information',
     'label_tags' => 'tags',
+    'label_new_tag' => 'new tag',
     'label_nothing_found' => 'nothing was found, please change request and try again',
     'label_load_image' => 'upload image',
     'label_drag_images_or_press_upload' => 'drag and drop images or press upload',
-    'label_can_add_image_after_saving' => 'you can add a photo after saving',
-    'label_select_image_and_press_star_to_make_main' => 'press star to make photo main',
+    'label_idea_images' => 'idea images',
+    'label_can_add_image_after_saving' => 'add and save idea description before adding images',
+    'label_select_image_and_press_star_to_make_main' => 'click star to make photo main',
+    'label_pictures' => 'pictures',
 
+    'editor_no_dates_title' => 'idea dates',
+    'editor_no_dates_description' => 'add idea dates and prices',
 
     'label_for_season' => 'for season',
     'label_for_time' => 'for time',
@@ -84,6 +92,15 @@ return [
 
     'save_button' => 'SAVE',
     'close_button' => 'CLOSE',
+
+    'saving' => 'saving',
+    'save_success' => 'saved successfully',
+    'save_error' => 'there was an error',
+    'error' => 'error',
+
+    'max_file_size_limit' => 'file size should not exceed',
+    'megabytes' => 'megabytes',
+    'megabyte' => 'megabyte',
 
 
 ];

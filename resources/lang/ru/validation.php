@@ -104,6 +104,7 @@ return [
     |
     */
     'custom'               => [
+        'required' => 'Поле обязательно для заполнения.',
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -114,9 +115,12 @@ return [
             'required' => 'Выберите место.',
         ],
         'relationships.dates' => [
-            'required' => 'Выберите дату.',
+            'required' => 'Заполните даты мероприятия',
         ],
-        'relationships.dates.*.attributes.start_datetime_utc' => [
+        'relationships.itineraries' => [
+            'required' => 'Заполните план мероприятия.',
+        ],
+        'relationships.dates.*.attributes.start_date' => [
             'date' => 'Укажите верную дату.',
         ],
     ],
@@ -143,6 +147,7 @@ return [
         'attributes.description' => 'описание',
 
         'relationships.places' => 'места',
+        'relationships.itineraries' => 'план меропиятия',
         'relationships.idea.id' => 'идея',
 
         'relationships.price.attributes.price' => 'стоимость',

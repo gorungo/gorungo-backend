@@ -80,8 +80,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" v-on:click="closeSelectorWindow">{{Lang.get('editor.close')}}</button>
-                        <button type="button" class="btn btn-primary" v-on:click="saveDate">{{Lang.get('editor.save')}}</button>
+                        <button type="button" class="btn btn-secondary" v-on:click="closeSelectorWindow">{{Lang.get('editor.close_button')}}</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveDate">{{Lang.get('editor.save_button')}}</button>
                     </div>
                 </div>
             </div>
@@ -148,6 +148,7 @@
                 return window.go;
             },
         },
+
         watch: {
 
         },

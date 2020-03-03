@@ -5,12 +5,10 @@ use Closure;
 use App;
 use Request;
 use App\Locale;
+use Illuminate\Support\Facades\Redirect;
 
 class LocaleMiddleware
 {
-    public static $mainLanguage = 'ru'; //основной язык, который не должен отображаться в URl
-    public static $languages = ['en', 'ru', 'ch']; // Указываем, какие языки будем использовать в приложении.
-
 
     public function __construct()
     {
@@ -23,19 +21,21 @@ class LocaleMiddleware
      */
     public static function getLocale()
     {
+
         $uri = Request::path(); //получаем URI
 
         $request = Request::input();
 
-        if(isset($request['locale']) && in_array($request['locale'], self::$languages)){
-            return $request['locale'] !== self::$mainLanguage ? $request['locale']:null;
+        if(isset($request['locale']) && in_array($request['locale'], config('app.languages'))){
+            // if we have get param locale
+            return $request['locale'] !== config('app.locale') ? $request['locale'] : null;
         }else{
 
             $segmentsURI = explode('/', $uri); //делим на части по разделителю "/"
 
             //Проверяем метку языка  - есть ли она среди доступных языков
-            if (!empty($segmentsURI[0]) && in_array($segmentsURI[0], self::$languages)) {
-                if ($segmentsURI[0] != self::$mainLanguage) return $segmentsURI[0];
+            if (!empty($segmentsURI[0]) && in_array($segmentsURI[0], config('app.languages'))) {
+                if ($segmentsURI[0] != config('app.locale')) return $segmentsURI[0];
             }
         }
 
@@ -56,13 +56,13 @@ class LocaleMiddleware
         }
 
         if($locale){
-            $key = array_search($locale, self::$languages);
+            $key = array_search($locale, config('app.languages'));
 
             if($key !== Null){
                 return $key + 1;
             }
         }else{
-            $key = array_search(self::$mainLanguage, self::$languages);
+            $key = array_search(config('app.locale'), config('app.languages'));
 
             if($key !== Null){
                 return $key + 1;
@@ -73,7 +73,7 @@ class LocaleMiddleware
     }
 
     public function isValidLocaleSymbol($localeSymbol){
-        return in_array($localeSymbol, self::$languages);
+        return in_array($localeSymbol, config('app.languages'));
     }
 
     /**
@@ -85,7 +85,7 @@ class LocaleMiddleware
 
         if($locale) App::setLocale($locale);
         //если метки нет - устанавливаем основной язык $mainLanguage
-        else App::setLocale(self::$mainLanguage);
+        else App::setLocale(config('app.locale'));
 
         return $next($request); //пропускаем дальше - передаем в следующий посредник
     }
@@ -97,5 +97,6 @@ class LocaleMiddleware
         // parsing string like this 'en-GB,en;q=0.8'
         return explode(explode(request()->server('HTTP_ACCEPT_LANGUAGE'), ';')[0],',')[0];
     }
+
 
 }

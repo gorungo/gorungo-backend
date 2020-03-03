@@ -23,27 +23,37 @@ class StoreIdea extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'attributes.title' => 'required|min:3|max:100',
             'attributes.intro' => 'required|min:3|max:199',
             'attributes.description' => 'required|min:5',
             'attributes.active' => 'required|integer',
 
             'relationships.categories' => 'required|array',
-            'relationships.categories.*.id' => 'required|numeric|exists:categories',
+            'relationships.categories.*.id' => 'required|numeric|exists:categories,id',
 
-            'relationships.idea.id' => 'required|integer',
+            'relationships.itineraries' => 'required|array',
+            'relationships.itineraries.*.attributes.title' => 'required',
+            'relationships.itineraries.*.attributes.description' => 'required',
 
-            'relationships.places' => 'array|required',
-            'relationships.places.*.id' => 'required|exists:places,id',
-
-            'relationships.dates' => 'array|required',
-            'relationships.dates.*.attributes.start_datetime_utc' => 'date',
-
-            'relationships.price.attributes.price' => 'nullable',
-            'relationships.price.relationships.currency.id' => 'required|integer|exists:currencies,id',
+            'relationships.dates' => 'required|array|nullable',
+            'relationships.dates.*.relationships.ideaPrice.attributes.price' => 'required|nullable',
+            'relationships.dates.*.relationships.ideaPrice.relationships.currency.id' => 'required|integer|exists:currencies,id',
 
         ];
+        if(!Auth()->user()->can('createMainIdea')){
+            $rules[] = [
+                'relationships.idea.id' => 'required|integer|exists:ideas,id',
+
+                'relationships.places' => 'array|required',
+                'relationships.places.*.id' => 'required|exists:places,id',
+
+                'relationships.dates' => 'array|required',
+                'relationships.dates.*.attributes.start_datetime_utc' => 'date',
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages()

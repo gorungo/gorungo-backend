@@ -43,7 +43,8 @@ class IdeaController extends Controller
             'ideaPlaces',
             'ideaDates',
             'ideaParentIdea',
-            'ideaCategories'
+            'ideaCategories',
+            'ideaItineraries'
         ]));
     }
 
@@ -61,7 +62,8 @@ class IdeaController extends Controller
             'ideaPlaces',
             'ideaDates',
             'ideaParentIdea',
-            'ideaCategories'
+            'ideaCategories',
+            'ideaItineraries'
         ]));
     }
 
@@ -78,7 +80,8 @@ class IdeaController extends Controller
             'ideaPlaces',
             'ideaDates',
             'ideaParentIdea',
-            'ideaCategories'
+            'ideaCategories',
+            'ideaItineraries'
         ]));
     }
 
@@ -95,7 +98,8 @@ class IdeaController extends Controller
             'ideaPlaces',
             'ideaDates',
             'ideaParentIdea',
-            'ideaCategories'
+            'ideaCategories',
+            'ideaItineraries'
         ]));
     }
 
@@ -113,7 +117,8 @@ class IdeaController extends Controller
             'ideaPlaces',
             'ideaDates',
             'ideaParentIdea',
-            'ideaCategories'
+            'ideaCategories',
+            'ideaItineraries'
         ]));
     }
 
@@ -137,12 +142,6 @@ class IdeaController extends Controller
     {
         return response()->json($this->idea->ideaPhotos()->isActive()->get());
     }
-
-    public function getAllAvailableTags()
-    {
-        return $this->idea->getAllTags();
-    }
-
 
     /**
      * Return list of items photo
@@ -168,5 +167,9 @@ class IdeaController extends Controller
 
     public function getByTitle(Request $request){
         return IdeaResource::collection(Idea::getByTitle($request->title));
+    }
+
+    public function getMain(Request $request){
+        return IdeaResource::collection(Idea::getMain($request->title));
     }
 }

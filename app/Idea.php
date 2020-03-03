@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Http\Requests\Action\StoreAction;
 use DB;
-use App\Http\Requests\Photo\UploadPhoto;
 use App\Traits\Imageble;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -30,10 +28,16 @@ class Idea extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = ['author_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug'];
+    protected $fillable = ['author_id', 'idea_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug'];
 
-    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice'];
+    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice', 'tagged'];
 
+    public $defaultTmb = 'images/interface/placeholders/idea.png';
+
+    public function getHidAttribute()
+    {
+        return $this->getRouteKey();
+    }
 
     Public function getTitleAttribute()
     {
@@ -77,7 +81,7 @@ class Idea extends Model
     Public function getUrlAttribute()
     {
         if ($this->ideaMainCategory) {
-            return route('ideas.show', [$this->ideaMainCategory->pathToCategory(), $this->slug]);
+            return route('ideas.show', [$this->ideaMainCategory->pathToCategory(), $this]);
         } else {
             return '';
         }
@@ -85,61 +89,51 @@ class Idea extends Model
 
     public function getEditUrlAttribute()
     {
-        return route('ideas.edit', [$this->slug]);
+        return route('ideas.edit', $this);
     }
 
     public function getFullUrlAttribute()
     {
-        return $this->url . MainFilter::queryString();
+        return $this->url.MainFilter::queryString();
     }
 
-    /**
-     * Get path to tmb img of category item
-     * @return string
-     */
-    Public function getTmbImgPathAttribute()
+
+    public function getHasIdeasAttribute()
     {
-
-        $defaultTmb = 'images/interface/placeholders/idea.png';
-
-        if ($this->thmb_file_name != null) {
-            //если есть картинка вакансии
-            $src = 'storage/images/idea/' . $this->id . '/' . htmlspecialchars(strip_tags($this->thmb_file_name));
-
-        } else {
-            //если есть картинка вакансии
-            $src = $defaultTmb;
-        }
-
-        if (!file_exists($src)) {
-            $src = $defaultTmb;
-        }
-
-        return $src;
+        return $this->futureIdeaIdeas()->count();
     }
 
-
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKey()
     {
-        if (request()->is('api/*')) {
-            return 'id';
-        } else {
-            return 'slug';
-        }
+        $hashids = new \Hashids\Hashids(config('app.name'), 7);
+
+        return $hashids->encode($this->getKey());
     }
 
-    public function getIsPublishedAttribute(){
+    public function getIsPublishedAttribute()
+    {
         return $this->active == 1;
+    }
+
+    public function getIsBlockedAttribute()
+    {
+        return $this->active == 0;
+    }
+
+    public function getCanBeOrderedAttribute()
+    {
+        return $this->ideaPrice->default == false;
     }
 
     public function ideaPlace()
     {
         return $this->ideaPlaces()->first();
+    }
+
+    public function ideaItineraries()
+    {
+        return $this->hasMany('App\Itinerary')
+            ->orderBy('day_num', 'asc');
     }
 
     public function ideaPlaces()
@@ -152,14 +146,49 @@ class Idea extends Model
         return $this->hasMany('App\IdeaDate');
     }
 
+    public function ideaItinerary()
+    {
+        return null;
+    }
+
+    /**
+     * Date to display on idea card
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasMany|object|null
+     */
+    public function getDateToDisplayAttribute()
+    {
+        $date = $this->ideaDates()->inFuture()->first();
+        return $date ? $date->startDateTimeUtc : null;
+    }
+
+    /**
+     * Idea child ideas
+     * @return mixed
+     */
     public function ideaIdeas()
     {
-        return $this->hasMany('App\Idea');
+        return $this
+            ->hasMany('App\Idea', 'idea_id')
+            ->whereHas('localisedIdeaDescription')
+            ->isActive();
+    }
+
+    /**
+     * Idea child ideas coming in future
+     * @return mixed
+     */
+    public function futureIdeaIdeas()
+    {
+        return $this
+            ->hasMany('App\Idea', 'idea_id')
+            ->InFuture()
+            ->whereHas('localisedIdeaDescription')
+            ->isActive();
     }
 
     public function ideaParentIdea()
     {
-        return $this->belongsTo('App\Idea', 'idea_id');
+        return $this->belongsTo('App\Idea', 'idea_id')->isActive();
     }
 
     public function ideaPrice()
@@ -167,7 +196,8 @@ class Idea extends Model
         return $this->hasOne('App\IdeaPrice')
             ->withDefault([
                 'price' => 0,
-                'currency_id' => 3
+                'currency_id' => 3,
+                'default' => true,
             ]);
     }
 
@@ -227,42 +257,49 @@ class Idea extends Model
             ->using('App\Pivots\Category');
     }
 
-    public static function itemsList(Request $request, $activeCategory = Null)
+    public function ideaAuthor()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
+
+    public static function itemsList(Request $request, $activeCategory = null)
     {
         $activeCategoryId = 0;
 
-        if($activeCategory){
+        if ($activeCategory) {
             $activeCategoryId = $activeCategory->id;
         }
 
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::tags(['ideas'])->remember('ideas_' . LocaleMiddleware::getLocale() . '_category_' . $activeCategoryId . '_' . request()->getQueryString(), 0, function () use ($activeCategory) {
-            return self::whereCategory($activeCategory)
-                ->joinDescription()
-                ->WhereTags(MainFilter::getFiltersTagsArray())
-                ->Sorting()
-                ->paginate();
-        });
+        return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale().'_category_'.$activeCategoryId.'_'.request()->getQueryString(),
+            0, function () use ($activeCategory) {
+                return self::whereCategory($activeCategory)
+                    ->joinDescription()
+                    ->WhereTags(MainFilter::getFiltersTagsArray())
+                    ->Sorting()
+                    ->paginate();
+            });
     }
 
-    public function actionItemsList()
+    public function ideaIdeasList()
     {
-        return $this->ideaIdeas()->isActive()->paginate();
+        return $this->ideaIdeas()->isActive()->get();
     }
 
     public static function backgroundImage()
     {
-        return '/images/bg/mountains_blue.svg';
+        return null;
+        //return '/images/bg/mountains_blue.svg';
     }
 
     /**
      * Get idea actions
-     * @param int $actionsCount
+     * @param  int  $itemsCount
      * @return mixed
      */
-    public function actionItemsListLimited($actionItemsCount = 4)
+    public function ideaIdeasListLimited($itemsCount = 4)
     {
-        return $this->ideaActions()->isActive()->take($actionItemsCount)->get();
+        return $this->ideaIdeas()->inFuture()->isActive()->take($itemsCount)->get();
     }
 
     private function generateSlug(String $title)
@@ -291,7 +328,7 @@ class Idea extends Model
                 'slug' => $this->generateSlug($request->input('attributes.title')),
             ];
 
-            if($request->input('attributes.main_category_id') !== null){
+            if ($request->input('attributes.main_category_id') !== null) {
                 $storeData ['main_category_id'] = $request->input('attributes.main_category_id');
             }
 
@@ -322,7 +359,6 @@ class Idea extends Model
             $localeId = LocaleMiddleware::getLocaleId();
 
             $storeData = [
-                'author_id' => 1,
                 'idea_id' => $request->input('relationships.idea.id'),
                 'active' => $request->input('attributes.active'),
             ];
@@ -336,9 +372,9 @@ class Idea extends Model
 
             $this->update($storeData);
 
-            if($this->localisedIdeaDescription){
+            if ($this->localisedIdeaDescription) {
                 $this->localisedIdeaDescription()->update($descriptionStoreData);
-            }else{
+            } else {
                 $this->localisedIdeaDescription()->create($descriptionStoreData);
             }
 
@@ -355,10 +391,12 @@ class Idea extends Model
     private function updateRelationships(StoreIdea $request): void
     {
         $this->saveCategories($request);
+        $this->saveItineraries($request);
         $this->saveTags($request);
         $this->savePlaces($request);
         $this->saveDates($request);
-        $this->savePrice($request);
+        //$this->savePrice($request);
+
     }
 
     private function savePlaces(StoreIdea $request): void
@@ -380,7 +418,7 @@ class Idea extends Model
         }
     }
 
-    private function savePrice(StoreIdea $request): void
+/*    private function savePrice(StoreIdea $request): void
     {
         $actionPrice = $request->input('relationships.price');
         if ($actionPrice['id'] !== null) {
@@ -394,39 +432,116 @@ class Idea extends Model
                 'currency_id' => $actionPrice['relationships']['currency']['id'],
             ]);
         }
-    }
+    }*/
+
 
     private function saveDates(StoreIdea $request): void
     {
-        $dates = $request->input('relationships.dates');
+        $datesArray = $request->input('relationships.dates');
+        $usedDateIds = [];
 
-        if ($dates) {
-            foreach ($dates as $date) {
+        if ($datesArray) {
+            foreach ($datesArray as $date) {
+
+                $ideaDate = null;
+                $ideaPriceArray = $date['relationships']['ideaPrice'];
+
                 if ($date['id'] !== null) {
-                    $this->ideaDates()->whereId($date['id'])->update([
-                        'start_datetime_utc' => $date['attributes']['start_datetime_utc'],
-                        'end_datetime_utc' => $date['attributes']['end_datetime_utc'],
+                    $ideaDate = $this->ideaDates()->find($date['id']);
+                    $ideaDate->update([
+                        'start_date' => $date['attributes']['start_date'],
+                        'start_time' => $date['attributes']['start_time'],
                         'time_zone_offset' => $date['attributes']['time_zone_offset'],
-                        'is_all_day' => $date['attributes']['is_all_day'],
-                        'duration' => $date['attributes']['duration'],
-                        'is_recurring' => $date['attributes']['is_recurring'],
-                        'recurrence_pattern' => $date['attributes']['recurrence_pattern'],
                     ]);
                 } else {
-                    $this->ideaDates()->create([
-                        'start_datetime_utc' => $date['attributes']['start_datetime_utc'],
-                        'end_datetime_utc' => $date['attributes']['end_datetime_utc'],
+                    $ideaDate = $this->ideaDates()->create([
+                        'start_date' => $date['attributes']['start_date'],
+                        'start_time' => $date['attributes']['start_time'],
                         'time_zone_offset' => $date['attributes']['time_zone_offset'],
-                        'is_all_day' => $date['attributes']['is_all_day'],
-                        'duration' => $date['attributes']['duration'],
-                        'is_recurring' => $date['attributes']['is_recurring'],
-                        'recurrence_pattern' => $date['attributes']['recurrence_pattern'],
+                    ]);
+                }
+
+                $usedDateIds[] = $ideaDate->id;
+
+                // save date price
+                if ($ideaPriceArray['id'] !== null) {
+                    $this->ideaPrice()->whereId($ideaPriceArray['id'])->update([
+                        'idea_date_id' => $ideaDate->id,
+                        'idea_price_type_id' => 1,
+                        'age_group_id' => 1,
+                        'price' => (int) $ideaPriceArray['attributes']['price'],
+                        'currency_id' => $ideaPriceArray['relationships']['currency']['id'],
+                    ]);
+                } else {
+                    $this->ideaPrice()->create([
+                        'idea_date_id' => $ideaDate->id,
+                        'idea_price_type_id' => 1,
+                        'age_group_id' => 1,
+                        'price' => (int) $ideaPriceArray['attributes']['price'],
+                        'currency_id' => $ideaPriceArray['relationships']['currency']['id'],
                     ]);
                 }
             }
 
         }
+
+        // remove not used dates from database
+        $this->ideaDates()->whereNotIn('id', $usedDateIds)->forceDelete();
+
     }
+
+    private function saveDatePrice(): void
+    {
+
+    }
+
+    private function saveItineraries(StoreIdea $request): void
+    {
+        $itineraries = $request->input('relationships.itineraries');
+
+        if ($itineraries) {
+            foreach ($itineraries as $itinerary) {
+                $descriptionStoreData = [
+                    'title' => $itinerary['attributes']['title'],
+                    'description' => $itinerary['attributes']['description'],
+                    'what_included' => $itinerary['attributes']['whatIncluded'],
+                    'will_visit' => $itinerary['attributes']['willVisit'],
+                    'locale_id' => LocaleMiddleware::getLocaleId(),
+                ];
+
+                if ($itinerary['id'] !== null) {
+
+                    $itineraryObj = Itinerary::find($itinerary['id']);
+                    $itineraryObj->start_time = $itinerary['attributes']['startTime'];
+                    $itineraryObj->day_num = $itinerary['attributes']['dayNum'];
+                    $itineraryObj->day_order = $itinerary['attributes']['dayOrder'];
+
+                    if ($itineraryObj->localisedItineraryDescription) {
+                        $itineraryObj->localisedItineraryDescription()->update($descriptionStoreData);
+                    } else {
+                        $itineraryObj->localisedItineraryDescription()->create($descriptionStoreData);
+                    }
+
+                    //$itineraryObj->localisedItineraryDescription()->updateOrCreate($descriptionStoreData);
+
+                    $itineraryObj->save();
+
+
+                } else {
+                    $itineraryObj = $this->ideaItineraries()->create([
+                        'idea_id' => $itinerary['attributes']['idea_id'],
+                        'start_time' => $itinerary['attributes']['startTime'],
+                        'day_num' => $itinerary['attributes']['dayNum'],
+                        'day_order' => $itinerary['attributes']['dayOrder'],
+                    ]);
+
+                    $itineraryObj->localisedItineraryDescription()->create($descriptionStoreData);
+                }
+            }
+
+        }
+    }
+
 
     private function saveCategories(StoreIdea $request): void
     {
@@ -449,41 +564,21 @@ class Idea extends Model
 
     private function saveTags(StoreIdea $request): void
     {
-        $tagsText = $request->input('relationships.tags.tagsText');
-        $tagsAgeGroup = $request->input('relationships.tags.tagsAgeGroup');
-        $tagsDayTimeGroup = $request->input('relationships.tags.tagsDayTimeGroup');
-        $tagsSeasonsGroup = $request->input('relationships.tags.tagsSeasonsGroup');
+        $tagsArray = $request->input('relationships.tags');
+        $validTags = [];
 
         // Составляем массив из тэгов, потом сохряняем
-        if ($tagsText != '') {
-            $tags = explode(",", $tagsText);
-            foreach ($tags as $tag) {
-                if ($tag != '') {
-                    $validTags[] = trim($tag);
+        if ($tagsArray && count($tagsArray)) {
+            foreach ($tagsArray as $tag) {
+                if ($tag['attributes']['name'] !== '') {
+                    $validTags[] = trim($tag['attributes']['name']);
                 }
             }
-
         }
 
-        if (count($tagsAgeGroup)) {
-            foreach ($tagsAgeGroup as $tag) {
-                $validTags[] = $tag['attributes']['name'];
-            }
+        if (count($validTags)) {
+            $this->retag($validTags);
         }
-
-        if (count($tagsDayTimeGroup)) {
-            foreach ($tagsDayTimeGroup as $tag) {
-                $validTags[] = $tag['attributes']['name'];
-            }
-        }
-
-        if (count($tagsSeasonsGroup)) {
-            foreach ($tagsSeasonsGroup as $tag) {
-                $validTags[] = $tag['attributes']['name'];
-            }
-        }
-
-        if (count($validTags)) $this->retag($validTags);
 
     }
 
@@ -533,15 +628,16 @@ class Idea extends Model
     public function scopeWhereCategory2($query, $category1, $category2, $category3)
     {
 
-        $activeCategory = ($category3 !== Null) ? $category3 : Null;
-        $activeCategory = ($category2 !== Null && !$activeCategory) ? $category2 : Null;
-        $activeCategory = ($category1 !== Null && !$activeCategory) ? $category1 : Null;
+        $activeCategory = ($category3 !== null) ? $category3 : null;
+        $activeCategory = ($category2 !== null && !$activeCategory) ? $category2 : null;
+        $activeCategory = ($category1 !== null && !$activeCategory) ? $category1 : null;
 
         if ($activeCategory) {
 
             $activeCategoryId = Category::where('slug', $activeCategory)->pluck('id')->first();
 
-            return $query->select('idea.*', 'idea_category.category_id')->join('idea_category', 'idea.id', 'idea_category.idea_id')->where('category_id', $activeCategoryId);
+            return $query->select('idea.*', 'idea_category.category_id')->join('idea_category', 'idea.id',
+                'idea_category.idea_id')->where('category_id', $activeCategoryId);
 
         } else {
 
@@ -554,9 +650,9 @@ class Idea extends Model
     public function scopeJoinDescription($query)
     {
         return $query->join('idea_descriptions', function ($join) {
-        $join->on('ideas.id', '=', 'idea_descriptions.idea_id')
-            ->where('locale_id', LocaleMiddleware::getLocaleId());
-        })->select('ideas.*', 'idea_descriptions.title','idea_descriptions.intro' );
+            $join->on('ideas.id', '=', 'idea_descriptions.idea_id')
+                ->where('locale_id', LocaleMiddleware::getLocaleId());
+        })->select('ideas.*', 'idea_descriptions.title', 'idea_descriptions.intro');
     }
 
     public function scopeSorting($query)
@@ -569,23 +665,20 @@ class Idea extends Model
         return $query->withAllTags($tags);
     }
 
+    public function scopeMain($query)
+    {
+        return $query->whereNull('idea_id');
+    }
+
     public function scopeDateFilter($query)
     {
-        return $query->inFuture()->inProgress();
+        return $query->inFuture();
     }
 
     public function scopeInFuture($query)
     {
         return $query->whereHas('ideaDates', function ($query) {
-            $query->whereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND (TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND (`end_datetime_utc` is not null))")
-                ->orWhereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_datetime_utc`) AND `end_datetime_utc` is null");
-        })->orDoesntHave('ideaDates');
-    }
-
-    public function scopeInProgress($query)
-    {
-        return $query->orWhereHas('ideaDates', function ($query) {
-            $query->whereRaw("TO_DAYS(NOW()) > TO_DAYS(`start_datetime_utc`) AND TO_DAYS(NOW()) < TO_DAYS(`end_datetime_utc`) AND TO_DAYS(`start_datetime_utc`) != TO_DAYS(`end_datetime_utc`)");
+            $query->whereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_date`)");
         })->orDoesntHave('ideaDates');
     }
 
@@ -598,10 +691,16 @@ class Idea extends Model
         ];
     }
 
-    public static function getByTitle(String $title){
+    public static function getByTitle(String $title)
+    {
         return self::whereHas('ideaDescriptions', function ($query) use ($title) {
-            $query->where('title', 'like' , '%' . $title . '%');
+            $query->where('title', 'like', '%'.$title.'%');
         })->take(20)->get();
+    }
+
+    public static function getMain()
+    {
+        return self::main()->take(50)->get();
     }
 
 

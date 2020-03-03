@@ -26,7 +26,6 @@ class IdeaPrice extends JsonResource
 
             'attributes' => [
                 'price' => $this->formattedPrice,
-                'currency_id' => $this->currency_id,
             ],
 
             'relationships' => [

@@ -17,9 +17,27 @@ class IdeaPolicy
      * @param  \App\Idea  $idea
      * @return mixed
      */
-    public function view(User $user, Idea $idea)
+    public function view(?User $user, Idea $idea)
     {
-        return $user->hasPermissionTo('view ideas');
+        if($user){
+            if($user->hasPermissionTo('view ideas')){
+                // can see all published not blocked
+                if(!$idea->isBlocked && $idea->isPublished){
+                    return true;
+                }
+
+                // can see all published and own unpublished or blocked
+                // can see all
+                return $this->viewUnpublished($user, $idea);
+            }
+        }else{
+            // can see all published not blocked
+            if(!$idea->isBlocked && $idea->isPublished){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

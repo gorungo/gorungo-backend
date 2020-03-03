@@ -101,7 +101,7 @@
                     <div class="tab-pane fade" id="edit-images-block" role="tabpanel" aria-labelledby="edit-images-block-tab">
                         <photo-uploader
                                 :type="this.item.type"
-                                :item-id="item.id"
+                                :item-id="item.hid"
                         />
                     </div>
                 </div>
@@ -121,7 +121,7 @@
     export default {
 
         name: "PlaceEditor",
-        props: ['propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
+        props: ['propHid', 'propTitle', 'propUser', 'propCityId', 'propItemId', 'propLocale'],
 
         mixins: [ Editable ],
 

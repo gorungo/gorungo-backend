@@ -21,6 +21,15 @@ class IdeaPrice extends Model
         return $this->belongsTo('App\Currency');
     }
 
+    public function idea(){
+        return $this->belongsTo('App\Idea');
+    }
+
+    public function ideaDate(){
+        return $this->belongsTo('App\IdeaDate');
+    }
+
+
     public function getFormattedPriceAttribute()
     {
         return $this->price ? number_format($this->price, 2, '.', '') : number_format(0, 2, '.', '');

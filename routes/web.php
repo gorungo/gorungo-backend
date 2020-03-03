@@ -113,7 +113,8 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         Route::get('/', 'PageController@index')->name('prestart');
 
         //Route::get('/posts', 'PostController@getPosts')->name('posts');
-        //Route::get('/home', 'HomeController@index')->name('home');
+
+        Route::get('/feed', 'HomeController@feed')->name('feed');
 
         // Actions show route
         Route::get('ideas/{categories}/-{idea}/actions/{action}', 'IdeaActionController@show')
@@ -210,13 +211,13 @@ Route::get('setlocale/{lang}', function ($lang) {
     $segments = explode('/', $parse_url);
 
     //Если URL (где нажали на переключение языка) содержал корректную метку языка
-    if (in_array($segments[1], App\Http\Middleware\LocaleMiddleware::$languages)) {
+    if (in_array($segments[1], config('app.languages'))) {
 
         unset($segments[1]); //удаляем метку
     }
 
     //Добавляем метку языка в URL (если выбран не язык по-умолчанию)
-    if ($lang != App\Http\Middleware\LocaleMiddleware::$mainLanguage){
+    if ($lang != config('app.locale')){
         array_splice($segments, 1, 0, $lang);
     }
 

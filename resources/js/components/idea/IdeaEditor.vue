@@ -1,14 +1,13 @@
 <template>
-    <div>
-        <div class="w-100">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row w-100">
+    <div id="idea-editor" v-loading="loading">
+        <div class="w-100 bg-white">
+            <div class="container pt-4">
+                <div class="row w-100">
                         <div class="col-sm-12 col-md-8">
-                            <h2>{{this.documentTitle}}</h2>
+                            <h2 class="text-first-uppercase">{{this.documentTitle}}</h2>
                         </div>
                         <div class="col-sm-12 col-md-4 text-right">
-                            <button :disabled="loading" class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">
+                            <button v-if="hasPageChanges" :disabled="loading" class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">
                                 <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 <span v-if="loading" class="sr-only">{{Lang.get('editor.loading')}}...</span>
                                 <span v-else>{{Lang.get('editor.save_button')}}</span>
@@ -16,35 +15,38 @@
                         </div>
                         <div class="col-12 col-md-12">
                             <div class="d-flex justify-content-center">
-                                <ul class="nav nav-pills">
-                                    <li role="presentation" id="tab_main" class="active">
-                                        <a class="nav-link active" id="edit-main-block-tab" data-toggle="tab" href="#edit-main-block" role="tab" aria-controls="profile" aria-selected="true"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.tab_main')}}</a>
-                                    </li>
-                                    <li role="presentation" id="tab_photo">
-                                        <a class="nav-link" id="edit-images-block-tab" data-toggle="tab" href="#edit-images-block" role="tab" aria-controls="profile" aria-selected="false"><span class="glyphicon glyphicon-picture"> </span>{{Lang.get('editor.tab_pictures')}}</a>
-                                    </li>
-                                </ul>
+                                <el-tabs v-model="activeTabName" @tab-click="handleTabClick">
+                                    <el-tab-pane :label="Lang.get('editor.tab_main')" name="main"></el-tab-pane>
+                                    <el-tab-pane :label="Lang.get('editor.tab_itinerary')" name="itinerary"></el-tab-pane>
+                                    <el-tab-pane :label="Lang.get('editor.tab_dates')" name="dates"></el-tab-pane>
+                                    <el-tab-pane :label="Lang.get('editor.tab_pictures')" name="images"></el-tab-pane>
+                                </el-tabs>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
-        <div v-if="dataLoaded && !loading" class="mt-4">
+        <div v-if="dataLoaded && !loading" class="bg-white pt-4">
             <div class="container">
                 <errors :errors="errors"></errors>
 
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="edit-main-block" role="tabpanel" aria-labelledby="edit-main-block-tab">
+                <div class="">
+                    <div id="idea-details-editor" v-if="dataLoaded && activeTabName === 'main'">
                         <form id="frm_form" name="frm_form" method="post" autocomplete="off">
                             <input type="hidden" name="city_id" :value="this.cityId"/>
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h5 class="text-first-uppercase">{{Lang.get('idea.idea_description')}}</h5>
-                                    <div class="form-group">
-                                        <label for="frm_title">{{Lang.get('editor.label_title')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                        <input id="frm_title" name="title" class="form-control" placeholder="" type="text" maxlength="100" v-model="item.attributes.title" />
-                                    </div>
+                                    <el-form label-position="top" :model="item" ref="descriptionForm" label-width="120px" class="demo-dynamic">
+                                    <h4 class="text-first-uppercase mb-4">{{Lang.get('idea.idea_description')}}</h4>
+                                        <el-form-item
+                                                prop="title"
+                                                :label="Lang.get('editor.label_title')"
+                                                :rules="[
+                                                  { required: true, message: Lang.get('validation.custom.required'), trigger: 'blur' },
+                                                  { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] }
+                                                ]">
+                                            <el-input v-model="item.attributes.title"></el-input>
+                                        </el-form-item>
                                     <div class="form-group">
                                         <label for="frm_intro">{{Lang.get('editor.label_intro')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
                                         <textarea class="form-control" maxlength="255" placeholder="" name="intro" id="frm_intro" rows="2" v-model="item.attributes.intro"></textarea>
@@ -53,6 +55,7 @@
                                         <label>{{Lang.get('editor.label_description')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
                                         <ckeditor height="200" :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
                                     </div>
+                                    </el-form>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="row form-group">
@@ -68,8 +71,8 @@
                                         </div>
                                     </div>
                                     <category-selector
-                                            v-if="item !== null && activeUser.attributes.superuser"
                                             v-model = "item.relationships.categories"
+                                            :locale = "locale"
                                             @change="categoryChanged"
                                     ></category-selector>
                                     <hr/>
@@ -85,30 +88,12 @@
                                             v-model = "item.relationships.places"
                                     ></place-selector>
                                     <hr>
-                                    <date-selector
-                                            v-if="item !== null && item.relationships.dates !== undefined"
-                                            :locale = "locale"
-                                            v-model = "item.relationships.dates"
-                                    ></date-selector>
-                                    <hr>
                                     <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
                                     <hr>
-                                    <div class="row" v-if="currencies.length">
-                                        <div class="col-8">
-                                            <div class="form-group">
-                                                <label for="frm_price"><span class="text-capitalize">{{Lang.get('editor.label_price')}}</span><span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                                <input v-money="money" id="frm_price" name="price" class="form-control" placeholder="" type="text" maxlength="100" v-model.lazy="item.relationships.price.attributes.price" />
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label for="frm_currency"><span class="text-capitalize">{{Lang.get('editor.label_currency')}}</span><span title="Обязательное поле" class="required-star">*</span></label>
-                                                <select id="frm_currency" class="form-control" v-model="item.relationships.price.relationships.currency">
-                                                    <option disabled value="">{{Lang.get('editor.label_select_one')}}</option>
-                                                    <option :value="currency" v-for="(currency, index) in currencies">{{currency.attributes.title}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <tags-editor
+                                                :tags="item.relationships.tags"
+                                        ></tags-editor>
                                     </div>
                                 </div>
                             </div>
@@ -120,12 +105,26 @@
 
                         </form>
                     </div>
-                    <div class="tab-pane fade" id="edit-images-block" role="tabpanel" aria-labelledby="edit-images-block-tab">
-                        <photo-uploader
-                                :type="this.item.type"
-                                :item-id="item.id"
-                        />
-                    </div>
+
+                    <itinerary-editor
+                            v-if="dataLoaded && activeTabName === 'itinerary'"
+                            v-model="item.relationships.itineraries"
+                            :hid="item.hid"
+                    ></itinerary-editor>
+
+                    <dates-and-prices-editor
+                            v-if="dataLoaded && activeTabName === 'dates'"
+                            v-model="item.relationships.dates"
+                            :currencies="currencies"
+                            :hid="item.hid"
+                    ></dates-and-prices-editor>
+
+                    <photo-uploader
+                            v-if="dataLoaded && activeTabName === 'images'"
+                            :type="this.item.type"
+                            :item-id="item.hid"
+                            :hid="item.hid"
+                    />
                 </div>
             </div>
         </div>
@@ -141,7 +140,8 @@
     import PlaceSelector from '../place/PlaceSelector.vue';
     import IdeaSelector from '../idea/IdeaSelector.vue';
     import LocaleSelector from '../LocaleSelector.vue';
-    import {Money} from 'v-money';
+    import ElementUI from 'element-ui';
+    import TagsEditor from "./TagsEditor";
 
 
     export default {
@@ -152,19 +152,21 @@
             propTitle : String,
             propItemId : Number,
             propLocale : String,
+            propHid : String,
         },
 
         mixins: [ Editable ],
 
         components: {
+            TagsEditor,
             PhotoUploader,
             LocaleSelector,
             CategorySelector,
             ExtendedTagSelector,
-            Money,
             IdeaSelector,
             DateSelector,
-            PlaceSelector
+            PlaceSelector,
+            ElementUI,
         },
 
         data(){
@@ -180,7 +182,9 @@
                     suffix: '',
                     precision: 2,
                     masked: false
-                }
+                },
+
+                activeTabName: 'main'
             }
         },
 
@@ -232,6 +236,10 @@
 
             fetchCurrenciesRequestUrl(){
                 return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
+            },
+
+            handleTabClick(){
+                //
             }
 
         }

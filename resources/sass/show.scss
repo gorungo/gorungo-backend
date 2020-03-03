@@ -8,10 +8,18 @@
   }
 }
 
-.price{
-  font-size: 20px;
-  font-weight: bold;
+#idea-details{
+  .price{
+    font-size: 30px;
+    font-weight: bold;
+  }
+  .price-currency, .from{
+    font-size: 20px;
+  }
+
+
 }
+
 
 .text-first-uppercase::first-letter, label::first-letter, .nav-link::first-letter {
   text-transform: uppercase;

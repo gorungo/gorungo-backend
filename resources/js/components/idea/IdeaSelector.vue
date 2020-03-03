@@ -77,6 +77,7 @@
                 selectedIdea: {},
                 searchTitle: '',
                 foundIdeas: [],
+                mainIdeas: [],
                 multiselect: false,
 
             }
@@ -113,6 +114,10 @@
                 }
             }
 
+            if(!this.mainIdeas.length){
+                this.fetchMainIdeas();
+            }
+
 
         },
 
@@ -120,7 +125,7 @@
             searchTitle(title){
                 if(!this.loading && title.length >= this.searchMinimum) {
                     this.loading = true;
-                    this.getIdeasByTitle(title);
+                    this.fetchIdeasByTitle(title);
                 }
             }
         },
@@ -144,18 +149,56 @@
                     this.idea = null;
                 }
 
+                this.$emit('change', this.idea);
+
             },
 
             closeSelectorWindow: function(){
                 $('#ideasSelectorModal').modal('hide');
             },
 
-            getIdeasByTitle:
+            fetchIdeasByTitle:
+                _.debounce(function(title){
+
+                    if(title.length){
+                        this.foundIdeas = [];
+
+                        axios.get( this.ideasByTitleRequestUrl(), { params:{
+                                locale: this.locale,
+                                title: title,
+                            } } )
+                            .then( (resp) => {
+                                if (resp.status === 200) {
+                                    this.dataLoaded = true;
+                                    this.foundIdeas = resp.data.data;
+                                }
+
+                            }).catch( (error) => {
+
+                            if (error.response === undefined) {
+                                console.log('no internet');
+                            }
+
+                        }).finally( () => {
+                            this.loading = false;
+                        })
+                    }else{
+                        this.foundIdeas = this.mainIdeas;
+                    }
+
+
+                }, 500),
+
+            ideasByTitleRequestUrl: function(){
+                return '/api/' + window.systemInfo.apiVersion + '/ideas/getByTitle' ;
+            },
+
+            fetchMainIdeas:
                 _.debounce(function(title){
 
                     this.foundIdeas = [];
 
-                    axios.get( this.ideasByTitleRequestUrl(), { params:{
+                    axios.get( this.mainIdeasRequestUrl(), { params:{
                             locale: this.locale,
                             title: title,
                         } } )
@@ -163,12 +206,13 @@
                             if (resp.status === 200) {
                                 this.dataLoaded = true;
                                 this.foundIdeas = resp.data.data;
+                                this.mainIdeas = resp.data.data;
                             }
 
                         }).catch( (error) => {
 
                         if (error.response === undefined) {
-                            userui.showNoInternetNotification();
+                            console.log('no internet');
                         }
 
                     }).finally( () => {
@@ -178,8 +222,8 @@
 
                 }, 500),
 
-            ideasByTitleRequestUrl: function(){
-                return '/api/' + window.systemInfo.apiVersion + '/' + this.type + '/getByTitle' ;
+            mainIdeasRequestUrl: function(){
+                return '/api/' + window.systemInfo.apiVersion + '/ideas/main' ;
             },
 
         },

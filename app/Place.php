@@ -27,8 +27,6 @@ class Place extends Model
 
     protected $perPage = 60;
 
-    protected $dates = ['deleted_at'];
-
     protected $fillable = ['place_type_id','coordinates'];
 
     protected $with = ['localisedPlaceDescription', 'placeDescriptions'];
@@ -46,10 +44,18 @@ class Place extends Model
         'title'
     ];
 
-    public function __construct(array $attributes = [])
+    public function getHidAttribute()
     {
-        parent::__construct($attributes);
+        return $this->getRouteKey();
     }
+
+    public function getRouteKey()
+    {
+        $hashids = new \Hashids\Hashids(config('app.name'), 7);
+
+        return $hashids->encode($this->getKey());
+    }
+
 
     public function placeType()
     {
@@ -81,7 +87,7 @@ class Place extends Model
 
     public function getUrlAttribute()
     {
-        return route('places.show', [$this->id]);
+        return route('places.show', [$this]);
     }
 
     public function getFullUrlAttribute()
@@ -91,7 +97,7 @@ class Place extends Model
 
     public function getEditUrlAttribute()
     {
-        return route('places.edit', [$this->id]);
+        return route('places.edit', $this);
     }
 
     Public function getTitleAttribute()
@@ -158,18 +164,6 @@ class Place extends Model
         }
 
         return $src;
-    }
-
-
-
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'id';
     }
 
     public static function getByTitle(String $title){

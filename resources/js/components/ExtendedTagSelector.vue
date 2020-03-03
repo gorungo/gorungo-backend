@@ -1,23 +1,23 @@
 <template>
-    <div id="extended-tag-block" v-if="extendedTags && extendedTags.tagsSeasonsGroup">
+    <div id="extended-tag-block" v-if="extendedTags && extendedTags.length > 0">
         <div>
             <h5 class="text-first-uppercase">{{Lang.get('editor.label_for_season')}}</h5>
-            <span v-for="(tag, index) in extendedTags.tagsSeasonsGroup">
+            <span v-for="(tag, index) in allSeasonTags">
             <input type="checkbox"
                    :id="'tag-seasons-' + index"
                    :key="'tag-seasons-' + tag.id"
-                   :value="extendedTags.tagsSeasonsGroup[index]" v-model="tags.tagsSeasonsGroup"
+                   :value="tag" v-model="selectedTags"
             />
         <label :for="'tag-seasons-' + index" style="margin-right: 0.5rem;">{{tag.attributes.name}}</label>
         </span>
         </div>
         <div>
             <h5 class="text-first-uppercase">{{Lang.get('editor.label_for_time')}}</h5>
-            <span v-for="(tag, index) in extendedTags.tagsDayTimeGroup">
+            <span v-for="(tag, index) in allDayTimeTags">
             <input type="checkbox"
                    :id="'tag-daytime-' + index"
                    :key="'tag-daytime-' + tag.id"
-                   :value="extendedTags.tagsDayTimeGroup[index]" v-model="tags.tagsDayTimeGroup"
+                   :value="tag" v-model="selectedTags"
             />
         <label :for="'tag-daytime-' + index" style="margin-right: 0.5rem;">{{tag.attributes.name}}</label>
         </span>
@@ -30,6 +30,7 @@
     export default {
         name: "ExtendedTagSelector",
         props: ['tags'],
+
         mixins: [Localized],
 
         model: {
@@ -39,37 +40,47 @@
 
         data(){
             return {
-                type: 'extended_tags',
+                type: 'main_tags',
 
                 dataLoaded:false,
                 loading: false,
                 extendedTags: null,
-                selectedTags: {
-                    tagsSeasonsGroup:[],
-                    tagsAgeGroup:[],
-                    tagsDayTimeGroup:[],
-                },
+                selectedTags: [],
             }
         },
 
         created(){
             this.getAllExtendedTags();
+            this.selectedTags = this.tags;
         },
 
         watch:{
             selectedTags(val){
-                this.$emit('change', this.tags);
+                this.$emit('change', this.selectedTags);
             }
+        },
+
+        computed: {
+            allSeasonTags(){
+                if(this.extendedTags.length === 0) return [];
+                return this.extendedTags.filter(tag => {
+                    return tag.attributes.tag_group_id === 1;
+                });
+            },
+            allDayTimeTags(){
+                if(this.extendedTags.length === 0) return [];
+                return this.extendedTags.filter(tag => {
+                    return tag.attributes.tag_group_id === 3;
+                });
+            },
         },
 
         methods:{
             getAllExtendedTags(){
 
                 if(this.loading) return;
-                console.log('dsfdf');
                 axios.get( this.fetchUrl(), { params:{
                         locale: this.locale,
-                        title: '',
                     } } )
                     .then( (resp) => {
                         if (resp.status === 200) {
@@ -91,7 +102,7 @@
             },
 
             fetchUrl: function(){
-                return '/api/' + window.systemInfo.apiVersion + '/ideas/' + this.type  ;
+                return '/api/' + window.systemInfo.apiVersion + '/tags/allMain'  ;
             },
         },
 

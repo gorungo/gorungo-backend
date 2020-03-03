@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Tag extends JsonResource
@@ -23,11 +22,10 @@ class Tag extends JsonResource
             'attributes' => [
                 'slug' => $this->slug,
                 'name' => $this->name,
+                'tag_group_id' => $this->tag_group_id,
             ],
 
-            'relationships' => [
-
-            ],
+            'relationships' => [],
         ];
     }
 }

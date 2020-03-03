@@ -12,7 +12,7 @@ return[
     'not_created' => 'idea was not created successfully',
     'not_updated' => 'idea was not updated successfully',
 
-    'idea_description' => 'idea description',
+    'idea_description' => 'description',
 
     'idea_for_you' => 'idea for you',
     'random_idea' => 'random idea',
@@ -22,4 +22,6 @@ return[
 
     'see_actions' => 'see actions',
     'see_all_actions' => 'see all actions',
+
+    'from' => 'from',
 ];

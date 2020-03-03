@@ -25,4 +25,14 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    /**
+     * Show user feed.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function feed()
+    {
+        return view('feed');
+    }
 }

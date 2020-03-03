@@ -8,9 +8,11 @@
         </div>
         @endhasanyrole
         @if($places->count())
-            <div class="row">
+            <div class="grid-container grid-columns-4">
                 @foreach($places as $place)
-                    @include('place.widgets.list_item_12-4', ['item' => $place])
+                    @if($place->title !== null)
+                        @include('place.widgets.list_item_12-4', ['item' => $place])
+                    @endif
                 @endforeach
             </div>
             <div style="text-align: center;">{{ $places->links() }}</div>

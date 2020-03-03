@@ -108,18 +108,29 @@ class IdeaController extends Controller
      * Display the specified resource.
      *
      * @param  Category $category
-     * @param  String $itemSlug
+     * @param  Idea $idea
      * @return \Illuminate\Http\Response
      */
-    public function show( $category, $itemSlug)
+    public function show( $category, Idea $idea)
     {
+        $breadCrumbs = [];
+        $ideaIdeas = $idea->ideaIdeasListLimited(4);
 
-        $item = Idea::where('slug', $itemSlug)->first();
-        $ideaActions = $item->actionItemsList(4);
-
-        if(!$item){
-            abort('404');
+        if($idea->idea_id){
+            $breadCrumbs[] = [
+                'sectionTitle' => __('idea.title'),
+                'itemUrl'=> $idea->ideaParentIdea->url, 'itemTitle'=> $idea->ideaParentIdea->title,
+                'imgUrl' => $idea->ideaParentIdea->TmbImgPath
+            ];
         }
+
+        $breadCrumbs[] = [
+            'sectionTitle' => __('idea.title'),
+            'itemUrl'=> $idea->url,
+            'itemTitle'=> $idea->title,
+            'imgUrl' => $idea->idea_id ? null : $idea->TmbImgPath,
+        ];
+
 
         /*$breadcrumb_array = [
             ['title' => 'Главная', 'url' => route('home',  session('current_city_alias'))],
@@ -127,7 +138,7 @@ class IdeaController extends Controller
             ['title' => 'Новый товар',  'url' => '#'],
         ];*/
 
-        return view('idea.show' , compact(['item', 'category', 'ideaActions', 'breadcrumb_array' ]));
+        return view('idea.show' , compact(['idea', 'category', 'ideaIdeas', 'breadCrumbs' ]));
     }
 
     /**

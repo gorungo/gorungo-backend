@@ -34,6 +34,8 @@ return [
 
     'tab_main' => 'главное',
     'tab_pictures' => 'изображения',
+    'tab_itinerary' => 'план',
+    'tab_dates' => 'даты',
 
     'label_add' => 'добавить',
     'label_category' => 'категория',
@@ -49,14 +51,20 @@ return [
     'label_not_active' => 'не активно',
     'label_more_information' => 'больше информации',
     'label_tags' => 'тэги',
+    'label_new_tag' => 'новый тэг',
     'label_draft' => 'черновик',
     'label_published' => 'опубликовано',
     'label_activity' => 'активность',
     'label_nothing_found' => 'ничего не найдено, измените запрос',
     'label_load_image' => 'загрузить изображение',
     'label_drag_images_or_press_upload' => 'преместите изображения или нажмите загрузить',
-    'label_can_add_image_after_saving' => 'вы сможете добавить изображение после сохранения',
+    'label_idea_images' => 'Изображения мероприятия',
+    'label_can_add_image_after_saving' => 'сохраните описание мероприятия, чтобы добавить изображения',
     'label_select_image_and_press_star_to_make_main' => 'нажмите звездочку, чтобы сделать изображение главным',
+    'label_pictures' => 'изображения',
+
+    'editor_no_dates_title' => 'дыты мероприятия',
+    'editor_no_dates_description' => 'добавте даты и стоимость мероприятия',
 
     'label_for_season' => 'для сезона',
     'label_for_time' => 'для времени суток',
@@ -83,9 +91,18 @@ return [
     'save_button' => 'сохранить',
     'close_button' => 'закрыть',
 
+    'saving' => 'сохранение',
+    'save_success' => 'успешно сохранено',
+    'save_error' => 'ошибка при сохранении',
+    'error' => 'ошибка',
+
     'loading' => 'загрузка',
     'nothing_found' => 'ничего не нашли',
     'nothing_found_try_to_change_query' => 'ничего не нашли, попробуйте изменить запрос',
+
+    'max_file_size_limit' => 'размер файла не должен превышать',
+    'megabytes' => 'мегабайты',
+    'megabyte' => 'мегабайт',
 
 
 

@@ -25,6 +25,17 @@ let mySqlDateTimeToJs = function (mySqlDate) {
     return d;
 };
 
+let mySqlDateToJs = function (mySqlDate) {
+
+    // Split timestamp into [ Y, M, D, h, m, s ]
+    //let t = mySqlDate.split(/[-]/);
+
+    // Apply each element to the Date function
+    let d = new Date(mySqlDate);
+
+    return d;
+};
+
 let currentDateTimeMySql = function () {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 };
@@ -54,6 +65,11 @@ let localizeMySqlTime = function (mySqlDate) {
     return date.toLocaleTimeString(locale).slice(0, 5);
 };
 
+let localizeMySqlDateToLocale = function (mySqlDate, locale) {
+    let date = mySqlDateToJs(mySqlDate);
+    return date.toLocaleDateString(locale);
+};
+
 let localizeMySqlDate = function (mySqlDate) {
     let locale = 'ru-RU';
     let date = mySqlDateTimeToJsUTC(mySqlDate);
@@ -72,6 +88,19 @@ let setLocation = function(location) {
     window.app.$store.dispatch('setUserLocation', location);
 };
 
+let firstToUpperCase = function(lower){
+    return lower.replace(/^\w/, c => c.toUpperCase());
+};
+
+let strLimit = function (string, limit) {
+    if (string.length > limit) string = string.substring(0, limit) + '...';
+    return string;
+};
+
+let validationMessage = function(attribute, ){
+
+}
+
 module.exports.getTimeZoneOffset = getTimeZoneOffset;
 module.exports.mySqlDateTimeToJsUTC = mySqlDateTimeToJsUTC;
 module.exports.mySqlDateTimeToJs = mySqlDateTimeToJs;
@@ -80,7 +109,10 @@ module.exports.dateTimeMySql = dateTimeMySql;
 module.exports.localizeMySqlDateTime = localizeMySqlDateTime;
 module.exports.localizeMySqlTime = localizeMySqlTime;
 module.exports.localizeMySqlDate = localizeMySqlDate;
+module.exports.localizeMySqlDateToLocale = localizeMySqlDateToLocale;
 module.exports.dateFromMySqlDateTime = dateFromMySqlDateTime;
 module.exports.timeFromMySqlDateTime = timeFromMySqlDateTime;
 module.exports.getLocation = getLocation;
 module.exports.setLocation = setLocation;
+module.exports.firstToUpperCase = firstToUpperCase;
+module.exports.strLimit = strLimit;

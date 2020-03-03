@@ -22,7 +22,7 @@
                     <p class="text-secondary item-intro">
                         {!! $item->intro !!}
                     </p>
-                    @can('create', App\Place::class)
+                    @can('update', $item)
                         <a class="text-primary text-uppercase" href="{{route('places.edit', $item)}}">{{__('editor.edit')}}</a>
                     @endcan
                 </div>

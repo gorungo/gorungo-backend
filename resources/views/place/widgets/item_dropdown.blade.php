@@ -5,7 +5,7 @@
     </button>
     <div class="dropdown-menu">
         @can('update', $item)
-        <a class="dropdown-item capitalize" href ="{{route('places.edit', $item->id)}}"><span class="glyphicon glyphicon-pencil"></span> {{__('editor.edit_place')}}</a>
+        <a class="dropdown-item capitalize" href ="{{route('places.edit', $item)}}"><span class="glyphicon glyphicon-pencil"></span> {{__('editor.edit_place')}}</a>
         <div class="dropdown-divider"></div>
         @endcan
 

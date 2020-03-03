@@ -1,10 +1,10 @@
 <template>
-    <div id="place-selector" class="place-selector">
+    <div id="category-selector" class="category-selector">
         <h5 class="text-capitalize" v-if="isSingleCategoryMode">{{Lang.get('editor.label_main_category')}}</h5>
         <h5 class="text-capitalize" v-else>{{Lang.get('editor.label_categories')}}
-            <span class="float-right text-primary" v-if="canAddCategory" v-on:click="showSelectorWindow()" data-toggle="modal" data-target="#placeSelectorModal"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.label_add')}}</span>
+            <span class="float-right text-primary" v-if="canAddCategory" v-on:click="showSelectorWindow()" data-toggle="modal" data-target="#categorySelectorModal"><span class="glyphicon glyphicon-pencil"> </span>{{Lang.get('editor.label_add')}}</span>
         </h5>
-        <!-- Place selector -->
+        <!-- Category selector -->
         <div>
             <div v-for="(category, index) in categories">
                 <div class="card card-body">
@@ -35,7 +35,7 @@
                             <ul class="list-group list-group-flush" v-if="allCategories.length && !loading">
                                 <li class="list-group-item" v-for="(category ,index) in allCategories" v-on:click="addCategory(index)">
                                     {{category.attributes.title}}
-                                    <span class="btn btn-link float-right">{{Lang.get('editor.label_select')}}</span>
+                                    <span class="btn btn-link float-right">{{Lang.get('editor.to_select')}}</span>
                                 </li>
                             </ul>
                             <div v-if="noSearchResults" class="mt-2">

@@ -13,7 +13,7 @@ return[
     'not_created' => 'идея не создана',
     'not_updated' => 'идея не обновлена',
 
-    'idea_description' => 'описание идеи',
+    'idea_description' => 'описание',
 
     // not found
     'no_items' => 'нет идей',
@@ -28,4 +28,6 @@ return[
 
     'see_actions' => 'смотреть действия',
     'see_all_actions' => 'смотреть все действия',
+
+    'from' => 'от',
 ];

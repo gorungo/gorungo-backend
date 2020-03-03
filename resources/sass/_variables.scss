@@ -43,7 +43,27 @@ $link-hover-decoration: none;
 $border-radius-base: 5px;
 $btn-border-radius: 1.5em;
 $btn-border-radius-lg: 2rem;
-$grid-gutter-width: 50px;
+$grid-gutter-width: 20px;
+
+$grid-breakpoints: (
+  // Extra small screen / phone
+        xs: 0,
+  // Small screen / phone
+        sm: 576px,
+  // Medium screen / tablet
+        md: 768px,
+  // Large screen / desktop
+        lg: 992px,
+  // Extra large screen / wide desktop
+        xl: 1200px
+);
+
+$container-max-widths: (
+        sm: 540px,
+        md: 720px,
+        lg: 960px,
+        xl: 1280px
+);
 
 // Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap";

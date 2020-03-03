@@ -11,51 +11,56 @@ trait TagInfo
 {
 
 
-    public function getAllTags(){
-        // season tags
-        $tagsSeasonsGroup = Cache::remember('tagsSeasonsGroup', 10, function ()  {
-            return  Tag::inGroup('seasonsgroup')->get();
+    public static function allMainTagsCollectionCached()
+    {
+        $mainTags = Cache::remember('mainTags', 10, function () {
+            return Tag::whereIn('tag_group_id', [1,2,3])->get();
         });
 
-        // season tags
-        $tagsAgeGroupGroup = Cache::remember('tagsAgeGroup', 10, function ()  {
-            return  Tag::inGroup('agegroup')->get();
-        });
-
-        // season tags
-        $tagsDayTimeGroup = Cache::remember('tagsDayTimeGroup', 10, function ()  {
-            return  Tag::inGroup('daytimegroup')->get();
-        });
-
-        return collect([
-            'tagsSeasonsGroup' => TagResource::collection($tagsSeasonsGroup),
-            'tagsAgeGroupGroup' => TagResource::collection($tagsAgeGroupGroup),
-            'tagsDayTimeGroup' => TagResource::collection($tagsDayTimeGroup),
-        ]);
+        return response(TagResource::collection($mainTags));
     }
 
-    public function getItemTags(){
+    public static function allMainTagsCollection()
+    {
+        $mainTags = Tag::whereIn('tag_group_id', [1,2,3])->get();
+
+        return response(TagResource::collection($mainTags));
+    }
+
+    public function getItemTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Old version
+     * @return array
+     */
+    public function getItemTags2()
+    {
         // негруппированные тэги ч-з запятую
         $simpleTagsText = '';
 
         // item grouped tags
-        $itemSeasonsGroupTags = []; $itemAgeGroupTags = []; $itemDayTimeGroupTags = [];
+        $itemSeasonsGroupTags = [];
+        $itemAgeGroupTags = [];
+        $itemDayTimeGroupTags = [];
 
         $tags = $this->tags;
 
         // загружаем тэги элемента и вносим их в группы
-        foreach($tags as $tag){
+        foreach ($tags as $tag) {
 
-            if($tag->tag_group_id == ''){
+            if ($tag->tag_group_id == '') {
 
                 // строка тэгов, ч-з запятую
-                $simpleTagsText == '' ? $simpleTagsText = $tag->name : $simpleTagsText = $simpleTagsText . ',' . $tag->name ;
+                $simpleTagsText == '' ? $simpleTagsText = $tag->name : $simpleTagsText = $simpleTagsText.','.$tag->name;
 
-            }elseif($tag->tag_group_id == 1){
+            } elseif ($tag->tag_group_id == 1) {
                 $itemSeasonsGroupTags[] = $tag;
-            }elseif($tag->tag_group_id == 2){
+            } elseif ($tag->tag_group_id == 2) {
                 $itemAgeGroupTags[] = $tag;
-            }elseif($tag->tag_group_id == 3){
+            } elseif ($tag->tag_group_id == 3) {
                 $itemDayTimeGroupTags[] = $tag;
             }
         }

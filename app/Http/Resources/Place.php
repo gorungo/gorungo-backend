@@ -23,6 +23,7 @@ class Place extends JsonResource
         return [
             'type' => 'Places',
             'id' => $this->id ,
+            'hid' => $this->hid ? $this->hid : null,
             'locale' => LocaleMiddleware::getLocale() ,
 
             'attributes' => [

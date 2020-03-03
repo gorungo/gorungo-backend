@@ -11,6 +11,7 @@ Vue.component('RandomIdea', require('./components/idea/RandomIdea.vue').default)
 Vue.component('MainPlaceFilter', require('./components/place/MainPlaceFilter.vue').default);
 Vue.component('SeasonFilter', require('./components/filter/SeasonFilter.vue').default);
 Vue.component('TimeFilter', require('./components/filter/TimeFilter.vue').default);
+Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').default);
 
 
 /**

@@ -11,6 +11,6 @@
 @endsection
 
 @section('content')
-<place-editor  :prop-item-id="@isset($place->id){{$place->id}}@else null @endisset" ></place-editor>
+<place-editor prop-hid="@isset($place->hid){{$place->hid}}@else null @endisset" :prop-item-id="@isset($place->id){{$place->id}}@else null @endisset" ></place-editor>
 @endsection
 
