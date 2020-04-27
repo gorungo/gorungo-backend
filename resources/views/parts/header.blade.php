@@ -2,25 +2,25 @@
     <div class="row w-100">
         <div class="col-sm-4">
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ route('ideas.index') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
+            <a class="navbar-brand" href="{{ route('home') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
         </div>
         <div class="col-sm-4">
+            @hasrole('super-admin')
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
-                    @auth
-                    <li class="nav-item @if(Route::currentRouteName() == 'feed') active @endif">
-                        <a class="nav-link text-first-uppercase" href="{{route('feed') . MainFilter::queryString()}}">{{__('feed.title')}}</a>
-                    </li>
-                    @endauth
                     <li class="nav-item @if(Route::currentRouteName() == 'ideas.index') active @endif">
                         <a class="nav-link text-first-uppercase" href="{{route('ideas.index') . MainFilter::queryString()}}">{{__('idea.title')}}</a>
                     </li>
+                    @auth
+                        @can('view places')
                     <li class="nav-item @if(Route::currentRouteName() == 'places.index') active @endif">
                         <a class="nav-link text-first-uppercase" href="{{route('places.index') . MainFilter::queryString()}}">{{__('place.title')}}</a>
                     </li>
+                        @endcan
+                    @endauth
                 </ul>
-
             </div>
+            @endhasrole
         </div>
         <div class="col-sm-4">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">

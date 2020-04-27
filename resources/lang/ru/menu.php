@@ -34,9 +34,19 @@ return [
 
     'and_more_filters' => '',
 
+    'select_place' => 'Выберите местоположение',
     'select_season' => 'Выберите сезон',
+    'select_dates' => 'Выберите даты',
     'select_time' => 'Выберите время',
-    'apply_filters' => 'Применить фильтр'
+    'any_place' => 'Любое место',
+    'any_season' => 'Любой сезон',
+    'any_dates' => 'Любые даты',
+    'any_time' => 'Любое время',
+
+    'apply_filters' => 'Применить фильтры',
+    'apply_filter' => 'Применить фильтр',
+    'clear_filters' => 'Очистить фильтры',
+    'clear_filter' => 'Очистить фильтр'
 
 
 ];

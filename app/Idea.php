@@ -262,6 +262,13 @@ class Idea extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    /**
+     * Ideas main list
+     *
+     * @param  Request  $request
+     * @param  null  $activeCategory
+     * @return mixed
+     */
     public static function itemsList(Request $request, $activeCategory = null)
     {
         $activeCategoryId = 0;
@@ -271,13 +278,56 @@ class Idea extends Model
         }
 
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale().'_category_'.$activeCategoryId.'_'.request()->getQueryString(),
+        return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale() . '_category_' . $activeCategoryId . '_' . request()->getQueryString(),
             0, function () use ($activeCategory) {
                 return self::whereCategory($activeCategory)
                     ->joinDescription()
-                    ->WhereTags(MainFilter::getFiltersTagsArray())
-                    ->Sorting()
+                    ->inFuture()
+                    ->whereFilters()
+                    ->sorting()
                     ->paginate();
+            });
+    }
+
+    /**
+     * Get ideas to show on main page sections
+     *
+     * @param  Request  $request
+     * @param  null  $placeId
+     * @param  null  $category
+     * @param  int  $itemsCount
+     * @return mixed
+     */
+    public static function widgetItemsList(Request $request, $placeId = null, $category = null, $itemsCount = 5)
+    {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale() . '_category_' . $category . '_' . request()->getQueryString(),
+            0, function () use ($placeId, $category, $itemsCount) {
+                return self::whereCategory($category)
+                    ->wherePlaceId($placeId)
+                    ->joinDescription()
+                    ->inFuture()
+                    ->take($itemsCount)
+                    ->get();
+            });
+    }
+
+    /**
+     * Get ideas to show on main page sections
+     *
+     * @param  Request  $request
+     * @param  null  $category
+     * @param  int  $itemsCount
+     * @return mixed
+     */
+    public static function widgetMainItemsList(Request $request, $category = null, $itemsCount = 5)
+    {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale() . '_category_' . $category . '_' . request()->getQueryString(),
+            0, function () use ($category, $itemsCount) {
+                return self::whereCategory($category)
+                    ->joinDescription()
+                    ->isActive()
+                    ->take($itemsCount)
+                    ->get();
             });
     }
 
@@ -446,7 +496,7 @@ class Idea extends Model
                 $ideaDate = null;
                 $ideaPriceArray = $date['relationships']['ideaPrice'];
 
-                if ($date['id'] !== null) {
+                if ($date['id'] !== null && strlen( (string)$date['id'] ) < 13) {
                     $ideaDate = $this->ideaDates()->find($date['id']);
                     $ideaDate->update([
                         'start_date' => $date['attributes']['start_date'],
@@ -499,7 +549,7 @@ class Idea extends Model
     {
         $itineraries = $request->input('relationships.itineraries');
 
-        if ($itineraries) {
+        if ($request->id !== null && $itineraries) {
             foreach ($itineraries as $itinerary) {
                 $descriptionStoreData = [
                     'title' => $itinerary['attributes']['title'],
@@ -509,7 +559,11 @@ class Idea extends Model
                     'locale_id' => LocaleMiddleware::getLocaleId(),
                 ];
 
-                if ($itinerary['id'] !== null) {
+                // todo
+                // на фронте переделать, чтобы выдавался дефолтный id
+                // соотвественно тут научить это все понимать
+
+                if ($itinerary['id'] !== null && $itinerary['id'] !== 0) {
 
                     $itineraryObj = Itinerary::find($itinerary['id']);
                     $itineraryObj->start_time = $itinerary['attributes']['startTime'];
@@ -529,10 +583,9 @@ class Idea extends Model
 
                 } else {
                     $itineraryObj = $this->ideaItineraries()->create([
-                        'idea_id' => $itinerary['attributes']['idea_id'],
+                        'idea_id' => $request->input('id'),
                         'start_time' => $itinerary['attributes']['startTime'],
                         'day_num' => $itinerary['attributes']['dayNum'],
-                        'day_order' => $itinerary['attributes']['dayOrder'],
                     ]);
 
                     $itineraryObj->localisedItineraryDescription()->create($descriptionStoreData);
@@ -675,11 +728,85 @@ class Idea extends Model
         return $query->inFuture();
     }
 
+    /**
+     * Scope items will be in future
+     * @param $query
+     * @return mixed
+     */
     public function scopeInFuture($query)
     {
         return $query->whereHas('ideaDates', function ($query) {
             $query->whereRaw("TO_DAYS(NOW()) < TO_DAYS(`start_date`)");
         })->orDoesntHave('ideaDates');
+    }
+
+    /**
+     * Scope main filter
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWhereFilters($query){
+        return $query
+            ->WhereBelongsToRegionOrCity()
+            ->WhereTags(MainFilter::getFiltersTagsArray())
+            ->WhereDates()
+            ->WherePrices()
+            ;
+    }
+
+    /**
+     * Scope filter main filter dates
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWhereDates($query){
+        if(request()->has('dates')){
+            return $query->whereHas('ideaDates', function ($query) {
+
+                [$dateFrom, $dateTo] = explode( 'to', request()->dates);
+
+                $query
+                    ->whereDate('start_date', '>=', date_format(date_create($dateFrom), 'Y-m-d'))
+                    ->whereDate('start_date', '<=', date_format(date_create($dateTo), 'Y-m-d'));
+
+            });
+
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope filter main filter prices
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWherePrices($query){
+        return $query;
+    }
+
+    /**
+     * Scope ideas belonged to region or city
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWhereBelongsToRegionOrCity($query){
+        if(request()->has('plid')){
+            return $query->whereHas('ideaPlaces', function ($q){
+                $q->OrderedByPlace();
+            });
+        }
+        return $query;
+    }
+
+    public function scopeWherePlaceId($query, $placeId)
+    {
+        if($placeId !== null){
+            return $query->whereHas('ideaPlaces', function ($q) use ($placeId) {
+                $q->where('places.id', $placeId);
+            });
+        }
+        return $query;
     }
 
     public static function emptyTagsArray()

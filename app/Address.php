@@ -95,14 +95,14 @@ class Address extends Model
 
         return [
             // Address
-            'postal_code' => $lastPlace ? $lastPlace->placeAddress->postal_code : '000000',
-            'country_code' => $lastPlace ? $lastPlace->placeAddress->country_code : 'RU',
+            'postal_code' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->postal_code : '000000',
+            'country_code' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->country_code : 'RU',
 
             // AddressDescription
-            'address' => $lastPlace ? $lastPlace->placeAddress->address : '',
-            'country' => $lastPlace ? $lastPlace->placeAddress->country : '',
-            'region' => $lastPlace ? $lastPlace->placeAddress->region : '',
-            'city' => $lastPlace ? $lastPlace->placeAddress->city : '',
+            'address' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->address : '',
+            'country' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->country : '',
+            'region' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->region : '',
+            'city' => $lastPlace && $lastPlace->placeAddress ? $lastPlace->placeAddress->city : '',
         ];
     }
 

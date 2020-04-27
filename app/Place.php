@@ -5,18 +5,16 @@ namespace App;
 use App\Http\Requests\Place\StorePlace;
 use App\Traits\Imageble;
 use DB;
-use GeoJson\Geometry\Geometry;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-use App\Http\Requests\Filter\GetFilterItems;
 use App\Http\Middleware\LocaleMiddleware;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
-use Illuminate\Contracts\Support\Jsonable;
+
 use Kyslik\ColumnSortable\Sortable;
 
 class Place extends Model
@@ -172,13 +170,18 @@ class Place extends Model
         })->take(20)->get();
     }
 
+    public static function getRegionOrCityByTitle(String $title){
+        return self::RegionOrCity()->whereHas('placeDescriptions', function ($query) use ($title) {
+            $query->where('title', 'like' , '%' . $title . '%');
+        })->take(20)->get();
+    }
+
     public static function itemsList(Request $request)
     {
         return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page . '_distance_' . request()->distance, 0, function (){
-            return self::distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
+            return self::orderedByPlace()
                 ->joinDescription()
                 ->search()
-                ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc')
                 ->sortable()
                 ->paginate();
         });
@@ -375,6 +378,18 @@ class Place extends Model
         return $place;
     }
 
+    public function scopeRegionOrCity($query)
+    {
+        $regionOrCityPlaceTypeIds = PlaceType::regionOrCityPlaceTypeIds();
+        return $query->whereIn('place_type_id', $regionOrCityPlaceTypeIds);
+    }
+
+    public function scopeNotRegionOrCity($query)
+    {
+        $regionOrCityPlaceTypeIds = PlaceType::regionOrCityPlaceTypeIds();
+        return $query->whereNotIn('place_type_id', $regionOrCityPlaceTypeIds);
+    }
+
     /**
      * Get last created place of authorized user
      */
@@ -385,6 +400,13 @@ class Place extends Model
         }
 
         return null;
+    }
+
+    public function scopeOrderedByPlace($query)
+    {
+        return $query
+            ->distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
+            ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc');
     }
 
 

@@ -23,6 +23,7 @@ return [
     'edit_place' => 'редактировать место',
     'edit' => 'редактировать',
     'delete' => 'удалить',
+    'remove' => 'очистить',
 
     'to_select' => 'выбрать',
     'select' => 'выбрите',
@@ -44,8 +45,8 @@ return [
     'label_tape_category_name' => 'введите название категории',
     'label_subcategory' => 'подкатегория',
     'label_title' => 'заголовок',
-    'label_intro' => 'введение',
-    'label_description' => 'описание',
+    'label_intro' => 'короткое описание',
+    'label_description' => 'опишите вашу идею',
     'label_text' => 'текст',
     'label_active' => 'активно',
     'label_not_active' => 'не активно',

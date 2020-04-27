@@ -2,7 +2,7 @@
     <div>
         <div class="text-center mb-2" v-if="!loading">
             <h5>
-                <span @click="showIdea" class="btn btn-lg btn-outline-success text-white text-uppercase"><i class="fas fa-meteor"></i> {{Lang.get('idea.random_idea')}}</span>
+                <span @click="showIdea" class="btn btn-lg btn-outline-success text-success text-uppercase"><i class="fas fa-meteor"></i> {{Lang.get('idea.random_idea')}}</span>
             </h5>
         </div>
         <div>
@@ -20,8 +20,8 @@
                         <div class="modal-body" v-if="item">
                             <div class="card list-item mb-4">
                                 <a :href="item.attributes.url">
-                                    <div class="img-wrap img-center">
-                                        <img class="card-img-top" :src="item.attributes.imageUrl" width="100%"/>
+                                    <div class="card-img__cover">
+                                        <img class="card-img" :src="item.attributes.imageUrl" width="100%"/>
                                     </div>
                                 </a>
                                 <div class="card-body text-center">
@@ -113,6 +113,14 @@
 
     .modal-footer{
         justify-content: center;
+    }
+
+    .card-img__cover{
+    }
+
+    .card-img{
+        object-fit: cover;
+        max-height: 400px;
     }
 
 </style>

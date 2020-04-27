@@ -13,120 +13,120 @@
                                 <span v-else>{{Lang.get('editor.save_button')}}</span>
                             </button>
                         </div>
-                        <div class="col-12 col-md-12">
-                            <div class="d-flex justify-content-center">
-                                <el-tabs v-model="activeTabName" @tab-click="handleTabClick">
-                                    <el-tab-pane :label="Lang.get('editor.tab_main')" name="main"></el-tab-pane>
-                                    <el-tab-pane :label="Lang.get('editor.tab_itinerary')" name="itinerary"></el-tab-pane>
-                                    <el-tab-pane :label="Lang.get('editor.tab_dates')" name="dates"></el-tab-pane>
-                                    <el-tab-pane :label="Lang.get('editor.tab_pictures')" name="images"></el-tab-pane>
-                                </el-tabs>
-                            </div>
-                        </div>
+
                     </div>
             </div>
         </div>
         <div v-if="dataLoaded && !loading" class="bg-white pt-4">
-            <div class="container">
-                <errors :errors="errors"></errors>
+            <el-container style="height: 500px; border: 1px solid #eee">
+                <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+                    <el-menu :default-openeds="['1', '2']">
+                        <el-submenu index="1">
+                            <template slot="title">{{Lang.get('editor.tab_main')}}</template>
+                            <el-menu-item index="1-1" @click="activeTabName='main'">{{Lang.get('editor.tab_main')}}</el-menu-item>
+                            <el-menu-item index="1-2" @click="activeTabName='itinerary'">{{Lang.get('editor.tab_itinerary')}}</el-menu-item>
+                            <el-menu-item index="1-3" @click="activeTabName='dates'">{{Lang.get('editor.tab_dates')}}</el-menu-item>
+                            <el-menu-item index="1-4" @click="activeTabName='images'">{{Lang.get('editor.tab_pictures')}}</el-menu-item>
+                        </el-submenu>
+                        <el-submenu index="2">
+                            <template slot="title">{{Lang.get('editor.tab_main')}}</template>
+                            <el-menu-item index="2-1">Option 1</el-menu-item>
+                            <el-menu-item index="2-2">Option 1</el-menu-item>
+                            <el-menu-item index="2-3">Option 1</el-menu-item>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
 
-                <div class="">
-                    <div id="idea-details-editor" v-if="dataLoaded && activeTabName === 'main'">
-                        <form id="frm_form" name="frm_form" method="post" autocomplete="off">
-                            <input type="hidden" name="city_id" :value="this.cityId"/>
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <el-form label-position="top" :model="item" ref="descriptionForm" label-width="120px" class="demo-dynamic">
-                                    <h4 class="text-first-uppercase mb-4">{{Lang.get('idea.idea_description')}}</h4>
-                                        <el-form-item
-                                                prop="title"
-                                                :label="Lang.get('editor.label_title')"
-                                                :rules="[
-                                                  { required: true, message: Lang.get('validation.custom.required'), trigger: 'blur' },
-                                                  { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] }
-                                                ]">
-                                            <el-input v-model="item.attributes.title"></el-input>
-                                        </el-form-item>
-                                    <div class="form-group">
-                                        <label for="frm_intro">{{Lang.get('editor.label_intro')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                        <textarea class="form-control" maxlength="255" placeholder="" name="intro" id="frm_intro" rows="2" v-model="item.attributes.intro"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>{{Lang.get('editor.label_description')}}<span :title="Lang.get('editor.required_field')" class="required-star">*</span></label>
-                                        <ckeditor height="200" :editor="editor" :config="editorConfig" v-model="item.attributes.description" id="frm_description"></ckeditor>
-                                    </div>
-                                    </el-form>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="row form-group">
-                                        <div class="col-sm-4 col-6">
-                                            <input type="radio" class="radio" name="active" id="active_0"
-                                                   value="0" v-model="item.attributes.active"/>
-                                            <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
+                <el-container>
+                    <el-main>
+                        <errors :errors="errors"></errors>
+                        <div class="">
+                            <div id="idea-details-editor" v-if="dataLoaded && activeTabName === 'main'">
+                                <form id="frm_form" name="frm_form" method="post" autocomplete="off">
+                                    <input type="hidden" name="city_id" :value="this.cityId"/>
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <el-form label-position="top" :model="item" ref="descriptionForm" label-width="120px" class="demo-dynamic">
+                                                <h4 class="text-first-uppercase mb-4">{{Lang.get('idea.idea_description')}}</h4>
+                                                <el-form-item :label="Lang.get('editor.label_title')">
+                                                    <el-input v-model="item.attributes.title"></el-input>
+                                                </el-form-item>
+                                                <el-form-item :label="Lang.get('editor.label_intro')">
+                                                    <el-input v-model="item.attributes.intro"></el-input>
+                                                </el-form-item>
+                                                <el-form-item :label="Lang.get('editor.label_description')">
+                                                    <el-input type="textarea" v-model="item.attributes.description"></el-input>
+                                                </el-form-item>
+                                            </el-form>
                                         </div>
-                                        <div class="col-sm-4 col-6">
-                                            <input type="radio" class="radio" name="active" id="active_1"
-                                                   value="1"  v-model="item.attributes.active"/>
-                                            <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
+                                        <div class="col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col-sm-4 col-6">
+                                                    <input type="radio" class="radio" name="active" id="active_0"
+                                                           value="0" v-model="item.attributes.active"/>
+                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
+                                                </div>
+                                                <div class="col-sm-4 col-6">
+                                                    <input type="radio" class="radio" name="active" id="active_1"
+                                                           value="1"  v-model="item.attributes.active"/>
+                                                    <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
+                                                </div>
+                                            </div>
+                                            <category-selector
+                                                    v-model = "item.relationships.categories"
+                                                    :locale = "locale"
+                                                    @change="categoryChanged"
+                                            ></category-selector>
+                                            <hr/>
+                                            <idea-selector
+                                                    v-if="item !== null"
+                                                    :locale = "locale"
+                                                    v-model = "item.relationships.idea"
+                                            ></idea-selector>
+                                            <hr>
+                                            <place-selector
+                                                    v-if="item !== null"
+                                                    :locale = "locale"
+                                                    v-model = "item.relationships.places"
+                                            ></place-selector>
+                                            <hr>
+                                            <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
+                                            <hr>
+                                            <div>
+                                                <tags-editor
+                                                        :tags="item.relationships.tags"
+                                                ></tags-editor>
+                                            </div>
                                         </div>
                                     </div>
-                                    <category-selector
-                                            v-model = "item.relationships.categories"
-                                            :locale = "locale"
-                                            @change="categoryChanged"
-                                    ></category-selector>
                                     <hr/>
-                                    <idea-selector
-                                            v-if="item !== null"
-                                            :locale = "locale"
-                                            v-model = "item.relationships.idea"
-                                    ></idea-selector>
-                                    <hr>
-                                    <place-selector
-                                            v-if="item !== null"
-                                            :locale = "locale"
-                                            v-model = "item.relationships.places"
-                                    ></place-selector>
-                                    <hr>
-                                    <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
-                                    <hr>
-                                    <div>
-                                        <tags-editor
-                                                :tags="item.relationships.tags"
-                                        ></tags-editor>
-                                    </div>
-                                </div>
+
+                                </form>
                             </div>
 
-                            <div>
-                                <span class="text-secondary">(<span class="required-star">*</span>) {{Lang.get('editor.stars_required')}}</span>
-                            </div>
-                            <hr/>
+                            <itinerary-editor
+                                    v-if="dataLoaded && activeTabName === 'itinerary'"
+                                    v-model="item.relationships.itineraries"
+                                    :hid="item.hid"
+                            ></itinerary-editor>
 
-                        </form>
-                    </div>
+                            <dates-and-prices-editor
+                                    v-if="dataLoaded && activeTabName === 'dates'"
+                                    v-model="item.relationships.dates"
+                                    :currencies="currencies"
+                                    :hid="item.hid"
+                            ></dates-and-prices-editor>
 
-                    <itinerary-editor
-                            v-if="dataLoaded && activeTabName === 'itinerary'"
-                            v-model="item.relationships.itineraries"
-                            :hid="item.hid"
-                    ></itinerary-editor>
-
-                    <dates-and-prices-editor
-                            v-if="dataLoaded && activeTabName === 'dates'"
-                            v-model="item.relationships.dates"
-                            :currencies="currencies"
-                            :hid="item.hid"
-                    ></dates-and-prices-editor>
-
-                    <photo-uploader
-                            v-if="dataLoaded && activeTabName === 'images'"
-                            :type="this.item.type"
-                            :item-id="item.hid"
-                            :hid="item.hid"
-                    />
-                </div>
-            </div>
+                            <photo-uploader
+                                    v-if="dataLoaded && activeTabName === 'images'"
+                                    :type="this.item.type"
+                                    :item-id="item.hid"
+                                    :hid="item.hid"
+                            />
+                        </div>
+                    </el-main>
+                </el-container>
+            </el-container>
         </div>
     </div>
 </template>

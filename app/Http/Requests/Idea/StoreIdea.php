@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Idea;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreIdea extends FormRequest
 {
@@ -32,15 +33,23 @@ class StoreIdea extends FormRequest
             'relationships.categories' => 'required|array',
             'relationships.categories.*.id' => 'required|numeric|exists:categories,id',
 
-            'relationships.itineraries' => 'required|array',
+            'relationships.itineraries' => Rule::requiredIf(function(){
+                return request()->input('attributes.created_at') !== null;
+            }),
             'relationships.itineraries.*.attributes.title' => 'required',
             'relationships.itineraries.*.attributes.description' => 'required',
 
             'relationships.dates' => 'required|array|nullable',
+            'relationships.dates.*.attributes.start_date' => 'required|date',
+            'relationships.dates.*.attributes.start_time' => 'required|min:8|max:8',
             'relationships.dates.*.relationships.ideaPrice.attributes.price' => 'required|nullable',
             'relationships.dates.*.relationships.ideaPrice.relationships.currency.id' => 'required|integer|exists:currencies,id',
 
         ];
+
+
+
+
         if(!Auth()->user()->can('createMainIdea')){
             $rules[] = [
                 'relationships.idea.id' => 'required|integer|exists:ideas,id',

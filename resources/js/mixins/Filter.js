@@ -6,8 +6,11 @@ export default {
             locale: 'ru',
             filters: null,
             activeFilters: null,
-            filterName: 'season',
+            filterName: null,
             loading: false,
+
+            // нужно ли погружать фильтры
+            needFetchFilters: true,
         }
     },
 
@@ -16,13 +19,13 @@ export default {
         if(this.propFilters !== undefined && this.propFilters != null){
             this.filters = this.propFilters;
         }else{
-            this.fetchFilterItems();
+            if(this.needFetchFilters)this.fetchFilterItems();
         }
     },
 
     watch:{
         activeFilters(val){
-            if(val.length === 0){
+            if(val.length === 0 && this.filters.length){
                 // if nothing selected
                 this.activeFilters.push(this.filters[0]);
             }
@@ -35,12 +38,12 @@ export default {
         },
 
         URLActiveFilter: {
-            // геттер:
+
             get: function () {
                 let newUrl = new URL(decodeURI(window.location.href));
                 return newUrl.searchParams.get(this.filterName);
             },
-            // сеттер:
+
             set: function (newValue) {
                 if(newValue){
                     let newUrl = new URL(window.location.href);
@@ -74,7 +77,7 @@ export default {
         },
 
         defaultButtonTitle(){
-            return Lang.get('menu.select_season');
+            return Lang.get('Select filter');
         }
     },
 
@@ -85,9 +88,12 @@ export default {
             let filters = [];
             if (this.filters && this.filters.length) {
                 for (let i = 0; i < this.filters.length; i++) {
-                    if (this.filters[i].attributes.name !== '' && this.URLActiveFilter && this.URLActiveFilter.split('-').includes(this.filters[i].attributes.name)) {
-                        filters.push(this.filters[i]);
+                    if(typeof this.filters[i] === "object" && this.filters[i].attributes !== undefined){
+                        if (this.filters[i].attributes.name !== '' && this.URLActiveFilter && this.URLActiveFilter.split('-').includes(this.filters[i].attributes.name)) {
+                            filters.push(this.filters[i]);
+                        }
                     }
+
                 }
             }
 
@@ -119,7 +125,7 @@ export default {
         },
 
         filterChanged(filter){
-            // remove all selected filter when select something else
+            // remove all selected filters when select something else
             if(filter.attributes.name === ''){
                 // all filters clicked
                 if(this.activeFilters.includes(filter)){
@@ -133,7 +139,7 @@ export default {
 
                 }
             }else{
-                // remove all filter if exists
+                // remove filter if exists
                 let allIndex = null;
                 for(let i = 0; i < this.activeFilters.length; i++){
                     if(this.activeFilters[i].attributes.name === ''){
@@ -147,21 +153,28 @@ export default {
             }
         },
 
-        applyFilter(){
+        applyFilterHandler(){
             let filter = '';
             if(this.activeFilters && this.activeFilters.length){
                 for(let i = 0; i < this.activeFilters.length; i++){
-                    if(i !== 0){
-                        filter = filter + '-' + this.activeFilters[i].attributes.name;
-                    }else{
-                        filter = this.activeFilters[i].attributes.name;
+                    if(typeof this.activeFilters[i] === 'object'){
+                        if(i !== 0){
+                            filter = filter + '-' + this.activeFilters[i].attributes.name;
+                        }else{
+                            filter = this.activeFilters[i].attributes.name;
+                        }
+                    }else if(typeof this.activeFilters[i] === 'string'){
+                        filter = this.activeFilters[i];
                     }
-
                 }
-            }else{
-                filter = this.defaultButtonTitle;
             }
             this.URLActiveFilter = filter;
+        },
+
+        clearFilterHandler(){
+            this.activeFilters = [];
+            this.activeFilters.push(this.filters[0]);
+            this.applyFilterHandler();
         }
     }
 

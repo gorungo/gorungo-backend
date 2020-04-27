@@ -3,6 +3,7 @@
 return[
     'title' => 'ideas',
     'item_title' => 'idea',
+    'main_ideas' => 'main ideas',
     'description' => '1000 ideas how to spend free time',
 
     'create' => 'add idea',
@@ -24,4 +25,5 @@ return[
     'see_all_actions' => 'see all actions',
 
     'from' => 'from',
+    'make_appeal' => 'make appeal'
 ];

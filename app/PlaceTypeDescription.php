@@ -8,7 +8,7 @@ class PlaceTypeDescription extends Model
 {
     protected $table = 'place_type_descriptions';
 
-    protected $fillable = ['locale_id', 'title'];
+    protected $fillable = ['locale_id', 'title', 'place_type_id'];
 
     protected $touches = [];
 

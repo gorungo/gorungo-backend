@@ -41,9 +41,19 @@ return [
 
     'and_more_filters' => '',
 
+    'select_place' => 'Select place',
+    'select_dates' => 'Select date',
     'select_season' => 'Select season',
     'select_time' => 'Select time',
-    'apply_filters' => 'Apply'
+    'any_place' => 'Any place',
+    'any_dates' => 'Any date',
+    'any_season' => 'Any season',
+    'any_time' => 'Any time',
+
+    'apply_filters' => 'Apply filters',
+    'apply_filter' => 'Apply filter',
+    'clear_filters' => 'Clear filters',
+    'clear_filter' => 'Clear filter'
 
 
 ];

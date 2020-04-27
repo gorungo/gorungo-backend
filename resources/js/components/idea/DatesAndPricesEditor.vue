@@ -3,16 +3,16 @@
         <!-- Date selector -->
         <div v-if="orderedDates.length !== 0">
             <h4 class="text-first-uppercase mb-4">{{Lang.get('editor.label_dates')}}
-                <span class="float-right text-primary" v-on:click="newDate"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
+                <span class="float-right text-primary" v-on:click="handleNewDate"><span class="glyphicon glyphicon-pencil"> </span><span class="text-capitalize">{{Lang.get('editor.label_add')}}</span></span>
             </h4>
             <el-row>
-                <el-col  v-for="(date, index) in orderedDates" :span="6" :key="index">
-                    <div class="card date-card" :key="index">
+                <el-col  v-for="(date, index) in orderedDates" :span="6" :key="date.id">
+                    <div class="card date-card">
                         <div class="card-body date-card__wrap">
-                            <el-button class="float-right" type="default" icon="el-icon-delete" circle v-on:click="removeDate(index)"></el-button>
-                            <div class="date-card__info"  v-on:click="showDate(index)">
+                            <el-button class="float-right" type="default" icon="el-icon-delete" circle v-on:click="handleRemoveDate(index)"></el-button>
+                            <div class="date-card__info" v-on:click="handleShowDate(index)">
                                 <div>
-                                    <i class="el-icon-date mr-2"></i>{{go.localizeMySqlDateToLocale(date.attributes.start_date, 'ru-RU')}}
+                                    <i class="el-icon-date mr-2"></i>{{Go.localizeMySqlDateToLocale(date.attributes.start_date, 'ru-RU')}}
                                 </div>
                                 <div><i class="el-icon-coin mr-2"></i>{{date.relationships.ideaPrice.attributes.price}} {{date.relationships.ideaPrice.relationships.currency.attributes.title}}</div>
                             </div>
@@ -24,9 +24,9 @@
         <div v-else class="clearfix d-flex" style="justify-content: center;">
             <el-col :span="12">
                 <el-card class="box-card text-center" shadow="never">
-                    <h3 class="text-first-uppercase">{{go.firstToUpperCase(Lang.get('editor.editor_no_dates_title'))}}</h3>
-                    <p class="text-first-uppercase">{{go.firstToUpperCase(Lang.get('editor.editor_no_dates_description'))}}</p>
-                    <el-button @click="newDate" type="primary" icon="el-icon-plus" round>{{Lang.get('editor.label_add')}}</el-button>
+                    <h3 class="text-first-uppercase">{{Go.firstToUpperCase(Lang.get('editor.editor_no_dates_title'))}}</h3>
+                    <p class="text-first-uppercase">{{Go.firstToUpperCase(Lang.get('editor.editor_no_dates_description'))}}</p>
+                    <el-button @click="handleNewDate" type="primary" icon="el-icon-plus" round>{{Lang.get('editor.label_add')}}</el-button>
                 </el-card>
             </el-col>
         </div>
@@ -37,7 +37,7 @@
                 <div class="modal-content search-list">
                     <div class="modal-header">
                         <h5 class="modal-title text-first-uppercase">{{Lang.get('editor.label_date_editing')}}</h5>
-                        <button type="button" class="close" v-on:click="closeSelectorWindow" :aria-label="Lang.get('editor.close')">
+                        <button type="button" class="close" v-on:click="handleCloseSelectorWindow" :aria-label="Lang.get('editor.close')">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -59,6 +59,7 @@
                                     <el-time-picker
                                             class="w-100"
                                             v-model="editDate.attributes.start_time"
+                                            value-format="HH:mm:ss"
                                             placeholder="Arbitrary time">
                                     </el-time-picker>
                                 </el-col>
@@ -88,8 +89,8 @@
                         </el-form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" v-on:click="closeSelectorWindow">{{Lang.get('editor.close_button')}}</button>
-                        <button type="button" class="btn btn-primary" v-on:click="saveDate">{{Lang.get('editor.save_button')}}</button>
+                        <button type="button" class="btn btn-secondary" v-on:click="handleCloseSelectorWindow">{{Lang.get('editor.close_button')}}</button>
+                        <button type="button" class="btn btn-primary" v-on:click="handleSaveDate">{{Lang.get('editor.save_button')}}</button>
                     </div>
                 </div>
             </div>
@@ -102,12 +103,11 @@
     import Localized from '../../mixins/Localized.js';
     import Datepicker from 'vuejs-datepicker';
     import TimeSelector from '../TimeSelector';
-    import go from '../../go.js';
     import ElementUI from 'element-ui';
 
     export default {
         name: "DatesAndPricesEditor",
-        components: {Datepicker, TimeSelector, Money, ElementUI, go} ,
+        components: {Datepicker, TimeSelector, Money, ElementUI} ,
 
         props: {
             dates: Array,
@@ -147,7 +147,7 @@
 //------METHODS-----------------------------------------------------------------------------------------------
 
         computed: {
-            go(){
+            Go(){
                 return window.go;
             },
 
@@ -166,13 +166,13 @@
 
             emptyDate() {
                 return {
-                    id: null,
+                    id: Date.now(), // 13 symbols
                     type: "Dates",
                     locale: this.locale,
                     attributes: {
                         start_date: null,
                         start_time: null,
-                        time_zone_offset: window.go.getTimeZoneOffset(),
+                        time_zone_offset: this.Go.getTimeZoneOffset(),
                     },
                     relationships: {
                         ideaPrice: {
@@ -193,7 +193,12 @@
 
             orderedDates(){
                 return this.dates
-            }
+            },
+
+            dateToSave(){
+                return this.editDate;
+            },
+
 
         },
         watch: {
@@ -201,53 +206,57 @@
         },
         methods: {
 
-            newDate: function(){
-                this.editDateIndex = null;
-                this.editDate = _.cloneDeep(this.emptyDate);
-                $('#dateSelectorModal').modal('show');
-            },
+            /**
+             * Push date to dates array from modal window
+             */
 
-            showDate: function(index){
-                this.editDateIndex = index;
-                this.editDate = _.cloneDeep(this.dates[index]);
-
-                $('#dateSelectorModal').modal('show');
-            },
-
-            removeDate: function(index){
-                this.dates.splice(index,1);
-            },
-
-            addDate: function(){
-                this.dates.push(this.dateToSave());
-                this.closeSelectorWindow();
-            },
-
-            closeSelectorWindow: function(){
-                $('#dateSelectorModal').modal('hide');
-                this.reset();
-            },
-
-            dateToSave(){
-                return this.editDate;
-            },
-
-            saveDate(){
-                if(this.editDateIndex){
-                    this.$set(this.dates, this.editDateIndex ,this.dateToSave());
+            addDate(){
+                if(this.editDateIndex !== null){
+                    // if updating date
+                    this.$set(this.dates, this.editDateIndex, this.dateToSave);
+                    this.$emit('change', this.dates);
                 }else{
-                    this.dates.push(this.editDate);
+                    // if creating new
+                    this.dates.push(this.dateToSave);
                 }
-
-                this.$emit('change', this.dates);
                 this.reset();
-
-                $('#dateSelectorModal').modal('hide');
             },
 
+            /**
+             * Reset date modal window data
+             */
             reset(){
                 this.editDate = null;
                 this.editIndex = null;
+            },
+
+            // handlers
+
+            handleNewDate: function(){
+                this.editDateIndex = null;
+                this.editDate = { ...this.emptyDate };
+                $('#dateSelectorModal').modal('show');
+            },
+
+            handleShowDate: function(index){
+                this.editDateIndex = index;
+                this.editDate = { ...this.dates[index] };
+
+                $('#dateSelectorModal').modal('show');
+            },
+
+            handleRemoveDate: function(index){
+                this.dates.splice(index,1);
+            },
+
+            handleCloseSelectorWindow: function(){
+                $('#dateSelectorModal').modal('hide');
+                this.reset();
+            },
+
+            handleSaveDate(){
+                this.addDate();
+                $('#dateSelectorModal').modal('hide');
             },
 
 

@@ -201,6 +201,7 @@ export default {
 
                             if(this.itemId === null){
                                 this.item.id = resp.data.data.id;
+                                this.item.hid = resp.data.data.hid;
                                 this.item.attributes.url = resp.data.data.attributes.url;
                                 this.item.attributes.edit_url = resp.data.data.attributes.edit_url;
                             }

@@ -7,11 +7,20 @@
 
 require('./bootstrap');
 
+//import ElementUI from 'element-ui';
+import enlLocale from 'element-ui/lib/locale/lang/en';
+import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from "element-ui";
+
+Vue.use(ElementUI, { enlLocale });
+
 Vue.component('RandomIdea', require('./components/idea/RandomIdea.vue').default);
-Vue.component('MainPlaceFilter', require('./components/place/MainPlaceFilter.vue').default);
+Vue.component('PlaceFilter', require('./components/filter/PlaceFilter.vue').default);
 Vue.component('SeasonFilter', require('./components/filter/SeasonFilter.vue').default);
 Vue.component('TimeFilter', require('./components/filter/TimeFilter.vue').default);
+Vue.component('DatesFilter', require('./components/filter/DatesFilter.vue').default);
 Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').default);
+Vue.component('IdeaItemDropdown', require('./components/idea/IdeaItemDropdown.vue').default);
 
 
 /**

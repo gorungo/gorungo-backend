@@ -93,9 +93,13 @@
 
         computed: {
             tagsArray(){
-                return this.dataTags.map(item => {
-                    return item.attributes.name;
-                });
+                if(this.dataTags && this.dataTags.length){
+                    return this.dataTags.map(item => {
+                        return item.attributes.name;
+                    });
+                }
+
+                return [];
             },
             go(){
                 return window.go;

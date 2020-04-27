@@ -24,7 +24,7 @@ class Itinerary extends Model
 
     protected $perPage = 60;
 
-    protected $protected = [];
+    protected $guarded = [];
 
     protected $with = ['localisedItineraryDescription'];
 

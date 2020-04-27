@@ -1,6 +1,6 @@
 @if($categories)
 <div class="container">
-<div class="card mt-4 mb-4 bg-light">
+<div class="card mt-5 mb-2 mb-4 bg-light">
     @isset($activeCategory)
         <div class="card-header">
 

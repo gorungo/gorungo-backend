@@ -241,6 +241,10 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/places/getByTitle', "API\PlaceController@getByTitle")
         ->name('api.place.get_by_title');
 
+    //Get listing of regions and cities by title
+    Route::get('/places/getRegionOrCityByTitle', "API\PlaceController@getRegionOrCityByTitle")
+        ->name('api.place.get_region_or_city_by_title');
+
     //Get listing of places by title
     Route::get('/ideas/getByTitle', "API\IdeaController@getByTitle")
         ->name('api.idea.get_by_title');

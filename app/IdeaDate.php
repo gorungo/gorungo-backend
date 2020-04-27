@@ -22,7 +22,7 @@ class IdeaDate extends Model
     }
 
     public function ideaPrice(){
-        return $this->hasOne('App\IdeaPrice');
+        return $this->hasOne('App\IdeaPrice')->withDefault(['price' => null, 'currency_id' => 3 ]);
     }
 
     public function scopeInFuture($query)

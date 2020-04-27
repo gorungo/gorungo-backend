@@ -26,8 +26,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{Lang.get('editor.close_button')}}</button>
-                        <button @click="applyFilter" type="button" class="btn btn-primary">{{Lang.get('menu.apply_filters')}}</button>
+                        <button @click="clearFilterHandler" type="button" class="btn btn-link float-left">{{Lang.get('texts.clear')}}</button>
+                        <button @click="applyFilterHandler" type="button" class="btn btn-primary">{{Lang.get('texts.apply')}}</button>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
 
         computed:{
             defaultButtonTitle(){
-                return Lang.get('menu.select_time');
+                return window.go.firstToUpperCase(Lang.get('menu.select_time'));
             }
         }
     }

@@ -42,15 +42,17 @@ Vue.component('ActionEditor', require('./components/action/ActionEditor.vue').de
 Vue.component('PlaceEditor', require('./components/place/PlaceEditor.vue').default);
 
 Vue.component('IdeaEditor', require('./components/idea/IdeaEditor.vue').default);
+Vue.component('IdeaItemDropdown', require('./components/idea/IdeaItemDropdown.vue').default);
 Vue.component('DatesAndPricesEditor', require('./components/idea/DatesAndPricesEditor.vue').default);
 Vue.component('ItineraryEditor', require('./components/idea/ItineraryEditor.vue').default);
 
 Vue.component('ProfileEditor', require('./components/profile/ProfileEditor.vue').default);
 
 Vue.component('RandomIdea', require('./components/idea/RandomIdea.vue').default);
-Vue.component('MainPlaceFilter', require('./components/place/MainPlaceFilter.vue').default);
+Vue.component('PlaceFilter', require('./components/filter/PlaceFilter.vue').default);
 Vue.component('SeasonFilter', require('./components/filter/SeasonFilter.vue').default);
 Vue.component('TimeFilter', require('./components/filter/TimeFilter.vue').default);
+Vue.component('DatesFilter', require('./components/filter/DatesFilter.vue').default);
 
 Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').default);
 

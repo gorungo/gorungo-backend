@@ -23,6 +23,7 @@ return [
     'label_draft' => 'draft',
     'label_published' => 'published',
     'label_activity' => 'activity',
+    'remove' => 'remove',
 
     'activate' => 'activate',
     'deactivate' => 'deactivate',
@@ -42,8 +43,8 @@ return [
     'label_tape_category_name' => 'type category name',
     'label_subcategory' => ' subcategory',
     'label_title' => 'title',
-    'label_intro' => 'intro',
-    'label_description' => 'description',
+    'label_intro' => 'short description',
+    'label_description' => 'describe idea',
     'label_text' => 'text',
     'label_active' => 'active',
     'label_not_active' => 'not active',

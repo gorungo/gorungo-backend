@@ -102,4 +102,8 @@ class PlaceController extends Controller
     public function getByTitle(Request $request){
         return PlaceNoRelationshipsResource::collection(Place::getByTitle($request->title));
     }
+
+    public function getRegionOrCityByTitle(Request $request){
+        return PlaceNoRelationshipsResource::collection(Place::getRegionOrCityByTitle($request->title));
+    }
 }

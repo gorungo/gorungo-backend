@@ -37,7 +37,8 @@ class Idea extends JsonResource
                 'title' => $this->id ? $this->title : '',
                 'intro' => $this->id ? $this->intro : '',
                 'description' => $this->id ? $this->description : '',
-                'imageUrl' => asset($this->TmbImgPath)
+                'imageUrl' => asset($this->TmbImgPath),
+                'created_at' => $this->created_at ? (string)$this->created_at : null,
             ],
 
             'relationships' => [

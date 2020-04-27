@@ -73,6 +73,56 @@ class IdeaController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @param String $categoriesUrl
+     * @return \Illuminate\Http\Response
+     */
+    public function main(Request $request, $categoriesUrl = null)
+    {
+        $page = new Page();
+        $page->title = config('app.name') . ' - ' . __('idea.description') . '.';
+
+        $categoriesArray = null;
+        $activeCategory = null;
+        $subCategory = null;
+        $categories = null;
+
+        $categoriesArray = explode('/', $categoriesUrl);
+        $activeCategorySlug = last($categoriesArray);
+
+        if ($activeCategorySlug) {
+
+            $activeCategory = Category::where('slug', mb_strtolower($activeCategorySlug))->first();
+            if(!$activeCategory){
+                abort('404');
+            }
+            $subCategory = $activeCategory->categoryParent;
+
+            if($activeCategory)
+                $page->title = $page->title . ' ' . $activeCategory->title . '.';
+        }
+
+        $activePlace = Place::activePlace();
+        $activePlaceResource = $activePlace ? new PlaceNoRelationships($activePlace) : null;
+        $sectionTitle = __('place.title');
+
+        if($activePlace){
+            $sectionTitle =__('place.places_close_to') .' '. $activePlace->title;
+        }
+
+        $backgroundImage = Idea::backgroundImage($activeCategory);
+        $categories = Category::getCategoriesForSelector($activeCategory);
+        $ideas = Idea::itemsList($request, $activeCategory);
+
+        return view('idea.index', compact([
+            'page', 'ideas', 'activeCategory', 'categories',
+            'categoriesUrl', 'subCategory', 'backgroundImage',
+            'sectionTitle', 'activePlace', 'activePlaceResource'
+        ]));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

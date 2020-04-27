@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PlaceNoRelationships;
+use App\Page;
+use App\Place;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
@@ -10,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Middleware\LocaleMiddleware;
 use App\Category;
 use App\Idea;
-use Auth;
+
 
 
 
@@ -18,14 +21,56 @@ class PageController extends Controller
 {
     public function index(Request $request){
 
-        // получаем список главных категорий
+        $page = new Page();
+        $page->title = config('app.name') . ' - ' . __('idea.description') . '.';
 
-        $mainCategories = Category::getMainCategories();
+        $categoriesUrl = null;
+        $categoriesArray = null;
+        $activeCategory = null;
+        $subCategory = null;
+        $categories = null;
+        $sectionTitle = '';
 
-        if(!session()->has('prestart')){
-            return view('prestart');
-        }
-        return view('index', compact(['mainCategories']));
+
+        $backgroundImage = Idea::backgroundImage($activeCategory);
+        $categories = Category::getCategoriesForSelector($activeCategory);
+        $ideas = Idea::itemsList($request, $activeCategory);
+
+        $activePlace = Place::activePlace();
+        $activePlaceResource = $activePlace ? new PlaceNoRelationships($activePlace) : null;
+
+        $ideaSections = [
+            // путешествия по приморью
+            [
+                'sectionTitle' => __('texts.section_title.prim_adventures'),
+                'sectionTargetUrl' => '',
+                'ideas' => Idea::widgetItemsList($request,87),
+                'place' => Place::whereId(87)->first(),
+                'category' => null,
+            ],
+
+            // путешествия по России
+            [
+                'sectionTitle' => __('texts.section_title.russia_adventures'),
+                'sectionTargetUrl' => '',
+                'ideas' => Idea::widgetItemsList($request,87),
+                'place' => Place::whereId(87)->first(),
+                'category' => null,
+            ],
+
+            // основные идеи
+            [
+                'sectionTitle' => __('texts.section_title.russia_adventures'),
+                'sectionTargetUrl' => '',
+                'ideas' => Idea::widgetMainItemsList($request),
+                'place' => null,
+                'category' => null,
+            ],
+        ];
+
+        return view('pages.index', compact([
+            'page', 'ideas', 'categories', 'backgroundImage', 'sectionTitle', 'categoriesUrl', 'ideaSections', 'activePlace', 'activePlaceResource'
+        ]));
     }
 
     /**

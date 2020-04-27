@@ -11,6 +11,8 @@ class PlaceType extends Model
     protected $table = 'place_types';
     public $timestamps = false;
 
+    public $guarded = [];
+
     protected $with = ['placeTypeDescriptions', 'localisedPlaceTypeDescription'];
 
     Public function getTitleAttribute()
@@ -74,5 +76,14 @@ class PlaceType extends Model
     public function scopeIsActive($query)
     {
         return $query;
+    }
+
+    /**
+     * Array of region or city place type ids
+     * @return array
+     */
+    public static function regionOrCityPlaceTypeIds()
+    {
+        return [1, 26];
     }
 }

@@ -74,7 +74,7 @@ class User extends Authenticatable  implements MustVerifyEmail
 
         $defaultTmb = 'images/interface/placeholders/idea.png';
 
-        if ($this->profile->thmb_file_name != null) {
+        if ($this->profile && $this->profile->thmb_file_name != null) {
             //если есть картинка вакансии
             $src = 'storage/images/profile/' . $this->profile->id . '/' . htmlspecialchars(strip_tags($this->profile->thmb_file_name));
 
