@@ -1,6 +1,7 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Errors from '../components/Errors.vue';
 import Authorized from './Authorized';
+import Notify from './Notify';
 
 export default {
 
@@ -10,7 +11,9 @@ export default {
         Errors
     },
 
-    mixins: [ Authorized ],
+    mixins: [
+        Authorized, Notify
+    ],
 
     data(){
         return{
@@ -147,7 +150,7 @@ export default {
          * get item data
          */
 
-        fetch: function(){
+        async fetch(){
 
             if(!this.loading){
                 this.loading = true;
@@ -290,23 +293,6 @@ export default {
             }
 
             return saveMethod;
-        },
-
-        showNotification(title, message, type = 'success'){
-            let notificationPosition = 'bottom-left';
-            let offset = 0;
-
-            this.$notify({
-                title: title,
-                message: message,
-                type: type,
-                position: notificationPosition,
-                offset: offset,
-            });
-        },
-
-        showNoConnectionNotification(){
-            this.showNotification('error', 'There was an error', 'error');
         },
 
         afterSave(){

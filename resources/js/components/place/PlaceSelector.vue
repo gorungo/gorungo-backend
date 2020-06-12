@@ -121,6 +121,10 @@
                 this.$emit('change', this.places);
             },
 
+            showSelectorWindow: function(){
+                $('#placeSelectorModal').modal('show');
+            },
+
             closeSelectorWindow: function(){
                 $('#placeSelectorModal').modal('hide');
             }
@@ -135,7 +139,9 @@
 
             noSearchResults(){
                 return !this.loading && !this.foundPlaces.length && this.searchTitle.length >= this.searchMinimum;
-            }
+            },
+
+
         },
 
     }

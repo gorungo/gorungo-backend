@@ -109,7 +109,7 @@
 
     import PhotoUploader from '../photo/PhotoUploader.vue';
     import LocaleSelector from '../LocaleSelector.vue';
-    import ExtendedTagSelector from '../ExtendedTagSelector.vue';
+    import ExtendedTagSelector from '../idea/ExtendedTagSelector.vue';
     import CategorySelector from '../CategorySelector.vue';
 
 

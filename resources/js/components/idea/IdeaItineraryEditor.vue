@@ -96,7 +96,7 @@
     import Localized from '../../mixins/Localized.js';
     import OneImageUploader from "../photo/OneImageUploader";
     export default {
-        name: "ItineraryEditor",
+        name: "IdeaItineraryEditor",
 
         components: {OneImageUploader, ElementUI},
 

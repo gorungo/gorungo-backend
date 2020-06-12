@@ -26,9 +26,9 @@
 </template>
 
 <script>
-    import Localized from '../mixins/Localized.js';
+    import Localized from '../../mixins/Localized.js';
     export default {
-        name: "ExtendedTagSelector",
+        name: "IdeaExtendedTagSelector",
         props: ['tags'],
 
         mixins: [Localized],

@@ -43,7 +43,7 @@ class User extends Authenticatable  implements MustVerifyEmail
 
     public function ideas()
     {
-        return $this->hasMany('App\Ideas');
+        return $this->hasMany('App\Idea', 'author_id');
     }
 
     public function actions()
@@ -152,9 +152,19 @@ class User extends Authenticatable  implements MustVerifyEmail
         return $this->save();
     }
 
+    public static function activeUser()
+    {
+        return Auth()->guest() ? null : self::find(Auth()->User()->id);
+    }
+
     public static function activeUserResource()
     {
-        return new UserResource(Auth()->User());
+        return Auth()->guest() ? null : new UserResource(self::activeUser());
+    }
+
+    public function hasDraftIdeas()
+    {
+        return self::ideas()->where('is_approved', 0)->count();
     }
 
 }

@@ -4,4 +4,5 @@ export default {
             return window.activeUser !== undefined ? window.activeUser : null;
         }
     },
+
 }

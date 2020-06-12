@@ -3,7 +3,7 @@
         @include('parts.section_title', [
             'sectionTitle' => ucfirst(__('idea.title')),
             'sectionDescription' => ucfirst(__('idea.description')),
-            'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.create'): null,
+            'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.new'): null,
             'addItemTitle' => __('idea.create'),
             'style' => 'dark'
             ])
@@ -15,7 +15,7 @@
     <div class="header bg-white py-4 border-bottom">
     @include('parts.section_title', [
             'sectionTitle' => __('idea.description'),
-            'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.create'): null,
+            'addItemURL' => Auth()->user() && Auth()->user()->can('create', App\Idea::class) ? route('ideas.new'): null,
             'addItemTitle' => __('idea.create'),
             ])
         <random-idea></random-idea>

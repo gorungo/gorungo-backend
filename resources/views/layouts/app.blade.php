@@ -28,10 +28,10 @@
     <script src="{{ mix('js/app_guest.js') }}"></script>
 @endguest
 @auth
-    <script src="{{ mix('js/app.js') }}"></script>
     <script>
         window.activeUser = @json(\App\User::activeUserResource());
     </script>
+    <script src="{{ mix('js/app.js') }}"></script>
 @endauth
 
 @yield('scripts')

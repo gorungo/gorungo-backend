@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Http\Resources\PlaceNoRelationships;
 use App\Idea;
 use App\Category;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Page;
+use App\User;
 use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Requests\Idea\StoreIdea;
@@ -127,9 +129,30 @@ class IdeaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function new(Idea $idea)
+    {
+        if(User::activeUser()->hasDraftIdeas()){
+            return redirect()->route('office.ideas');
+
+        }else{
+            return redirect()->route('ideas.create');
+
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Idea $idea)
     {
-        return view('idea.edit' , ['idea']);
+        $newIdea = Idea::createEmpty();
+
+        return redirect()->route('ideas.edit', ['idea' => $newIdea]);
+
+        //return view('idea.edit' , ['idea' => $newIdea]);
+
     }
 
     /**

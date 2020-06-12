@@ -2,15 +2,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
-
-import ActionEdit from './ActionEdit'
-import App from './App'
-
+import App from './modules/App'
+import Idea from './modules/Idea'
+import Profile from './modules/Profile'
 
 export default new Vuex.Store({
     modules:{
         App,
-        ActionEdit
+        Idea,
+        Profile
     },
 
     beforeCreate() {

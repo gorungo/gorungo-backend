@@ -32,6 +32,10 @@ return [
 
     // tabs
     'tab_main' => 'main',
+    'tab_category' => 'category',
+    'tab_place' => 'place',
+    'tab_description' => 'description',
+    'tab_tags' => 'tags',
     'tab_pictures' => 'pictures',
     'tab_itinerary' => 'itinerary',
     'tab_dates' => 'dates',
@@ -40,6 +44,8 @@ return [
     'label_category' => 'category',
     'label_categories' => 'categories',
     'label_main_category' => 'main category',
+    'label_place' => 'place',
+    'label_places' => 'places',
     'label_tape_category_name' => 'type category name',
     'label_subcategory' => ' subcategory',
     'label_title' => 'title',
@@ -97,6 +103,7 @@ return [
     'saving' => 'saving',
     'save_success' => 'saved successfully',
     'save_error' => 'there was an error',
+    'default_error_text' => 'there was an error',
     'error' => 'error',
 
     'max_file_size_limit' => 'file size should not exceed',

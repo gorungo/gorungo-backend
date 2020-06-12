@@ -15,7 +15,9 @@
     <div class="section-wrap bg-white pt-5">
         <div class="container">
             @foreach($ideaSections as $section)
-                @if($section['sectionTitle'])<h3>{{$section['sectionTitle']}}</h3>@endif
+                @if($section['sectionTitle'])
+                    <h3 class="text-first-uppercase">{{$section['sectionTitle']}}</h3>
+                @endif
                 <div class="grid-container grid-columns-5">
                     @foreach($section['ideas'] as $idea)
                         @if($idea->title !== null)

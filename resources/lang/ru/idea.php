@@ -14,6 +14,11 @@ return[
     'not_created' => 'идея не создана',
     'not_updated' => 'идея не обновлена',
 
+    'create_intro_title' => 'новая идея',
+    'create_intro_description' => 'давайте создадим что-нибудь интересное',
+
+    'publish' => 'опубликовать',
+
     'idea_description' => 'описание',
 
     // not found
@@ -31,5 +36,9 @@ return[
     'see_all_actions' => 'смотреть все действия',
 
     'from' => 'от',
-    'make_appeal' => 'пожаловаться'
+    'make_appeal' => 'пожаловаться',
+
+    'idea_settings' => 'настройки идеи',
+    'idea_category' => 'категория',
+    'idea_place' => 'место',
 ];

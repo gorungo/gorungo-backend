@@ -7,7 +7,7 @@
             </h4>
             <el-row>
                 <el-col  v-for="(date, index) in orderedDates" :span="6" :key="date.id">
-                    <div class="card date-card">
+                    <div class="card date-card mr-2">
                         <div class="card-body date-card__wrap">
                             <el-button class="float-right" type="default" icon="el-icon-delete" circle v-on:click="handleRemoveDate(index)"></el-button>
                             <div class="date-card__info" v-on:click="handleShowDate(index)">
@@ -106,7 +106,7 @@
     import ElementUI from 'element-ui';
 
     export default {
-        name: "DatesAndPricesEditor",
+        name: "IdeaDatesAndPricesEditor",
         components: {Datepicker, TimeSelector, Money, ElementUI} ,
 
         props: {

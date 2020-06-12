@@ -11,6 +11,6 @@
 @endsection
 
 @section('content')
-    <profile-editor  :prop-item-id="@isset($user->profile->id){{$user->profile->id}}@else null @endisset" :user="{{$profileResource->toJson()}}"></profile-editor>
+    <profile-editor  :prop-item-id="@isset($userProfile->id){{$userProfile->id}}@else null @endisset" :user="{{$profileResource->toJson()}}"></profile-editor>
 @endsection
 

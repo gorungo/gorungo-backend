@@ -24,31 +24,7 @@ class StoreIdea extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'attributes.title' => 'required|min:3|max:100',
-            'attributes.intro' => 'required|min:3|max:199',
-            'attributes.description' => 'required|min:5',
-            'attributes.active' => 'required|integer',
-
-            'relationships.categories' => 'required|array',
-            'relationships.categories.*.id' => 'required|numeric|exists:categories,id',
-
-            'relationships.itineraries' => Rule::requiredIf(function(){
-                return request()->input('attributes.created_at') !== null;
-            }),
-            'relationships.itineraries.*.attributes.title' => 'required',
-            'relationships.itineraries.*.attributes.description' => 'required',
-
-            'relationships.dates' => 'required|array|nullable',
-            'relationships.dates.*.attributes.start_date' => 'required|date',
-            'relationships.dates.*.attributes.start_time' => 'required|min:8|max:8',
-            'relationships.dates.*.relationships.ideaPrice.attributes.price' => 'required|nullable',
-            'relationships.dates.*.relationships.ideaPrice.relationships.currency.id' => 'required|integer|exists:currencies,id',
-
-        ];
-
-
-
+        $rules = [];
 
         if(!Auth()->user()->can('createMainIdea')){
             $rules[] = [

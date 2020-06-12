@@ -1,15 +1,16 @@
 export default {
+    namespaced: true,
     state: {
         item: null,
-    },
-    mutations: {
-        setItem(state, payload){
-            state.item = payload;
-        },
     },
     actions: {
         setItem({commit}, payload){
             commit('setItem', payload);
+        },
+    },
+    mutations: {
+        setItem(state, payload){
+            state.item = payload;
         },
     },
     getters: {

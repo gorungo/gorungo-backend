@@ -26,6 +26,9 @@ return [
     'register_policies_text' => 'Нажимая кнопку зарегистрироваться, вы подтверждаете согласие с <a class="text-primary" href=":policyUrl">правилами сайта</a> и <a class="text-primary" href="":confidentialUrl>политикой конфиденциальности</a>.',
     'register_caution_text' => 'Caution! Perhaps the acquisition of meaning in life.',
 
+    'reset_password' => 'reset password',
+    'send_password_reset_link' => 'send password reset link',
+
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',

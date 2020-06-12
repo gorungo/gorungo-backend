@@ -15,7 +15,7 @@ class AddIsMainToIdeasTable extends Migration
     {
         if (!Schema::hasColumn('ideas', 'is_main')) {
             Schema::table('ideas', function (Blueprint $table) {
-                $table->boolean('is_main')->afte('main_category_id')->default(0);
+                $table->boolean('is_main')->after('main_category_id')->default(0);
             });
         }
     }

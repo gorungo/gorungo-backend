@@ -1,39 +1,46 @@
 <template>
     <div id="idea-editor" v-loading="loading">
         <div class="w-100 bg-white">
-            <div class="container pt-4">
-                <div class="row w-100">
-                        <div class="col-sm-12 col-md-8">
-                            <h2 class="text-first-uppercase">{{this.documentTitle}}</h2>
-                        </div>
-                        <div class="col-sm-12 col-md-4 text-right">
-                            <button v-if="hasPageChanges" :disabled="loading" class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">
-                                <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                <span v-if="loading" class="sr-only">{{Lang.get('editor.loading')}}...</span>
-                                <span v-else>{{Lang.get('editor.save_button')}}</span>
-                            </button>
-                        </div>
-
-                    </div>
+            <div class="d-flex pt-4 px-3 justify-content-between">
+                <h2 class="text-first-uppercase">{{this.documentTitle}}</h2>
+                <button v-if="hasPageChanges" :disabled="loading" class="btn btn-primary float-right" dusk="savebtn" v-on:click.prevent="formSubmit()">
+                    <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span v-if="loading" class="sr-only">{{Lang.get('editor.loading')}}...</span>
+                    <span v-else>{{Lang.get('editor.save_button')}}</span>
+                </button>
             </div>
         </div>
         <div v-if="dataLoaded && !loading" class="bg-white pt-4">
             <el-container style="height: 500px; border: 1px solid #eee">
                 <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-                    <el-menu :default-openeds="['1', '2']">
+                    <el-menu :default-openeds="['1']">
                         <el-submenu index="1">
-                            <template slot="title">{{Lang.get('editor.tab_main')}}</template>
-                            <el-menu-item index="1-1" @click="activeTabName='main'">{{Lang.get('editor.tab_main')}}</el-menu-item>
-                            <el-menu-item index="1-2" @click="activeTabName='itinerary'">{{Lang.get('editor.tab_itinerary')}}</el-menu-item>
-                            <el-menu-item index="1-3" @click="activeTabName='dates'">{{Lang.get('editor.tab_dates')}}</el-menu-item>
-                            <el-menu-item index="1-4" @click="activeTabName='images'">{{Lang.get('editor.tab_pictures')}}</el-menu-item>
+                            <template slot="title">
+                                <div @click="activeTabName='main'">
+                                    {{Lang.get('editor.tab_main')}}
+                                </div>
+                            </template>
+                            <el-menu-item index="1-1" @click="activeTabName='place'">{{Lang.get('editor.tab_place')}}</el-menu-item>
+                            <el-menu-item index="1-2" @click="activeTabName='category'">{{Lang.get('editor.tab_category')}}</el-menu-item>
+                            <el-menu-item index="1-3" @click="activeTabName='description'">{{Lang.get('editor.tab_description')}}</el-menu-item>
+                            <el-menu-item index="1-4" @click="activeTabName='itinerary'">{{Lang.get('editor.tab_itinerary')}}</el-menu-item>
+                            <el-menu-item index="1-5" @click="activeTabName='dates'">{{Lang.get('editor.tab_dates')}}</el-menu-item>
+                            <el-menu-item index="1-6" @click="activeTabName='images'">{{Lang.get('editor.tab_pictures')}}</el-menu-item>
+                            <el-menu-item index="1-7" @click="activeTabName='tags'">{{Lang.get('editor.tab_tags')}}</el-menu-item>
                         </el-submenu>
                         <el-submenu index="2">
-                            <template slot="title">{{Lang.get('editor.tab_main')}}</template>
+                            <template slot="title">{{Lang.get('idea.idea_settings')}}</template>
                             <el-menu-item index="2-1">Option 1</el-menu-item>
                             <el-menu-item index="2-2">Option 1</el-menu-item>
                             <el-menu-item index="2-3">Option 1</el-menu-item>
                         </el-submenu>
+                        <div class="d-flex justify-content-center p-2">
+                            <el-button :type="readyToPublish ? 'success' : 'danger'" class="w-100" round>
+                                {{Lang.get('idea.publish')}}
+                                <i v-if="readyToPublish" class="el-icon-check el-icon-right"></i>
+                                <i v-if="!readyToPublish" class="el-icon-lock el-icon-right"></i>
+                            </el-button>
+                        </div>
                     </el-menu>
                 </el-aside>
 
@@ -41,82 +48,56 @@
                     <el-main>
                         <errors :errors="errors"></errors>
                         <div class="">
-                            <div id="idea-details-editor" v-if="dataLoaded && activeTabName === 'main'">
-                                <form id="frm_form" name="frm_form" method="post" autocomplete="off">
-                                    <input type="hidden" name="city_id" :value="this.cityId"/>
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <el-form label-position="top" :model="item" ref="descriptionForm" label-width="120px" class="demo-dynamic">
-                                                <h4 class="text-first-uppercase mb-4">{{Lang.get('idea.idea_description')}}</h4>
-                                                <el-form-item :label="Lang.get('editor.label_title')">
-                                                    <el-input v-model="item.attributes.title"></el-input>
-                                                </el-form-item>
-                                                <el-form-item :label="Lang.get('editor.label_intro')">
-                                                    <el-input v-model="item.attributes.intro"></el-input>
-                                                </el-form-item>
-                                                <el-form-item :label="Lang.get('editor.label_description')">
-                                                    <el-input type="textarea" v-model="item.attributes.description"></el-input>
-                                                </el-form-item>
-                                            </el-form>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="row form-group">
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_0"
-                                                           value="0" v-model="item.attributes.active"/>
-                                                    <label dusk="active_0" for="active_0" style="margin-right: 12px;"> {{Lang.get('editor.label_draft')}}</label>
-                                                </div>
-                                                <div class="col-sm-4 col-6">
-                                                    <input type="radio" class="radio" name="active" id="active_1"
-                                                           value="1"  v-model="item.attributes.active"/>
-                                                    <label dsk="active_1" for="active_1"> {{Lang.get('editor.label_published')}}</label>
-                                                </div>
-                                            </div>
-                                            <category-selector
-                                                    v-model = "item.relationships.categories"
-                                                    :locale = "locale"
-                                                    @change="categoryChanged"
-                                            ></category-selector>
-                                            <hr/>
-                                            <idea-selector
-                                                    v-if="item !== null"
-                                                    :locale = "locale"
-                                                    v-model = "item.relationships.idea"
-                                            ></idea-selector>
-                                            <hr>
-                                            <place-selector
-                                                    v-if="item !== null"
-                                                    :locale = "locale"
-                                                    v-model = "item.relationships.places"
-                                            ></place-selector>
-                                            <hr>
-                                            <extended-tag-selector v-if="item" v-model="item.relationships.tags"></extended-tag-selector>
-                                            <hr>
-                                            <div>
-                                                <tags-editor
-                                                        :tags="item.relationships.tags"
-                                                ></tags-editor>
-                                            </div>
-                                        </div>
+                            <div id="idea-info" v-if="dataLoaded && activeTabName === 'main'">
+                                <div class="d-flex" style="justify-content: center;">
+                                    <div v-if="item.attributes.title !== null">
+                                        <h1>
+                                            {{item.attributes.title}}
+                                        </h1>
                                     </div>
-                                    <hr/>
-
-                                </form>
+                                    <div class="text-center">
+                                        <h1>{{Lang.get('idea.create_intro_title')}}</h1>
+                                        <p>{{Lang.get('idea.create_intro_description')}}</p>
+                                    </div>
+                                </div>
                             </div>
-
-                            <itinerary-editor
+                            <div id="tab-category" v-if="dataLoaded && activeTabName === 'category'">
+                                <idea-category-editor
+                                        v-model = "item.relationships.categories"
+                                        :locale = "locale"
+                                        @change="categoryChanged"
+                                ></idea-category-editor>
+                            </div>
+                            <div id="tab-place" v-if="dataLoaded && activeTabName === 'place'">
+                                <idea-place-editor
+                                        v-if="item !== null"
+                                        :locale = "locale"
+                                        v-model = "item.relationships.places"
+                                ></idea-place-editor>
+                            </div>
+                            <div id="tab-tags" v-if="dataLoaded && activeTabName === 'tags'">
+                                <idea-tags-editor
+                                        v-model="item.relationships.tags"
+                                ></idea-tags-editor>
+                                <idea-extended-tag-selector
+                                        v-if="item"
+                                        v-model="item.relationships.tags"
+                                ></idea-extended-tag-selector>
+                            </div>
+                            <div id="tab-description" v-if="dataLoaded && activeTabName === 'description'">
+                                <idea-description-editor v-model="item"></idea-description-editor>
+                            </div>
+                            <idea-itinerary-editor
                                     v-if="dataLoaded && activeTabName === 'itinerary'"
                                     v-model="item.relationships.itineraries"
                                     :hid="item.hid"
-                            ></itinerary-editor>
-
-                            <dates-and-prices-editor
+                            ></idea-itinerary-editor>
+                            <idea-dates-and-prices-editor
                                     v-if="dataLoaded && activeTabName === 'dates'"
                                     v-model="item.relationships.dates"
                                     :currencies="currencies"
                                     :hid="item.hid"
-                            ></dates-and-prices-editor>
-
+                            ></idea-dates-and-prices-editor>
                             <photo-uploader
                                     v-if="dataLoaded && activeTabName === 'images'"
                                     :type="this.item.type"
@@ -132,16 +113,19 @@
 </template>
 
 <script>
+    import {mapGetters, mapActions, mapState} from 'vuex';
     import Editable from '../../mixins/Editable.js';
     import PhotoUploader from '../photo/PhotoUploader.vue';
-    import ExtendedTagSelector from '../ExtendedTagSelector.vue';
-    import CategorySelector from '../CategorySelector.vue';
-    import DateSelector from '../DateSelector.vue';
-    import PlaceSelector from '../place/PlaceSelector.vue';
-    import IdeaSelector from '../idea/IdeaSelector.vue';
+    import IdeaExtendedTagSelector from './IdeaExtendedTagSelector.vue';
+    import IdeaItineraryEditor from './IdeaItineraryEditor.vue';
+    import IdeaDatesAndPricesEditor from './IdeaDatesAndPricesEditor.vue';
+    import IdeaSelector from './IdeaSelector.vue';
     import LocaleSelector from '../LocaleSelector.vue';
     import ElementUI from 'element-ui';
-    import TagsEditor from "./TagsEditor";
+    import IdeaTagsEditor from "./IdeaTagsEditor";
+    import IdeaDescriptionEditor from "./IdeaDescriptionEditor";
+    import IdeaCategoryEditor from "./IdeaCategoryEditor";
+    import IdeaPlaceEditor from "./IdeaPlaceEditor";
 
 
     export default {
@@ -158,14 +142,16 @@
         mixins: [ Editable ],
 
         components: {
-            TagsEditor,
+            IdeaPlaceEditor,
+            IdeaCategoryEditor,
+            IdeaDescriptionEditor,
+            IdeaTagsEditor,
             PhotoUploader,
             LocaleSelector,
-            CategorySelector,
-            ExtendedTagSelector,
+            IdeaExtendedTagSelector,
+            IdeaDatesAndPricesEditor,
             IdeaSelector,
-            DateSelector,
-            PlaceSelector,
+            IdeaItineraryEditor,
             ElementUI,
         },
 
@@ -202,9 +188,14 @@
                     }
                 }
             },
+
             ideaId(){
                 return this.propIdeaId;
-            }
+            },
+
+            readyToPublish(){
+                return true;
+            },
 
         },
 
@@ -219,8 +210,9 @@
             },
 
             fetchCurrencies(){
-                axios.get(
-                    this.fetchCurrenciesRequestUrl(), { params: {
+                const requesrUrl = '/api/' + window.systemInfo.apiVersion + '/currencies/active';
+
+                axios.get( requesrUrl, { params: {
                             locale: this.locale,
                         }}
                 ).then((resp) => {
@@ -234,8 +226,23 @@
                 );
             },
 
-            fetchCurrenciesRequestUrl(){
-                return '/api/' + window.systemInfo.apiVersion + '/currencies/active';
+            handlePublish(){
+
+            },
+
+            async publish(){
+                if(this.canPublish()){
+                    const url = `/api/${window.systemInfo.apiVersion}/${this.type}/${this.hid}`;
+
+                    try {
+                        await axios.get( requesrUrl, { params: {
+                                locale: this.locale,
+                            }}
+                        );
+                    } catch (e) {
+                        this.showDefaultError();
+                    }
+                }
             },
 
             handleTabClick(){

@@ -19,6 +19,10 @@ Route::get('/prestart', function(){
 
 });
 
+Route::get('office/ideas', 'OfficeController@ideas')
+    ->middleware('auth')
+    ->name('office.ideas');
+
 
 /*
  * -------------------------------------------------------------------------
@@ -42,9 +46,16 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
 
 
     // idea crud routes ------------------------------------------------------------------------------------
+    // if has unpublished idea redirect to select idea
+    Route::get('/ideas/new', 'IdeaController@new')
+        ->middleware(['auth','can:create,App\Idea'])
+        ->name('ideas.new');
+
+    // create new idea
     Route::get('/ideas/create', 'IdeaController@create')
         ->middleware(['auth','can:create,App\Idea'])
         ->name('ideas.create');
+
     Route::get('/ideas/{idea}/edit', 'IdeaController@edit')
         ->middleware(['auth','can:update,idea'])
         ->name('ideas.edit');

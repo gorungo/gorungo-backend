@@ -1,5 +1,5 @@
 <template>
-    <div id="images-editor" class="images-uploader">
+    <div id="images-loader" class="images-loader">
         <div class="pb-4" :class="{dragging: isDragging}">
             <div v-if="itemId">
                 <h4 class="text-capitalize mb-4">{{Lang.get('editor.label_pictures')}}</h4>
@@ -313,8 +313,152 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .panel.dragging{
         border: 1px solid #2095ff !important;
+    }
+
+    .images-loader {
+
+        .tmb-sml .del-btn {
+            right: 5px;
+            top: 5px;
+            padding-top: 10px;
+            width: 32px;
+            height: 44px;
+            position: absolute;
+            display: none;
+            background: #000000;
+            border-radius: 10px;
+        }
+
+        .tmb-sml:hover .del-btn {
+            position: absolute;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .tmb-sml:hover .del-btn:hover {
+            position: absolute;
+            display: block;
+            opacity: 1;
+        }
+
+        .tmb-sml .star-btn {
+            left: 5px;
+            top: 5px;
+            padding-top: 10px;
+            width: 32px;
+            height: 44px;
+            position: absolute;
+            display: none;
+            background: #1cd500;
+            border-radius: 10px;
+        }
+
+        .tmb-sml:hover .star-btn {
+            position: absolute;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .tmb-sml:hover .star-btn:hover {
+            position: absolute;
+            display: block;
+            opacity: 1;
+        }
+
+        .tmb-sml-in img.img-loader {
+            height: 30px;
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 1;
+        }
+
+        .tmb-sml-in img.img-is-loading {
+            opacity: 0.2;
+        }
+
+        .picture-edit {
+            overflow: hidden;
+        }
+
+        .tmb-big {
+            height: 200px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .tmb-sml {
+            float: left;
+            display: block;
+            width: 120px;
+            height: 120px;
+            margin: 3px;
+            border: 1px solid #f8f8f8;
+            position: relative;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+
+        .tmb-sml-in img {
+            height: 118px;
+            width: 118px;
+            object-fit: cover;
+        }
+
+        .tmb-sml:hover {
+            border: 1px solid #0099ff;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 60%;
+            background: white;
+            border-radius: 2px !important;
+            border: 1px solid #2095ff;
+            -webkit-border-radius: 24px;
+            -moz-border-radius: 24px;
+            text-indent: 0;
+            color: #2095ff;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            margin: 0 auto;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+        .file-upload:hover {
+            border: 1px solid #2095ff;
+
+        }
+
+        .file-upload input[type=file] {
+            /* Позиционируем правый верхний край
+           input поверх нашего контейнера.
+           Правый верхний потому как именно там
+           у нас кнопка. */
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            /* Делаем input побольше, чтобы он точно
+           перекрыл контейнер. */
+            font-size: 200px;
+
+            /* Делаем input невидимым. По-другому нельзя,
+           иначе браузер не будет на него реагировать. */
+            opacity: 0;
+            filter: alpha(opacity=0);
+
+            /*  Украшательства: */
+            cursor: pointer;
+        }
     }
 </style>

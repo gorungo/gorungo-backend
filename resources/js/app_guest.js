@@ -23,6 +23,7 @@ Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').def
 Vue.component('IdeaItemDropdown', require('./components/idea/IdeaItemDropdown.vue').default);
 
 
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

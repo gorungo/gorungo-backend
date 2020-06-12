@@ -34,6 +34,10 @@ return [
     'yes_delete' => 'да, удалить',
 
     'tab_main' => 'главное',
+    'tab_category' => 'категории',
+    'tab_place' => 'места',
+    'tab_tags' => 'тэги',
+    'tab_description' => 'описание',
     'tab_pictures' => 'изображения',
     'tab_itinerary' => 'план',
     'tab_dates' => 'даты',
@@ -42,6 +46,8 @@ return [
     'label_category' => 'категория',
     'label_categories' => 'категории',
     'label_main_category' => 'главная категория',
+    'label_place' => 'место',
+    'label_places' => 'места',
     'label_tape_category_name' => 'введите название категории',
     'label_subcategory' => 'подкатегория',
     'label_title' => 'заголовок',
@@ -95,6 +101,7 @@ return [
     'saving' => 'сохранение',
     'save_success' => 'успешно сохранено',
     'save_error' => 'ошибка при сохранении',
+    'default_error_text' => 'произошла ошибка',
     'error' => 'ошибка',
 
     'loading' => 'загрузка',

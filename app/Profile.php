@@ -24,7 +24,7 @@ class Profile extends Model
     }
 
     public function getImageUrlAttribute() {
-        $url = 'storage/images/profile/' . $this->id . '/' . $this->thmb_file_name;
+        $url = $this->thmb_file_name ? 'storage/images/profile/' . $this->id . '/' . $this->thmb_file_name : '/favicon.png';
         return asset($url);
     }
 
@@ -101,6 +101,23 @@ class Profile extends Model
 
         return $this->imageUrl;
 
+    }
+
+    /**
+     * Create default profile for user
+     * @param  User  $user
+     * @return $profile
+     */
+    public static function createFor(User $user)
+    {
+        $profile = $user->profile()->create([
+            'name' => $user->name,
+        ]);
+
+        $profile->save();
+        $user->save();
+
+        return $profile;
     }
 
 }

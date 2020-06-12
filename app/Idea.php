@@ -161,6 +161,27 @@ class Idea extends Model
         return $date ? $date->startDateTimeUtc : null;
     }
 
+
+    /**
+     * Create empty instance in database
+     * @return Idea $newIdea
+     */
+    public static function createEmpty()
+    {
+        $newIdea = self::create([
+            'author_id' => User::activeUser()->id,
+            'slug' => 'new_idea_slug',
+        ]);
+
+        $newIdea->slug = 'new_idea_slug_' . $newIdea->id;
+        $newIdea->localisedIdeaDescription()->create([
+            'locale_id' => LocaleMiddleware::getLocaleId(),
+        ]);
+        $newIdea->save();
+
+        return $newIdea;
+    }
+
     /**
      * Idea child ideas
      * @return mixed
@@ -278,7 +299,7 @@ class Idea extends Model
         }
 
         // получаем список активных идей с учетом города, страницы, локали
-        return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale() . '_category_' . $activeCategoryId . '_' . request()->getQueryString(),
+        return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale().'_category_'.$activeCategoryId.'_'.request()->getQueryString(),
             0, function () use ($activeCategory) {
                 return self::whereCategory($activeCategory)
                     ->joinDescription()
@@ -300,8 +321,7 @@ class Idea extends Model
      */
     public static function widgetItemsList(Request $request, $placeId = null, $category = null, $itemsCount = 5)
     {
-        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale() . '_category_' . $category . '_' . request()->getQueryString(),
-            0, function () use ($placeId, $category, $itemsCount) {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($placeId, $category, $itemsCount) {
                 return self::whereCategory($category)
                     ->wherePlaceId($placeId)
                     ->joinDescription()
@@ -321,12 +341,25 @@ class Idea extends Model
      */
     public static function widgetMainItemsList(Request $request, $category = null, $itemsCount = 5)
     {
-        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale() . '_category_' . $category . '_' . request()->getQueryString(),
-            0, function () use ($category, $itemsCount) {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($category, $itemsCount) {
                 return self::whereCategory($category)
                     ->joinDescription()
+                    ->main()
                     ->isActive()
                     ->take($itemsCount)
+                    ->inRandomOrder()
+                    ->hasImage()
+                    ->get();
+        });
+    }
+
+    public static function itemsOfUser(User $user)
+    {
+        return Cache::tags(['ideas'])->remember('ideas_of_user_' . $user->id . '_' . LocaleMiddleware::getLocale() . '_category_', 0, function () use ($user) {
+                return $user
+                    ->ideas()
+                    ->joinDescription()
+                    ->hasImage()
                     ->get();
             });
     }
@@ -468,21 +501,21 @@ class Idea extends Model
         }
     }
 
-/*    private function savePrice(StoreIdea $request): void
-    {
-        $actionPrice = $request->input('relationships.price');
-        if ($actionPrice['id'] !== null) {
-            $this->ideaPrice()->whereId($actionPrice['id'])->update([
-                'price' => (int) $actionPrice['attributes']['price'],
-                'currency_id' => $actionPrice['relationships']['currency']['id'],
-            ]);
-        } else {
-            $this->ideaPrice()->create([
-                'price' => (int) $actionPrice['attributes']['price'],
-                'currency_id' => $actionPrice['relationships']['currency']['id'],
-            ]);
-        }
-    }*/
+    /*    private function savePrice(StoreIdea $request): void
+        {
+            $actionPrice = $request->input('relationships.price');
+            if ($actionPrice['id'] !== null) {
+                $this->ideaPrice()->whereId($actionPrice['id'])->update([
+                    'price' => (int) $actionPrice['attributes']['price'],
+                    'currency_id' => $actionPrice['relationships']['currency']['id'],
+                ]);
+            } else {
+                $this->ideaPrice()->create([
+                    'price' => (int) $actionPrice['attributes']['price'],
+                    'currency_id' => $actionPrice['relationships']['currency']['id'],
+                ]);
+            }
+        }*/
 
 
     private function saveDates(StoreIdea $request): void
@@ -496,7 +529,7 @@ class Idea extends Model
                 $ideaDate = null;
                 $ideaPriceArray = $date['relationships']['ideaPrice'];
 
-                if ($date['id'] !== null && strlen( (string)$date['id'] ) < 13) {
+                if ($date['id'] !== null && strlen((string) $date['id']) < 13) {
                     $ideaDate = $this->ideaDates()->find($date['id']);
                     $ideaDate->update([
                         'start_date' => $date['attributes']['start_date'],
@@ -640,7 +673,27 @@ class Idea extends Model
 
     public function scopeIsActive($query)
     {
-        return $query->where('ideas.active', '1');
+        return $query->where('ideas.active', 1);
+    }
+
+    /**
+     * Item is approved by moderator
+     * @param $query
+     * @return mixed
+     */
+    public function scopeIsApproved($query)
+    {
+        return $query->where('ideas.approved', 1);
+    }
+
+    /**
+     * Item is published by owner
+     * @param $query
+     * @return mixed
+     */
+    public function scopeIsPublished($query)
+    {
+        return $query->where('ideas.published', 1);
     }
 
     public function scopeWhereCategory($query, Category $activeCategory = null)
@@ -720,7 +773,7 @@ class Idea extends Model
 
     public function scopeMain($query)
     {
-        return $query->whereNull('idea_id');
+        return $query->where('is_main', 1);
     }
 
     public function scopeDateFilter($query)
@@ -745,13 +798,13 @@ class Idea extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWhereFilters($query){
+    public function scopeWhereFilters($query)
+    {
         return $query
             ->WhereBelongsToRegionOrCity()
             ->WhereTags(MainFilter::getFiltersTagsArray())
             ->WhereDates()
-            ->WherePrices()
-            ;
+            ->WherePrices();
     }
 
     /**
@@ -759,11 +812,12 @@ class Idea extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWhereDates($query){
-        if(request()->has('dates')){
+    public function scopeWhereDates($query)
+    {
+        if (request()->has('dates')) {
             return $query->whereHas('ideaDates', function ($query) {
 
-                [$dateFrom, $dateTo] = explode( 'to', request()->dates);
+                [$dateFrom, $dateTo] = explode('to', request()->dates);
 
                 $query
                     ->whereDate('start_date', '>=', date_format(date_create($dateFrom), 'Y-m-d'))
@@ -781,8 +835,14 @@ class Idea extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWherePrices($query){
+    public function scopeWherePrices($query)
+    {
         return $query;
+    }
+
+    public function scopeHasImage($query)
+    {
+        return $query->whereNotNull('thmb_file_name');
     }
 
     /**
@@ -790,9 +850,10 @@ class Idea extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeWhereBelongsToRegionOrCity($query){
-        if(request()->has('plid')){
-            return $query->whereHas('ideaPlaces', function ($q){
+    public function scopeWhereBelongsToRegionOrCity($query)
+    {
+        if (request()->has('plid')) {
+            return $query->whereHas('ideaPlaces', function ($q) {
                 $q->OrderedByPlace();
             });
         }
@@ -801,7 +862,7 @@ class Idea extends Model
 
     public function scopeWherePlaceId($query, $placeId)
     {
-        if($placeId !== null){
+        if ($placeId !== null) {
             return $query->whereHas('ideaPlaces', function ($q) use ($placeId) {
                 $q->where('places.id', $placeId);
             });

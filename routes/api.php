@@ -44,6 +44,10 @@ Route::group(['prefix' => 'v1'], function() {
             ->middleware(['auth','can:update,user'])
             ->name('api.profiles.set_new_password');
 
+        //Get user ideas
+        Route::get('/users/{user}/ideas', "API\UserController@ideas")
+            ->name('api.user.ideas');
+
         // posts
         Route::get('/posts/create', 'API\PostController@create')->name('api.posts.create');
         Route::get('/posts/{post}/edit', 'API\PostController@edit')->name('api.posts.edit');
@@ -227,6 +231,7 @@ Route::group(['prefix' => 'v1'], function() {
         //Delete item main photos
         Route::delete('/profiles/{profile}/photos/{photo}', 'API\Photo\ProfileController@destroy')
             ->name('api.profiles.photos_destroy');
+
 
 
     });

@@ -13,6 +13,11 @@ return[
     'not_created' => 'idea was not created successfully',
     'not_updated' => 'idea was not updated successfully',
 
+    'create_intro_title' => 'new idea',
+    'create_intro_description' => 'let\'s create something interesting',
+
+    'publish' => 'publish',
+
     'idea_description' => 'description',
 
     'idea_for_you' => 'idea for you',
@@ -25,5 +30,9 @@ return[
     'see_all_actions' => 'see all actions',
 
     'from' => 'from',
-    'make_appeal' => 'make appeal'
+    'make_appeal' => 'make appeal',
+
+    'idea_settings' => 'idea settings',
+    'idea_category' => 'category',
+    'idea_place' => 'place',
 ];

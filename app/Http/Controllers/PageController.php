@@ -60,7 +60,7 @@ class PageController extends Controller
 
             // основные идеи
             [
-                'sectionTitle' => __('texts.section_title.russia_adventures'),
+                'sectionTitle' => __('texts.section_title.main'),
                 'sectionTargetUrl' => '',
                 'ideas' => Idea::widgetMainItemsList($request),
                 'place' => null,

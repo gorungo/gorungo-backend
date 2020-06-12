@@ -27,7 +27,7 @@
 <script>
     import Localized from '../../mixins/Localized.js';
     export default {
-        name: "TagsEditor",
+        name: "IdeaTagsEditor",
         mixins: [Localized],
         data() {
             return {
@@ -48,7 +48,7 @@
         },
 
         mounted() {
-            this.dataTags = this.tags;
+            if (this.tags !== undefined) this.dataTags = this.tags;
         },
 
         watch:{

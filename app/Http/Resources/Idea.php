@@ -31,7 +31,7 @@ class Idea extends JsonResource
 
             'attributes' => [
                 'url' => $this->url,
-                'edit_url' => $this->editUrl,
+                'editUrl' => $this->editUrl,
                 'slug' => $this->id ? $this->slug : '',
                 'active' => $this->id ? $this->active : 1,
                 'title' => $this->id ? $this->title : '',
@@ -47,8 +47,8 @@ class Idea extends JsonResource
                 'author' => new UserResource($this->whenLoaded('author')),
                 'itineraries' => ItineraryResource::collection($this->whenLoaded('ideaItineraries')),
                 'places' => PlaceResource::collection($this->whenLoaded('ideaPlaces')),
-                'dates' => DateResource::collection($this->whenLoaded('ideaDates')),
-                'tags' => TaggedResource::collection($this->whenLoaded('tagged')),
+                'dates' => $this->id ? DateResource::collection($this->whenLoaded('ideaDates')) : [],
+                'tags' => $this->id ? TaggedResource::collection($this->whenLoaded('tagged')) : [],
             ],
         ];
     }

@@ -42,9 +42,8 @@ Vue.component('ActionEditor', require('./components/action/ActionEditor.vue').de
 Vue.component('PlaceEditor', require('./components/place/PlaceEditor.vue').default);
 
 Vue.component('IdeaEditor', require('./components/idea/IdeaEditor.vue').default);
+Vue.component('OfficeIdeasList', require('./components/office/OfficeIdeasList.vue').default);
 Vue.component('IdeaItemDropdown', require('./components/idea/IdeaItemDropdown.vue').default);
-Vue.component('DatesAndPricesEditor', require('./components/idea/DatesAndPricesEditor.vue').default);
-Vue.component('ItineraryEditor', require('./components/idea/ItineraryEditor.vue').default);
 
 Vue.component('ProfileEditor', require('./components/profile/ProfileEditor.vue').default);
 
@@ -55,6 +54,7 @@ Vue.component('TimeFilter', require('./components/filter/TimeFilter.vue').defaul
 Vue.component('DatesFilter', require('./components/filter/DatesFilter.vue').default);
 
 Vue.component('ItinerariesList', require('./components/ItinerariesList.vue').default);
+
 
 
 /**
@@ -70,6 +70,8 @@ window.systemInfo = {
 
 let app = new Vue({
     el: '#app',
-    data: {}
+    data: {
+        x3: 'x3',
+    }
 });
 

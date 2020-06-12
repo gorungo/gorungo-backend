@@ -19,8 +19,11 @@ return [
     'to' => 'to',
 
     'section_title' => [
+        'main' => 'Идеи на все случаи',
         'prim_adventures' => 'Primorsky kray adventures',
         'russia_trips' => 'Tips around Russia',
         'russia_adventures' => 'Adventures around Russia',
     ],
+
+    'my_ideas' => 'my ideas',
 ];

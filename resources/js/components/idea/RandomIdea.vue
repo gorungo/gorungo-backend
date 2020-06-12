@@ -2,7 +2,7 @@
     <div>
         <div class="text-center mb-2" v-if="!loading">
             <h5>
-                <span @click="showIdea" class="btn btn-lg btn-outline-success text-success text-uppercase"><i class="fas fa-meteor"></i> {{Lang.get('idea.random_idea')}}</span>
+                <span @click="showIdea" class="btn btn-lg btn-outline-success btn-random-idea text-success text-uppercase"><i class="fas fa-meteor"></i> {{Lang.get('idea.random_idea')}}</span>
             </h5>
         </div>
         <div>
@@ -121,6 +121,9 @@
     .card-img{
         object-fit: cover;
         max-height: 400px;
+    }
+    .btn-random-idea:hover{
+        color: white !important;
     }
 
 </style>
