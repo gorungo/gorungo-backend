@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-md shadow-sm navbar-dark bg-dark w-100 @if(isset($fixed) && $fixed) fixed-top @endif">
-    <div class="row w-100">
-        <div class="col-sm-4">
+    <div class="d-flex justify-content-between w-100">
+        <div class="">
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route('home') }}"><img src="{{asset('images/interface/logo/main_logo.svg')}}" height="30px"/></a>
         </div>
-        <div class="col-sm-4">
+        <div class="">
             @hasrole('super-admin')
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav m-auto">
@@ -22,7 +22,7 @@
             </div>
             @endhasrole
         </div>
-        <div class="col-sm-4">
+        <div class="">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -36,6 +36,7 @@
                         <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
                             <a href="{{ route('profile.edit', Auth()->User()) }}" class="dropdown-item profile text-first-uppercase" >{{__('profile.title')}}</a>
+                            @can('create', App\Idea::class)<a href="{{ route('office.ideas')}}" class="dropdown-item profile text-first-uppercase" >{{__('idea.manage_ideas')}}</a>@endcan
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                class="dropdown-item text-first-uppercase" >{{__('auth.logout')}}</a>

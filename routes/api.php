@@ -14,6 +14,17 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'v1'], function() {
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'auth'
+    ], function ($router) {
+
+        Route::post('login', 'API\AuthController@login');
+        Route::post('logout', 'API\AuthController@logout');
+        Route::post('refresh', 'API\AuthController@refresh');
+        Route::post('me', 'API\AuthController@me');
+
+    });
 
     Route::group(['middleware' => ['auth:api']], function () {
 
@@ -21,8 +32,6 @@ Route::group(['prefix' => 'v1'], function() {
             return ['result' => 'ok'];
         });
 
-        Route::post('/login', 'AuthController@login');
-        Route::post('/register', 'AuthController@register');
 
         // profiles
         Route::get('/profiles/create', 'API\ProfileController@create')
@@ -266,6 +275,11 @@ Route::group(['prefix' => 'v1'], function() {
         ->name('api.filters.active_items');
 
     // currencies
-    Route::get('/currencies/active', "API\CurrencyController@active")
+    Route::get('/currencies', "API\CurrencyController@active")
         ->name('api.currencies.active');
+
+    // OpenStreetMap
+    Route::get('/osm/search', "API\OSMController@search")
+        ->name('api.osm.search');
+
 });

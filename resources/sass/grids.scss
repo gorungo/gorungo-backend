@@ -12,6 +12,7 @@
     overflow: hidden;
     img{
       width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
@@ -65,5 +66,30 @@
       max-height: 226px;
     }
   }
+}
+.grid-container{
+    .idea-cover:nth-child(6){
+        display: none;
+    }
+}
+@media (min-width: $grid-breakpoints-hd){
+    .grid-container.grid-columns-5 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    .grid-container{
+        .idea-cover:nth-child(6){
+            display: block !important;
+        }
+    }
+}
 
+@media (min-width: $grid-breakpoints-2k){
+    .grid-container.grid-columns-5 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    .grid-container{
+        .idea-cover:nth-child(6){
+            display: block !important;
+        }
+    }
 }

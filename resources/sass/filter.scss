@@ -1,0 +1,53 @@
+@import 'variables';
+
+$filter-border: 1px solid var(--border-color);
+:root{
+    --filter-border: 1px solid var(--border-color);
+}
+.filters{
+    display: flex;
+    justify-content: center;
+    .fw{
+        display: inline-flex;
+        border: var(--filter-border);
+        border-radius: 2rem;
+    }
+    .fw.top{
+        display: inline-flex;
+        border: 1px solid var(--border-color);
+        border-radius: 2rem;
+    }
+    // when loading filters
+    .fw.fw-fake{
+        width: 479px;
+        height: 44px;
+        background-color: #f8f8f8;
+    }
+    .filter{
+        font-size: 18px;
+        border-right: var(--filter-border);
+        > button {
+            border: none;
+            background: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            &:active{
+                outline: none;
+            }
+        }
+        .dropdown-toggle::after{
+            display: none !important;
+        }
+        .filters__btn{
+            border: none;
+            padding: 1rem;
+            background: none;
+            font-size: 18px;
+        }
+    }
+    .filter:last-child{
+        border-right: none;
+    }
+
+
+}

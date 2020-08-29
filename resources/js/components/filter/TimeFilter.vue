@@ -1,7 +1,7 @@
 <template>
-    <div id="timeFilter">
+    <div id="timeFilter" class="filter">
         <!-- Time filter button  -->
-        <button type="button" class="btn btn-lg btn-outline-success dropdown-toggle" data-toggle="modal" data-target="#timeFilterModal">
+        <button type="button" class="btn-filter dropdown-toggle" data-toggle="modal" data-target="#timeFilterModal">
             {{buttonTitle}}
         </button>
 
@@ -61,6 +61,6 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    @import 'resources/sass/filter.scss';
 </style>

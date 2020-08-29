@@ -32,7 +32,7 @@ return[
         'any' => 'any distance',
         'popular' => 'popular',
         'at' => 'at home',
-        'close' => 'nearby',
+        'nearby' => 'nearby',
         'far' => 'far',
     ],
 ];

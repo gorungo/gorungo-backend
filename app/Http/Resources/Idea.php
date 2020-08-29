@@ -25,8 +25,8 @@ class Idea extends JsonResource
     {
         return [
             'type' => 'ideas',
-            'id' => $this->id ? $this->id : null,
-            'hid' => $this->getRouteKey() ? $this->getRouteKey() : null,
+            'id' => $this->id,
+            'hid' => $this->hid,
             'locale' => LocaleMiddleware::getLocale(),
 
             'attributes' => [
@@ -34,6 +34,7 @@ class Idea extends JsonResource
                 'editUrl' => $this->editUrl,
                 'slug' => $this->id ? $this->slug : '',
                 'active' => $this->id ? $this->active : 1,
+                'is_approved' => $this->is_approved ? $this->is_approved : 0,
                 'title' => $this->id ? $this->title : '',
                 'intro' => $this->id ? $this->intro : '',
                 'description' => $this->id ? $this->description : '',

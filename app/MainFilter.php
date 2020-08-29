@@ -107,10 +107,13 @@ class MainFilter extends Model
      */
     public static function searchPoint()
     {
-        $place = Place::activePlace();
-        if($place && $place->coordinates) return $place->coordinates;
-
+        $placeMode = Place::placeMode();
+        if($placeMode === 'place'){
+            $place = Place::activePlace();
+            if($place && $place->coordinates) return $place->coordinates;
+        }
         return User::currentPosition();
+
     }
 
     /**

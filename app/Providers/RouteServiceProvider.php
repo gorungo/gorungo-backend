@@ -29,20 +29,12 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::bind('idea', function($value, $route)
         {
-            $hashids = new Hashids(config('app.name'), 7);
-
-            $id = $hashids->decode($value)[0];
-
-            return Idea::findOrFail($id);
+            return Idea::findByHid($value);
         });
 
         Route::bind('place', function($value, $route)
         {
-            $hashids = new Hashids(config('app.name'), 7);
-
-            $id = $hashids->decode($value)[0];
-
-            return Place::findOrFail($id);
+            return Place::findByHid($value);
         });
 
         parent::boot();

@@ -77,11 +77,13 @@ let localizeMySqlDate = function (mySqlDate) {
 };
 
 let getLocation = function() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
+    return new Promise ((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(resolve);
+        } else {
+            reject();
+        }
+    })
 };
 
 let setLocation = function(location) {
@@ -101,6 +103,12 @@ let validationMessage = function(attribute, ){
 
 }
 
+let fixedEncodeURIComponent = function(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+        return '%' + c.charCodeAt(0).toString(16);
+    });
+}
+
 module.exports.getTimeZoneOffset = getTimeZoneOffset;
 module.exports.mySqlDateTimeToJsUTC = mySqlDateTimeToJsUTC;
 module.exports.mySqlDateTimeToJs = mySqlDateTimeToJs;
@@ -114,5 +122,6 @@ module.exports.dateFromMySqlDateTime = dateFromMySqlDateTime;
 module.exports.timeFromMySqlDateTime = timeFromMySqlDateTime;
 module.exports.getLocation = getLocation;
 module.exports.setLocation = setLocation;
+module.exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
 module.exports.firstToUpperCase = firstToUpperCase;
 module.exports.strLimit = strLimit;

@@ -55,15 +55,35 @@ $grid-breakpoints: (
   // Large screen / desktop
         lg: 992px,
   // Extra large screen / wide desktop
-        xl: 1200px
+        xl: 1200px,
+
 );
 
 $container-max-widths: (
         sm: 540px,
         md: 720px,
         lg: 960px,
-        xl: 1280px
+        xl: 1280px,
 );
+
+$grid-breakpoints-hd: 1800px;
+$container-max-widths-hd: 1900px;
+
+$grid-breakpoints-2k: 2200px;
+$container-max-widths-2k: 2200px;
 
 // Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap";
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Rubik');
+
+@font-face {
+    font-family: museo-sans-100;
+    src: url('/fonts/MS100.otf');
+}
+
+@font-face {
+    font-family: museo-sans-700;
+    src: url('/fonts/MS700.otf');
+}

@@ -64,3 +64,4 @@ window.go = require('./go');
 let cw = $('.vertical img').width() * 1.33;
 $('.vertical img').css({'height':cw+'px'});
 
+

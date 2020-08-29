@@ -33,7 +33,7 @@
                 </div>
             </header>
             <section id="item-description-section" class="mt-2">
-                @include('photo.viewer.gallery-grid-1', ['item'=> $idea])
+                @include('photo.viewer.gallery-grid-1', ['item' => $idea])
                 <div class="row mt-4">
                     <div class="col-sm-4">
                         <h3 class="text-first-uppercase">{{__('idea.idea_description')}}</h3>

@@ -1,16 +1,4 @@
 
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Rubik');
-
-@font-face {
-  font-family: museo-sans-100;
-  src: url('/fonts/MS100.otf');
-}
-
-@font-face {
-  font-family: museo-sans-700;
-  src: url('/fonts/MS700.otf');
-}
 
 // Variables
 @import 'variables';
@@ -39,35 +27,12 @@
 // Photo View
 @import "show";
 
+// Filter View
+@import "filter";
+
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.search-list{
-  font-size: 18px;
-  .input-cool{
-    font-weight: bold;
-    border-radius: unset;
-    border: none;
-  }
-  .input-cool:focus{
-    box-shadow: none;
-  }
-  .list-group-item{
-    padding: $list-group-item-padding-y 0;
-    cursor: pointer;
-
-    .btn {
-      padding: 0;
-    }
-  }
-  .list-group-item:hover{
-    padding-left: 15px;
-  }
-  .form-control{
-    padding: 0;
-  }
 }
 
 .pagination{
@@ -91,5 +56,22 @@
   color: $primary;
   font-weight: 700;
   border-bottom: 1px solid lighten($primary, 20%);
+}
+
+:root{
+    --border-color: #ebebeb;
+    --text-color: $text-color;
+}
+
+@media (min-width: $grid-breakpoints-hd){
+    .container, .container-sm, .container-md, .container-lg, .container-xl, .container-hd {
+        max-width: $container-max-widths-hd;
+    }
+}
+
+@media (min-width: $grid-breakpoints-2k){
+    .container, .container-sm, .container-md, .container-lg, .container-xl, .container-hd {
+        max-width: $container-max-widths-2k;
+    }
 }
 

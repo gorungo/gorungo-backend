@@ -13,8 +13,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\User as UserResource;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable  implements MustVerifyEmail
+class User extends Authenticatable  implements JWTSubject
 {
     use HasApiTokens, Notifiable, HasRoles;
 
@@ -97,45 +98,66 @@ class User extends Authenticatable  implements MustVerifyEmail
     public static function currentPosition(){
 
         $coordinates = null;
-
         $updatePeriod = 60*60*24; // 1 day
-
         $currentDateTime = date("Y-m-d H:i:s");
 
-        if(session()->has('current_user_position')){
-            $coordinates = session()->get('current_user_position');
-            if(strtotime($currentDateTime) - strtotime($coordinates['time'] > $updatePeriod)){
-                $coordinates = null;
+        // if we have request string like ?pl=lat897498327498lon9873495798
+        if(Place::placeMode() === 'coordinates'){
+
+            [$lat, $lon] = explode('lng', request()->pl);
+
+            if($lon !== ''){
+                $coordinates = [
+                    'lat' => substr($lat, 3) ?? 0,
+                    'lng' => $lon ?? 0,
+                    'country' => $obj->country ?? null,
+                    'city' => $obj->city ?? null,
+                    'time' => date("Y-m-d H:i:s"),
+                ];
+                session()->put('current_user_position', $coordinates);
+            }
+
+
+        } else{
+            if(session()->has('current_user_position')){
+                $coordinates = session()->get('current_user_position');
+                if(strtotime($currentDateTime) - strtotime($coordinates['time'] > $updatePeriod)){
+                    $coordinates = null;
+                }
+            }
+
+            if(!$coordinates){
+                // Получаем координаты пользователя если их нет в сессии
+
+                $ip = request()->ip() == '127.0.0.1' ? '5.100.94.143' : request()->ip();
+
+                try{
+                    $client = new \GuzzleHttp\Client();
+                    $body = $client->get('https://ipinfo.io/'. $ip .'/geo')->getBody();
+                    $obj = json_decode($body);
+
+                    [$lat, $lang] = explode(',', $obj->loc);
+
+                    $coordinates = [
+                        'lat' => $lat ?? 0,
+                        'lng' => $lang ?? 0,
+                        'country' => $obj->country ?? null,
+                        'city' => $obj->city ?? null,
+                        'time' => date("Y-m-d H:i:s"),
+                    ];
+
+                    session()->put('current_user_position', $coordinates);
+                    Log::info('Position Updated @'.$coordinates['lat'].' '.$coordinates['lng']);
+
+                }catch(\Exception $exception){
+                    Log::info('https://ipinfo.io/geo service unavailable');
+                }
+
+
             }
         }
 
 
-        if(!$coordinates){
-            // Получаем координаты пользователя если их нет в сессии
-
-            $ip = request()->ip() == '127.0.0.1' ? '5.100.94.143' : request()->ip();
-
-            try{
-                $client = new \GuzzleHttp\Client();
-                $body = $client->get('https://ipinfo.io/'. $ip .'/geo')->getBody();
-                $obj = json_decode($body);
-
-                [$lat, $lang] = explode(',', $obj->loc);
-            }catch(\Exception $exception){
-                Log::info('https://ipinfo.io/geo service unavailable');
-            }
-
-            $coordinates = [
-                'lat' => $lat ?? 0,
-                'lng' => $lang ?? 0,
-                'country' => $obj->country ?? null,
-                'city' => $obj->city ?? null,
-                'time' => date("Y-m-d H:i:s"),
-            ];
-
-            session()->put('current_user_position', $coordinates);
-            Log::info('Position Updated @'.$coordinates['lat'].' '.$coordinates['lng']);
-        }
 
         return new Point($coordinates['lng'], $coordinates['lat']);
     }
@@ -167,4 +189,13 @@ class User extends Authenticatable  implements MustVerifyEmail
         return self::ideas()->where('is_approved', 0)->count();
     }
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

@@ -19,7 +19,7 @@ Route::get('/prestart', function(){
 
 });
 
-Route::get('office/ideas', 'OfficeController@ideas')
+Route::get('office/ideas', 'Office\IdeaController@userIdeas')
     ->middleware('auth')
     ->name('office.ideas');
 
@@ -106,7 +106,7 @@ Route::group(['prefix' => App\Http\Middleware\LocaleMiddleware::getLocale()], fu
         ->name('profile.edit');
 
     // routes with city
-    
+
     // place show
     Route::get('places/{place}', 'PlaceController@show')
         ->name('places.show');

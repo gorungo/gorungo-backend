@@ -4,23 +4,23 @@ namespace App;
 
 use DB;
 use App\Traits\Imageble;
+use App\Traits\Hashable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Middleware\LocaleMiddleware;
 use \Conner\Tagging\Taggable;
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
 use App\Traits\TagInfo;
 use App\Http\Requests\Idea\StoreIdea;
 
 class Idea extends Model
 {
+    use SoftDeletes, Taggable, TagInfo, Imageble, Hashable, SpatialTrait;
 
-    use SoftDeletes;
-    use Taggable;
-    use TagInfo;
-    use Imageble;
+    const hidLength = 10;
 
     protected $table = 'ideas';
 
@@ -30,14 +30,13 @@ class Idea extends Model
 
     protected $fillable = ['author_id', 'idea_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug'];
 
-    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice', 'tagged'];
+    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice', 'tagged', 'ideaPlace'];
 
     public $defaultTmb = 'images/interface/placeholders/idea.png';
 
-    public function getHidAttribute()
-    {
-        return $this->getRouteKey();
-    }
+    protected $spatialFields = [
+        'coordinates',
+    ];
 
     Public function getTitleAttribute()
     {
@@ -94,20 +93,12 @@ class Idea extends Model
 
     public function getFullUrlAttribute()
     {
-        return $this->url.MainFilter::queryString();
+        return $this->url . MainFilter::queryString();
     }
-
 
     public function getHasIdeasAttribute()
     {
         return $this->futureIdeaIdeas()->count();
-    }
-
-    public function getRouteKey()
-    {
-        $hashids = new \Hashids\Hashids(config('app.name'), 7);
-
-        return $hashids->encode($this->getKey());
     }
 
     public function getIsPublishedAttribute()
@@ -127,7 +118,7 @@ class Idea extends Model
 
     public function ideaPlace()
     {
-        return $this->ideaPlaces()->first();
+        return $this->belongsTo('App\Place', 'place_id', 'id');
     }
 
     public function ideaItineraries()
@@ -303,12 +294,14 @@ class Idea extends Model
             0, function () use ($activeCategory) {
                 return self::whereCategory($activeCategory)
                     ->joinDescription()
+                    ->joinPlace()
                     ->inFuture()
                     ->whereFilters()
                     ->sorting()
                     ->paginate();
             });
     }
+
 
     /**
      * Get ideas to show on main page sections
@@ -319,7 +312,7 @@ class Idea extends Model
      * @param  int  $itemsCount
      * @return mixed
      */
-    public static function widgetItemsList(Request $request, $placeId = null, $category = null, $itemsCount = 5)
+    public static function widgetItemsList(Request $request, $placeId = null, $category = null, $itemsCount = 6)
     {
         return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($placeId, $category, $itemsCount) {
                 return self::whereCategory($category)
@@ -339,7 +332,7 @@ class Idea extends Model
      * @param  int  $itemsCount
      * @return mixed
      */
-    public static function widgetMainItemsList(Request $request, $category = null, $itemsCount = 5)
+    public static function widgetMainItemsList(Request $request, $category = null, $itemsCount = 6)
     {
         return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($category, $itemsCount) {
                 return self::whereCategory($category)
@@ -761,9 +754,17 @@ class Idea extends Model
         })->select('ideas.*', 'idea_descriptions.title', 'idea_descriptions.intro');
     }
 
+    public function scopeJoinPlace($query)
+    {
+        return $query->join('places', function ($join) {
+            $join->on('ideas.place_id', '=', 'places.id');
+        })->select('ideas.*', 'coordinates');
+    }
+
     public function scopeSorting($query)
     {
-        return $query->orderBy('id', 'desc');
+        return $query->distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
+            ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc');
     }
 
     public function scopeWhereTags($query, Array $tags)
@@ -801,7 +802,7 @@ class Idea extends Model
     public function scopeWhereFilters($query)
     {
         return $query
-            ->WhereBelongsToRegionOrCity()
+            ->WherePlace()
             ->WhereTags(MainFilter::getFiltersTagsArray())
             ->WhereDates()
             ->WherePrices();
@@ -845,25 +846,34 @@ class Idea extends Model
         return $query->whereNotNull('thmb_file_name');
     }
 
+    public function scopeNotModerated($query)
+    {
+        return $query->whereNull('is_approved')->whereHas('IdeaApproval', function($q){
+            $q->whereNull('moderated_at')->where(function($q2){
+                $q2->where('moderator_id', null)->elseWhere('moderator_id', User::activeUser()->id);
+            });
+        });
+    }
+
     /**
      * Scope ideas belonged to region or city
      * @param $query
      * @return mixed
      */
-    public function scopeWhereBelongsToRegionOrCity($query)
+    public function scopeWherePlace($query)
     {
-        if (request()->has('plid')) {
-            return $query->whereHas('ideaPlaces', function ($q) {
-                $q->OrderedByPlace();
-            });
-        }
+//        if (request()->has('pl')) {
+//            return $query->whereHas('ideaPlace', function ($q) {
+//                $q->OrderByPlace();
+//            });
+//        }
         return $query;
     }
 
     public function scopeWherePlaceId($query, $placeId)
     {
         if ($placeId !== null) {
-            return $query->whereHas('ideaPlaces', function ($q) use ($placeId) {
+            return $query->whereHas('ideaPlace', function ($q) use ($placeId) {
                 $q->where('places.id', $placeId);
             });
         }

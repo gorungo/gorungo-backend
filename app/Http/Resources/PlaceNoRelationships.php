@@ -23,6 +23,7 @@ class PlaceNoRelationships extends JsonResource
         return [
             'type' => 'Places',
             'id' => $this->id ,
+            'hid' => $this->hid ,
             'locale' => LocaleMiddleware::getLocale() ,
 
             'attributes' => [
@@ -31,6 +32,7 @@ class PlaceNoRelationships extends JsonResource
                 'place_type_id' => $this->place_type_id,
 
                 'edit_url' => $this->editUrl,
+                'tmb' => asset($this->tmbImgPath),
                 'description' => $this->description,
                 'intro' => $this->intro,
                 'coordinates' =>$this->id ? $this->coordinates : [

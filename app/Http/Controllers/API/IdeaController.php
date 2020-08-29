@@ -28,7 +28,23 @@ class IdeaController extends Controller
      */
     public function index(Request $request, $categories = null)
     {
+        if($request->has('q')){
+            switch ($request->q){
+                case 'not-moderated':
+                    return IdeaResource::collection(Idea::notModerated()->get()->loadMissing([
+                        'ideaPrice',
+                        'ideaPlaces',
+                        'ideaDates',
+                        'ideaParentIdea',
+                        'ideaCategories',
+                        'ideaItineraries'
+                    ]));
+                    break;
 
+                default:
+                    break;
+            }
+        }
     }
 
     /**

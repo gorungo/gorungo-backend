@@ -1,7 +1,7 @@
 <template>
-    <div id="datesFilter">
+    <div id="datesFilter" class="filter">
         <!-- Dates filter button  -->
-        <button type="button" class="btn btn-lg btn-outline-success dropdown-toggle" data-toggle="modal" data-target="#datesFilterModal">
+        <button type="button" class="btn-filter dropdown-toggle" data-toggle="modal" data-target="#datesFilterModal">
             {{buttonTitle}}
         </button>
 
@@ -41,6 +41,12 @@
 </template>
 
 <script>
+
+    import enLang from 'element-ui/lib/locale/lang/en';
+    import ruLang from 'element-ui/lib/locale/lang/ru-RU';
+    import cnLang from 'element-ui/lib/locale/lang/zh-CN';
+    import locale from 'element-ui/lib/locale'
+
     import Filter from '../../mixins/Filter';
     import { DatePicker } from 'element-ui';
     export default {
@@ -65,6 +71,23 @@
         },
 
         mounted(){
+            // configure language
+            switch(this.locale){
+                case 'ru':
+                    locale.use(ruLang);
+                    break;
+
+                case 'en':
+                    locale.use(enLang);
+                    break;
+
+                case 'ch':
+                    locale.use(cnLang);
+                    break;
+
+            }
+
+
             if(this.URLActiveFilter){
                 this.activeFilters.push(this.URLActiveFilter);
 
@@ -75,7 +98,7 @@
 
         computed:{
             defaultButtonTitle(){
-                return window.go.firstToUpperCase(Lang.get('menu.select_dates'));
+                return window.go.firstToUpperCase(Lang.get('menu.any_dates'));
             },
 
             buttonTitle(){
@@ -100,12 +123,15 @@
             clearFilterHandler() {
                 this.activeFilters = [];
                 this.formattedDateRange = [];
-                this.applyFilter();
+                this.applyFilterHandler();
             }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    @import 'resources/sass/filter.scss';
+    .el-range-editor.el-input__inner{
+        width: 100%;
+    }
 </style>

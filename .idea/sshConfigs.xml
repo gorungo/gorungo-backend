@@ -3,7 +3,7 @@
   <component name="SshConfigs">
     <configs>
       <sshConfig authType="PASSWORD" host="77.222.60.50" id="4a3feaa8-9e2a-43e1-a418-796dfc360228" port="22" customName="gorungo.net" nameFormat="CUSTOM" username="root" />
-      <sshConfig authType="PASSWORD" host="77.222.60.50" id="baa64c2d-4c97-46f6-8b44-4b4ddb84a255" port="22" customName="gorungo.net" nameFormat="CUSTOM" username="root" />
+      <sshConfig authType="PASSWORD" host="77.222.60.50" id="e18c4ee9-1132-4983-a35e-56c1818cbf09" port="22" customName="gorungo.net" nameFormat="CUSTOM" username="root" />
     </configs>
   </component>
 </project>

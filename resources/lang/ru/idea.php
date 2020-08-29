@@ -8,7 +8,7 @@ return[
     'main_ideas' => 'основные идеи',
 
     'create' => 'новая идея',
-    'edit' => 'редактировать идею',
+    'edit' => 'редактирование идеи',
     'created' => 'идея успешно создана',
     'updated' => 'идея успешно изменена',
     'not_created' => 'идея не создана',
@@ -16,8 +16,10 @@ return[
 
     'create_intro_title' => 'новая идея',
     'create_intro_description' => 'давайте создадим что-нибудь интересное',
+    'idea_published_and_available_for_users' => 'идея опубликована и доступна пользователям',
 
     'publish' => 'опубликовать',
+    'published' => 'опубликовано',
 
     'idea_description' => 'описание',
 
@@ -41,4 +43,6 @@ return[
     'idea_settings' => 'настройки идеи',
     'idea_category' => 'категория',
     'idea_place' => 'место',
+
+    'manage_ideas' => 'управление идеями',
 ];

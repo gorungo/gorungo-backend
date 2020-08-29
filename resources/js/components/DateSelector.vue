@@ -94,7 +94,7 @@
     import Localized from '../mixins/Localized.js';
     import Datepicker from 'vuejs-datepicker';
     import TimeSelector from './TimeSelector';
-    import go from '../go.js';
+    import go from '../go';
 
     export default {
         name: "DateSelector",
@@ -166,10 +166,10 @@
                 this.editDate = _.cloneDeep(this.dates[index]);
                 this.dateType = "1";
 
-                this.editDate.attributes.start_date = this.editDate.attributes.start_datetime_utc  !== null ? go.mySqlDateTimeToJsUTC(this.editDate.attributes.start_datetime_utc) : '';
-                this.editDate.attributes.end_date = this.editDate.attributes.end_datetime_utc  !== null ? go.mySqlDateTimeToJsUTC(this.editDate.attributes.end_datetime_utc) : '';
-                this.editDate.attributes.start_time = this.editDate.attributes.start_datetime_utc  !== null ? go.localizeMySqlTime(this.editDate.attributes.start_datetime_utc) : '';
-                this.editDate.attributes.end_time = this.editDate.attributes.end_datetime_utc  !== null ? go.localizeMySqlTime(this.editDate.attributes.end_datetime_utc): '';
+                this.editDate.attributes.start_date = this.editDate.attributes.start_datetime_utc  !== null ? this.go.mySqlDateTimeToJsUTC(this.editDate.attributes.start_datetime_utc) : '';
+                this.editDate.attributes.end_date = this.editDate.attributes.end_datetime_utc  !== null ? this.go.mySqlDateTimeToJsUTC(this.editDate.attributes.end_datetime_utc) : '';
+                this.editDate.attributes.start_time = this.editDate.attributes.start_datetime_utc  !== null ? this.go.localizeMySqlTime(this.editDate.attributes.start_datetime_utc) : '';
+                this.editDate.attributes.end_time = this.editDate.attributes.end_datetime_utc  !== null ? this.go.localizeMySqlTime(this.editDate.attributes.end_datetime_utc): '';
 
                 if(this.editDate.attributes.end_datetime_utc !== null && this.editDate.attributes.is_recurring === 0){
                     this.dateType = "2";
@@ -213,9 +213,9 @@
                     type: "Dates",
                     locale: this.locale,
                     attributes: {
-                        start_datetime_utc:  window.go.dateTimeMySql(da.start_date),
-                        end_datetime_utc: window.go.dateTimeMySql(da.end_date),
-                        time_zone_offset: window.go.getTimeZoneOffset(),
+                        start_datetime_utc:  this.go.dateTimeMySql(da.start_date),
+                        end_datetime_utc: this.go.dateTimeMySql(da.end_date),
+                        time_zone_offset: this.go.getTimeZoneOffset(),
                         is_all_day: da.is_all_day,
                         is_recurring: da.is_recurring,
                         recurrence_pattern: da.recurrence_pattern,

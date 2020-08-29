@@ -10,6 +10,7 @@ use App\Http\Requests\Photo\UploadPhoto;
 use App\Page;
 use App\User;
 use App\Place;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Middleware\LocaleMiddleware;
@@ -36,10 +37,12 @@ class IdeaController extends Controller
         $page = new Page();
         $page->title = config('app.name') . ' - ' . __('idea.description') . '.';
 
+        $activePlaceResource = null;
         $categoriesArray = null;
         $activeCategory = null;
         $subCategory = null;
         $categories = null;
+        $ideas = null;
 
         $categoriesArray = explode('/', $categoriesUrl);
         $activeCategorySlug = last($categoriesArray);
@@ -57,7 +60,9 @@ class IdeaController extends Controller
         }
 
         $activePlace = Place::activePlace();
-        $activePlaceResource = $activePlace ? new PlaceNoRelationships($activePlace) : null;
+        if($activePlace){
+            $activePlaceResource = new PlaceNoRelationships($activePlace);
+        }
         $sectionTitle = __('place.title');
 
         if($activePlace){
@@ -78,7 +83,7 @@ class IdeaController extends Controller
      * Display a listing of the resource.
      * @param Request $request
      * @param String $categoriesUrl
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function main(Request $request, $categoriesUrl = null)
     {
@@ -127,55 +132,28 @@ class IdeaController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function new(Idea $idea)
+    public function new()
     {
         if(User::activeUser()->hasDraftIdeas()){
             return redirect()->route('office.ideas');
-
         }else{
             return redirect()->route('ideas.create');
-
         }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function create(Idea $idea)
+    public function create()
     {
         $newIdea = Idea::createEmpty();
-
         return redirect()->route('ideas.edit', ['idea' => $newIdea]);
-
-        //return view('idea.edit' , ['idea' => $newIdea]);
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  StoreIdea $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreIdea $request, Idea $idea)
-    {
-
-        $idea = $idea->createAndSync($request);
-
-        if($idea){
-
-            return redirect()->route('ideas.edit', $idea->slug )->with('status', __('idea.created'));
-
-        }else{
-
-            return redirect()->back()->withInput()->with('status', __('idea.not_created'));
-
-        }
-    }
 
     /**
      * Display the specified resource.

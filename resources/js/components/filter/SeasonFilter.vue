@@ -1,7 +1,7 @@
 <template>
-    <div id="seasonFilter">
+    <div id="seasonFilter" class="filter">
         <!-- Place filter button  -->
-        <button type="button" class="btn btn-lg btn-outline-success dropdown-toggle" data-toggle="modal" data-target="#seasonFilterModal">
+        <button type="button" class="btn-filter dropdown-toggle" data-toggle="modal" data-target="#seasonFilterModal">
             {{buttonTitle}}
         </button>
 
@@ -55,6 +55,6 @@
         }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    @import 'resources/sass/filter.scss';
 </style>

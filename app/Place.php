@@ -2,86 +2,156 @@
 
 namespace App;
 
+use App\Http\Middleware\LocaleMiddleware;
 use App\Http\Requests\Place\StorePlace;
+use App\Traits\Hashable;
 use App\Traits\Imageble;
 use DB;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use App\Http\Middleware\LocaleMiddleware;
-use Grimzy\LaravelMysqlSpatial\Types\Point;
-use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Kyslik\ColumnSortable\Sortable;
 
 class Place extends Model
 {
-    use SoftDeletes, SpatialTrait, Imageble, Sortable;
+    use SoftDeletes, SpatialTrait, Imageble, Sortable, Hashable;
 
-    protected $table = 'places';
-
-    protected $perPage = 60;
-
-    protected $fillable = ['place_type_id','coordinates'];
-
-    protected $with = ['localisedPlaceDescription', 'placeDescriptions'];
-
+    const hidLength = 20;
     public $timestamps = false;
-
-    protected $spatialFields = [
-        'coordinates',
-    ];
-
     public $sortable = [
         'updated_at',
         'rating',
         'distance',
         'title'
     ];
+    protected $table = 'places';
+    protected $perPage = 60;
+    protected $fillable = ['place_type_id', 'coordinates'];
+    protected $with = ['localisedPlaceDescription', 'placeDescriptions'];
+    protected $spatialFields = [
+        'coordinates',
+    ];
+
+    public static function getByTitle(string $title)
+    {
+        return self::whereHas('placeDescriptions', function ($query) use ($title) {
+            $query->where('title', 'like', '%'.$title.'%');
+        })->take(20)->get();
+    }
+
+    public static function getRegionOrCityByTitle(string $title)
+    {
+        return self::RegionOrCity()->whereHas('placeDescriptions', function ($query) use ($title) {
+            $query->where('title', 'like', '%'.$title.'%');
+        })->take(20)->get();
+    }
+
+    public static function itemsList(Request $request)
+    {
+        return Cache::remember('places_'.LocaleMiddleware::getLocale().'_page_'.request()->page.'_distance_'.request()->distance,
+            0, function () {
+                return self::orderByPlace()
+                    ->joinDescription()
+                    ->search()
+                    ->sortable()
+                    ->paginate();
+            });
+    }
+
+    public static function backgroundImage()
+    {
+        return '/images/bg/mountains_blue.svg';
+    }
+
+    public static function coordinatesById($id)
+    {
+        $place = self::whereId((int) $id)->isActive()->first();
+
+        if ($place) {
+            return $place->coordinates;
+        }
+        return null;
+    }
+
+    /**
+     * Get currently viewing place ( if isset pl in request )
+     * @return mixed
+     *
+     */
+    public static function activePlace()
+    {
+        $place = null;
+        if(self::placeMode() === 'place'){
+            if (session()->has('current_place')) {
+
+                $placeArr = session()->get('current_place');
+
+                if(array_has($placeArr, ['data'])){
+                    $place = $placeArr['data'];
+                    if ($place->hid === request()->input('pl')) {
+                        return $place;
+                    }
+                }
+            }
+
+            $place = Place::findByHid(request()->input('pl'));
+            if ($place) {
+                session()->put('current_place', [
+                    'mode' => 'place',
+                    'data' => $place,
+                ]);
+            }
+        }
+
+
+        return $place;
+    }
+
+    public static function placeMode()
+    {
+        if (request()->has('pl') && request()->input('pl') !== '') {
+            if(strpos(request()->input('pl'), 'lat') === 0 && strpos(request()->input('pl'), 'lng') > 0){
+                return 'coordinates';
+            } else if(Place::findByHid(request()->input('pl')) !== null){
+                return 'place';
+            }
+        }
+    }
+
+    /**
+     * Get last created place of authorized user
+     */
+    public static function lastCreatedPlaceOfAuthUser()
+    {
+        if (Auth()->User()) {
+            return self::orderBy('id', 'desc')->first();
+        }
+
+        return null;
+    }
 
     public function getHidAttribute()
     {
-        return $this->getRouteKey();
+        return $this->getRouteKey() ?? null;
     }
-
-    public function getRouteKey()
-    {
-        $hashids = new \Hashids\Hashids(config('app.name'), 7);
-
-        return $hashids->encode($this->getKey());
-    }
-
 
     public function placeType()
     {
         return $this->belongsTo('App\PlaceType', 'place_type_id');
     }
 
+    public function osm()
+    {
+        return $this->hasOne('App\Osm');
+    }
+
     public function placeActions()
     {
         return $this->belongsToMany('App\Action', 'action_place');
     }
-
-    public function placeAddress()
-    {
-        return $this->hasOne('App\Address');
-    }
-
-    public function placeDescriptions()
-    {
-        return $this->hasMany('App\PlaceDescription', 'place_id', 'id');
-    }
-
-    public function localisedPlaceDescription()
-    {
-        return $this
-            ->hasOne('App\PlaceDescription', 'place_id', 'id')
-            ->where('locale_id', LocaleMiddleware::getLocaleId());
-    }
-
 
     public function getUrlAttribute()
     {
@@ -90,7 +160,7 @@ class Place extends Model
 
     public function getFullUrlAttribute()
     {
-        return $this->url. MainFilter::queryString();
+        return $this->url.MainFilter::queryString();
     }
 
     public function getEditUrlAttribute()
@@ -98,35 +168,46 @@ class Place extends Model
         return route('places.edit', $this);
     }
 
-    Public function getTitleAttribute()
+    public function getTitleAttribute()
     {
-        if($this->localisedPlaceDescription != null){
+        if ($this->localisedPlaceDescription != null) {
             return $this->localisedPlaceDescription->title;
-        }else if($this->placeDescriptions()->first()){
-            return $this->placeDescriptions()->first()->title;
+        } else {
+            if ($this->placeDescriptions()->first()) {
+                return $this->placeDescriptions()->first()->title;
+            }
         }
 
         return '';
     }
 
-    Public function getIntroAttribute()
+    public function placeDescriptions()
     {
-        if($this->localisedPlaceDescription != null){
+        return $this->hasMany('App\PlaceDescription', 'place_id', 'id');
+    }
+
+    public function getIntroAttribute()
+    {
+        if ($this->localisedPlaceDescription != null) {
             return $this->localisedPlaceDescription->intro;
-        }else if($this->placeDescriptions()->first()){
-            return $this->placeDescriptions()->first()->intro;
+        } else {
+            if ($this->placeDescriptions()->first()) {
+                return $this->placeDescriptions()->first()->intro;
+            }
         }
 
         return '';
     }
 
-    Public function getDescriptionAttribute()
+    public function getDescriptionAttribute()
     {
-        if ( $this->placeDescriptions()->count() ) {
-            if($this->localisedPlaceDescription != null){
+        if ($this->placeDescriptions()->count()) {
+            if ($this->localisedPlaceDescription != null) {
                 return $this->localisedPlaceDescription->description;
-            }else if($this->placeDescriptions()->first()){
-                return $this->placeDescriptions()->first()->description;
+            } else {
+                if ($this->placeDescriptions()->first()) {
+                    return $this->placeDescriptions()->first()->description;
+                }
             }
 
         }
@@ -137,7 +218,7 @@ class Place extends Model
      * Get path to tmb img of category item
      * @return string
      */
-    Public function getTmbImgPathAttribute2()
+    public function getTmbImgPathAttribute2()
     {
         $defaultTmb = 'images/interface/placeholders/location.png';
         return $defaultTmb;
@@ -147,52 +228,26 @@ class Place extends Model
      * Get path to tmb img of category item
      * @return string
      */
-    Public function getTmbImgPathAttribute() {
+    public function getTmbImgPathAttribute()
+    {
 
         $defaultTmb = 'images/interface/placeholders/idea.png';
 
-        if ( $this->thmb_file_name != null ) {
-            $src = 'storage/images/place/' . $this->id . '/' . htmlspecialchars( strip_tags( $this->thmb_file_name ) );
+        if ($this->thmb_file_name != null) {
+            $src = 'storage/images/place/'.$this->id.'/'.htmlspecialchars(strip_tags($this->thmb_file_name));
         } else {
             $src = $defaultTmb;
         }
 
-        if ( !file_exists( $src ) ) {
+        if (!file_exists($src)) {
             $src = $defaultTmb;
         }
 
         return $src;
     }
 
-    public static function getByTitle(String $title){
-        return self::whereHas('placeDescriptions', function ($query) use ($title) {
-            $query->where('title', 'like' , '%' . $title . '%');
-        })->take(20)->get();
-    }
-
-    public static function getRegionOrCityByTitle(String $title){
-        return self::RegionOrCity()->whereHas('placeDescriptions', function ($query) use ($title) {
-            $query->where('title', 'like' , '%' . $title . '%');
-        })->take(20)->get();
-    }
-
-    public static function itemsList(Request $request)
+    public function createAndSync(StorePlace $request)
     {
-        return Cache::remember('places_' . LocaleMiddleware::getLocale() . '_page_' . request()->page . '_distance_' . request()->distance, 0, function (){
-            return self::orderedByPlace()
-                ->joinDescription()
-                ->search()
-                ->sortable()
-                ->paginate();
-        });
-    }
-
-    public static function backgroundImage()
-    {
-        return '/images/bg/mountains_blue.svg';
-    }
-
-    public function createAndSync( StorePlace $request ){
 
         $createResult = DB::transaction(function () use ($request) {
 
@@ -216,7 +271,7 @@ class Place extends Model
             $place = self::create($storeData);
             $place->localisedPlaceDescription()->create($descriptionStoreData);
 
-            $place->updateRelationships( $request );
+            $place->updateRelationships($request);
 
             return $place;
 
@@ -225,9 +280,42 @@ class Place extends Model
         return $createResult;
     }
 
-    public function updateAndSync( StorePlace $request ) {
+    public function createFromOSM($osm)
+    {
+        $createResult = DB::transaction(function () use ($osm) {
 
-        $updateResult = DB::transaction( function () use ( $request ) {
+            $localeId = LocaleMiddleware::getLocaleId();
+
+            $storeData = [
+                'coordinates' => new Point(
+                    $osm['lat'],
+                    $osm['lon']
+                ),
+            ];
+
+            $nameArray = explode(',', $osm['display_name']);
+
+            $descriptionStoreData = [
+                'title' => count($nameArray) > 0 ? $nameArray[0] : '',
+                'intro' => $osm['display_name'],
+                'description' => $osm['display_name'],
+                'locale_id' => $localeId,
+            ];
+
+            $place = self::create($storeData);
+            $place->localisedPlaceDescription()->create($descriptionStoreData);
+
+            return $place;
+
+        });
+
+        return $createResult;
+    }
+
+    public function updateAndSync(StorePlace $request)
+    {
+
+        $updateResult = DB::transaction(function () use ($request) {
 
             $localeId = LocaleMiddleware::getLocaleId();
 
@@ -245,30 +333,37 @@ class Place extends Model
                 'locale_id' => $localeId,
             ];
 
-            $this->update( $storeData );
-            if($this->localisedPlaceDescription){
+            $this->update($storeData);
+            if ($this->localisedPlaceDescription) {
                 $this->localisedPlaceDescription()->update($descriptionStoreData);
-            }else{
+            } else {
                 $this->localisedPlaceDescription()->create($descriptionStoreData);
             }
 
-            $this->updateRelationships( $request );
+            $this->updateRelationships($request);
 
             return $this;
 
-        } );
+        });
 
 
         return $updateResult;
 
     }
 
-    private function updateRelationships( StorePlace $request ) : void
+    public function localisedPlaceDescription()
     {
-        $this->saveAddress( $request );
+        return $this
+            ->hasOne('App\PlaceDescription', 'place_id', 'id')
+            ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
-    private function saveAddress( $request )
+    private function updateRelationships(StorePlace $request): void
+    {
+        $this->saveAddress($request);
+    }
+
+    private function saveAddress($request)
     {
 
         $localeId = LocaleMiddleware::getLocaleId();
@@ -284,20 +379,20 @@ class Place extends Model
         $addressDescription['city'] = $request->input('relationships.address.attributes.city');
         $addressDescription['country'] = $request->input('relationships.address.attributes.country');
 
-        if($request->input('relationships.address.id')){
+        if ($request->input('relationships.address.id')) {
             $address = $this
                 ->placeAddress()
-                ->where('id', (int)$request->input('relationships.address.id'))
+                ->where('id', (int) $request->input('relationships.address.id'))
                 ->update($address);
 
-            if($this->placeAddress->localisedAddressDescription){
+            if ($this->placeAddress->localisedAddressDescription) {
                 $this->placeAddress->localisedAddressDescription()->update($addressDescription);
-            }else{
+            } else {
                 $this->placeAddress->localisedAddressDescription()->create($addressDescription);
             }
 
 
-        }else{
+        } else {
 
 
             $address = $this
@@ -311,22 +406,29 @@ class Place extends Model
 
     }
 
+    public function placeAddress()
+    {
+        return $this->hasOne('App\Address');
+    }
+
     public function scopeJoinDescription($query)
     {
         return $query->join('place_descriptions', function ($join) {
             $join->on('places.id', '=', 'place_descriptions.place_id')
                 ->where('locale_id', LocaleMiddleware::getLocaleId());
-        })->select('places.*', 'place_descriptions.title','place_descriptions.intro' );
+        })->select('places.*', 'place_descriptions.title', 'place_descriptions.intro');
     }
 
-    public function scopeIsActive($query){
+    public function scopeIsActive($query)
+    {
         return $query;
     }
 
-    public function scopeSearch($query){
-        if(request()->has('q')){
+    public function scopeSearch($query)
+    {
+        if (request()->has('q')) {
             return $query->whereHas('placeDescriptions', function ($query) {
-                $query->where('title', 'like' , '%' . request()->q . '%');
+                $query->where('title', 'like', '%'.request()->q.'%');
             });
         }
         return $query;
@@ -347,37 +449,6 @@ class Place extends Model
         return $query->orderBy('place_descriptions.title', $direction);
     }
 
-    public static function coordinatesById($id)
-    {
-        $place = self::whereId((int)$id)->isActive()->first();
-
-        if($place) return $place->coordinates;
-        return null;
-    }
-
-    /**
-     * Get currently viewing place ( if isset pid in request )
-     * @return mixed
-     *
-     */
-    public static function activePlace()
-    {
-        $place = null;
-        if(request()->has('plid') && request()->input('plid') !== '') {
-            if (session()->has('current_place')) {
-                $place = session()->get('current_place');
-                if($place->id !== (int)request()->input('plid')){
-                    $place = Place::find((int)request()->input('plid'));
-                }
-            } else {
-                $place = Place::find((int)request()->input('plid'));
-                if ($place) session()->put('current_place');
-            }
-        }
-
-        return $place;
-    }
-
     public function scopeRegionOrCity($query)
     {
         $regionOrCityPlaceTypeIds = PlaceType::regionOrCityPlaceTypeIds();
@@ -390,19 +461,7 @@ class Place extends Model
         return $query->whereNotIn('place_type_id', $regionOrCityPlaceTypeIds);
     }
 
-    /**
-     * Get last created place of authorized user
-     */
-    public static function lastCreatedPlaceOfAuthUser()
-    {
-        if(Auth()->User()){
-            return self::orderBy('id', 'desc')->first();
-        }
-
-        return null;
-    }
-
-    public function scopeOrderedByPlace($query)
+    public function scopeOrderByPlace($query)
     {
         return $query
             ->distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())

@@ -21,6 +21,17 @@
   background-color: $bg-gray;
 }
 
+.btn{
+    .btn-primary{
+        color: white;
+        background: $text-color;
+    }
+    .btn-outline-primary{
+        color: $text-color;
+        border-color: $text-color;
+    }
+}
+
 
 /*окно результата операции*/
 

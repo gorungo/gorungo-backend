@@ -15,6 +15,7 @@ return[
 
     'create_intro_title' => 'new idea',
     'create_intro_description' => 'let\'s create something interesting',
+    'idea_published_and_available_for_users' => 'idea is published and available for users',
 
     'publish' => 'publish',
 
@@ -35,4 +36,6 @@ return[
     'idea_settings' => 'idea settings',
     'idea_category' => 'category',
     'idea_place' => 'place',
+
+    'manage_ideas' => 'manage ideas',
 ];

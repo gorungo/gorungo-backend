@@ -4,34 +4,16 @@
             <h2 class="text-first-uppercase">{{Lang.get('texts.my_ideas')}}</h2>
             <a href="/ideas/create" class="btn btn-lg btn-outline-primary">{{Lang.get('idea.create')}}</a>
         </div>
-        <el-card v-loading="loading" class="box-card mb-2" v-if="ideas.length > 0" v-for="(idea, index) in ideas" :key="idea.id">
-            <div class="d-flex justify-content-between">
-                <div class="description d-flex">
-                    <el-image
-                            style="width: 60px; height: 80px"
-                            :src="idea.attributes.imageUrl"
-                            fit="cover">
-                    </el-image>
-                    <div class="ml-3">
-                        <div>
-                            <h5>
-                                {{ idea.attributes.title }}
-                            </h5>
-                        </div>
-                        <div>
-                            <span>
-                                {{ idea.attributes.intro }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <a :href="idea.attributes.editUrl"><el-button type="primary" icon="el-icon-edit" plain circle></el-button></a>
-                    <el-button type="danger" icon="el-icon-delete" plain circle></el-button>
-                </div>
-            </div>
-        </el-card>
-        <el-card class="box-card" v-if="ideas.length === 0">
+        <div v-if="userIdeas.length > 0" v-loading="loading">
+            <list-item-line
+                v-for="(idea, index) in userIdeas"
+                :key="idea.hid"
+                :item="idea"
+                @edit="handleEdit"
+                @delete="handleDelete"
+            />
+        </div>
+        <el-card class="box-card" v-if="userIdeas.length === 0" v-loading="loading">
             <h5 class="text-center">Нет идей</h5>
         </el-card>
     </div>
@@ -39,17 +21,17 @@
 
 <script>
     import Localized from '../../mixins/Localized.js';
-    import {IdeaAPI} from '../../mixins/API.js';
-    import Authorized from '../../mixins/Authorized.js';
     import Notify from '../../mixins/Notify.js';
     import { Loading } from 'element-ui';
+    import ListItemLine from "../idea/ListItemLine";
+    import {mapGetters, mapActions, mapState} from 'vuex';
 
     export default {
         name: "OfficeIdeasList",
 
-        mixins: [Authorized, Localized, Notify, IdeaAPI],
+        mixins: [Localized, Notify],
 
-        components: {Loading},
+        components: {ListItemLine, Loading},
 
         data(){
             return {
@@ -60,18 +42,32 @@
 
         async mounted(){
             try {
-                this.loading = true;
-                const res = await this.getUserIdeas(this.activeUser);
-                this.ideas = res.data;
+                if(this.userIdeas.length === 0){
+                    this.loading = true;
+                    await this.fetchUserIdeas();
+                }
             } catch (e){
-                this.showNotification('Fuck', 'You broke an application');
+                console.log(e);
             }
             this.loading = false;
         },
 
+        computed: {
+            ...mapState('Idea', ['userIdeas']),
+        },
 
         methods: {
 
+            ...mapActions('Idea', ['fetchUserIdeas']),
+            ...mapActions(['initialiseStore']),
+
+            handleEdit(idea){
+                window.location.href = idea.attributes.editUrl;
+            },
+
+            handleDelete(idea){
+
+            }
         },
 
     }

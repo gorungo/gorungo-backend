@@ -7,41 +7,77 @@ use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    public function login(Request $request){
-        $http = new \GuzzleHttp\Client;
-
-        try {
-            $response = $http->post(config('app.url').config('auth.passport.login_endpoint'),[
-                'form_params' => [
-                    'grant_type' => 'password',
-                    'client_id' => config('auth.passport.client_id'),
-                    'client_secret' => config('auth.passport.client_secret'),
-                    'username' => $request->username,
-                    'password' => $request->password,
-                ]
-            ]);
-
-            return $response->getBody();
-
-        } catch (\GuzzleHttp\Exception\BadResponseException $e){
-            if($e->getCode() == 400){
-                return response()->json([
-                    'type' => 'error',
-                    'code' => $e->getCode(),
-                    'description' => 'Invalif Request. Please enter a username or a password. ', $e->getCode(),
-                ]);
-            } else if($e->getCode() == 401){
-                return response()->json();
-            }
-        }
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login()
+    {
+        $credentials = request(['email', 'password']);
+
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
-        Auth()->user()->tokens->each(function($token, $key){
-            $token->delete();
-        });
+        auth()->logout();
 
-        return response()->json(['type'=>'ok']);
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
     }
 }

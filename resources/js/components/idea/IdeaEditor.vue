@@ -50,12 +50,15 @@
                         <div class="">
                             <div id="idea-info" v-if="dataLoaded && activeTabName === 'main'">
                                 <div class="d-flex" style="justify-content: center;">
-                                    <div v-if="item.attributes.title !== null">
+                                    <div class="text-center" v-if="item.attributes.title !== null">
                                         <h1>
                                             {{item.attributes.title}}
                                         </h1>
+                                        <p class="text-first-uppercase" v-if="item.attributes.active">
+                                            {{Lang.get('idea.idea_published_and_available_for_users')}}
+                                        </p>
                                     </div>
-                                    <div class="text-center">
+                                    <div v-else class="text-center">
                                         <h1>{{Lang.get('idea.create_intro_title')}}</h1>
                                         <p>{{Lang.get('idea.create_intro_description')}}</p>
                                     </div>
@@ -114,7 +117,6 @@
 
 <script>
     import {mapGetters, mapActions, mapState} from 'vuex';
-    import Editable from '../../mixins/Editable.js';
     import PhotoUploader from '../photo/PhotoUploader.vue';
     import IdeaExtendedTagSelector from './IdeaExtendedTagSelector.vue';
     import IdeaItineraryEditor from './IdeaItineraryEditor.vue';
@@ -139,8 +141,6 @@
             propHid : String,
         },
 
-        mixins: [ Editable ],
-
         components: {
             IdeaPlaceEditor,
             IdeaCategoryEditor,
@@ -159,8 +159,6 @@
             return{
                 type: 'ideas',
 
-                currencies: [],
-
                 money: {
                     decimal: ',',
                     thousands: '',
@@ -170,12 +168,15 @@
                     masked: false
                 },
 
-                activeTabName: 'main'
+                activeTabName: 'main',
+                loading: false,
+                dataLoaded: false,
+                hasPageChanges: false,
             }
         },
 
-        mounted(){
-            this.fetchCurrencies();
+        async mounted(){
+            await this.fetchCurrencies();
         },
 
         computed: {
@@ -193,13 +194,13 @@
                 return this.propIdeaId;
             },
 
-            readyToPublish(){
-                return true;
-            },
+            ...mapGetters('Idea', ['readyToPublish']),
+            ...mapGetters('Currency', ['currencies']),
 
         },
 
         methods: {
+            ...mapActions('Currency', ['fetchCurrencies']),
 
             categoryChanged(){
                 if(this.item.relationships.categories.length){
@@ -207,23 +208,6 @@
                 }else{
                     this.item.attributes.main_category_id = null;
                 }
-            },
-
-            fetchCurrencies(){
-                const requesrUrl = '/api/' + window.systemInfo.apiVersion + '/currencies/active';
-
-                axios.get( requesrUrl, { params: {
-                            locale: this.locale,
-                        }}
-                ).then((resp) => {
-                    if (resp.status === 200 || resp.status === 201){
-                        this.currencies = resp.data;
-                    }
-                }).catch(
-
-                ).finally(
-
-                );
             },
 
             handlePublish(){
