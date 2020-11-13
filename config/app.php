@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://gorungo2.dev'),
+    'url' => env('APP_URL', 'https://gorungo-backend.localhost'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -202,6 +202,7 @@ return [
         Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
         //Jenssegers\Agent\AgentServiceProvider::class,
         Orangehill\Iseed\IseedServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
     ],
 

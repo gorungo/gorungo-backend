@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Photo;
 use App\Http\Requests\Photo\UploadPhoto;
+use Illuminate\Support\Facades\Storage;
 
 
 trait Imageble
@@ -32,25 +33,23 @@ trait Imageble
      */
     public function getTmbImgPathAttribute()
     {
+        $src = null;
 
-        if ($this->thmb_file_name != null) {
-            //если есть картинка вакансии
-            $src = 'storage/images/'.class_basename(get_class($this)).'/'.$this->id.'/'.htmlspecialchars(strip_tags($this->thmb_file_name));
-        } else {
-            //если есть картинка вакансии
-            $src = $this->defaultTmb;
-        }
-
-        if (!file_exists($src)) {
-            $src = $this->defaultTmb;
-        }
+        if ($this->thmb_file_name && Storage::disk('images')->exists(class_basename(get_class($this)) . '/' . $this->id . '/' . htmlspecialchars(strip_tags($this->thmb_file_name)))) {
+            $src = Storage::disk('images')->url(class_basename(get_class($this)) . '/' . $this->id . '/' . htmlspecialchars(strip_tags($this->thmb_file_name)));
+        };
 
         return $src;
     }
 
     public function getFullTmbImgPathAttribute()
     {
-        return asset($this->tmbImgPath);
+        return $this->tmbImgPath ? asset($this->tmbImgPath) : null;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->tmbImgPath ? asset($this->tmbImgPath) : null;
     }
 
 }

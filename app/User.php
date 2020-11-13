@@ -4,6 +4,7 @@ namespace App;
 
 use App\Http\Requests\User\SetNewPassword;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -73,22 +74,27 @@ class User extends Authenticatable  implements JWTSubject
     Public function getTmbImgPathAttribute()
     {
 
-        $defaultTmb = 'images/interface/placeholders/idea.png';
+        $defaultTmb = null;
 
         if ($this->profile && $this->profile->thmb_file_name != null) {
             //если есть картинка вакансии
-            $src = 'storage/images/profile/' . $this->profile->id . '/' . htmlspecialchars(strip_tags($this->profile->thmb_file_name));
+            $src = 'profile/' . $this->profile->id . '/' . htmlspecialchars(strip_tags($this->profile->thmb_file_name));
 
         } else {
             //если есть картинка вакансии
             $src = $defaultTmb;
         }
 
-        if (!file_exists($src)) {
-            $src = $defaultTmb;
-        }
+        if ($src && Storage::disk('images')->exists('profile/' . $this->profile->id . '/' . htmlspecialchars(strip_tags($this->profile->thmb_file_name)))) {
+            $src = Storage::disk('images')->url('profile/' . $this->profile->id . '/' . htmlspecialchars(strip_tags($this->profile->thmb_file_name)));
+        };
 
         return $src;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return asset($this->TmbImgPath);
     }
 
     /**

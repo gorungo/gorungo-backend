@@ -3,6 +3,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App;
+use Illuminate\Support\Facades\Log;
 use Request;
 use App\Locale;
 use Illuminate\Support\Facades\Redirect;
@@ -21,23 +22,22 @@ class LocaleMiddleware
      */
     public static function getLocale()
     {
-
-        $uri = Request::path(); //получаем URI
-
-        $request = Request::input();
-
-        if(isset($request['locale']) && in_array($request['locale'], config('app.languages'))){
-            // if we have get param locale
-            return $request['locale'] !== config('app.locale') ? $request['locale'] : null;
+        $locale = Request()->input('locale');
+        if(Request()->wantsJson() && $locale){
+            if(in_array($locale, config('app.languages'))){
+                // if we have get param locale
+                return $locale !== config('app.locale') ? $locale : null;
+            }
         }else{
-
-            $segmentsURI = explode('/', $uri); //делим на части по разделителю "/"
+            $segmentsURI = explode('/', Request()->url()); //делим на части по разделителю "/"
 
             //Проверяем метку языка  - есть ли она среди доступных языков
             if (!empty($segmentsURI[0]) && in_array($segmentsURI[0], config('app.languages'))) {
                 if ($segmentsURI[0] != config('app.locale')) return $segmentsURI[0];
             }
+
         }
+
 
 
         return null;

@@ -14,15 +14,12 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'v1'], function() {
-    Route::group([
-        'middleware' => 'api',
-        'prefix' => 'auth'
-    ], function ($router) {
+    Route::group(['prefix' => 'auth', 'namespace' => 'API'], function ($router) {
 
-        Route::post('login', 'API\AuthController@login');
-        Route::post('logout', 'API\AuthController@logout');
-        Route::post('refresh', 'API\AuthController@refresh');
-        Route::post('me', 'API\AuthController@me');
+        Route::post('login', 'AuthController@login');
+        Route::post('logout', 'AuthController@logout');
+        Route::post('refresh', 'AuthController@refresh');
+        Route::post('me', 'AuthController@me');
 
     });
 
@@ -31,6 +28,8 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/test', function (Request $request) {
             return ['result' => 'ok'];
         });
+
+
 
 
         // profiles
@@ -72,7 +71,6 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/actions/{action}', 'API\ActionController@destroy')->name('api.actions.destroy');
 
         // ideas
-        Route::get('/ideas/create', 'API\IdeaController@create')->name('api.ideas.create');
         Route::get('/ideas/{idea}/edit', 'API\IdeaController@edit')->name('api.ideas.edit');
         Route::post('/ideas', 'API\IdeaController@store')->name('api.ideas.store');
 
@@ -281,5 +279,10 @@ Route::group(['prefix' => 'v1'], function() {
     // OpenStreetMap
     Route::get('/osm/search', "API\OSMController@search")
         ->name('api.osm.search');
+
+    // Ideas
+
+    Route::get('/ideas', 'API\IdeaController@index')->name('api.ideas');
+    Route::get('/ideas/{idea}', 'API\IdeaController@show')->name('api.ideas.show');
 
 });

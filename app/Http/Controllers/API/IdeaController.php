@@ -25,13 +25,41 @@ class IdeaController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @param  Request  $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(Request $request, $categories = null)
+    public function index(Request $request)
     {
+        if($request->has('sectionName')){
+            switch ($request->sectionName){
+                case "nearby":
+                    return IdeaResource::collection(
+                        Idea::widgetMainItemsList($request)
+                    );
+                    break;
+
+
+                case "base":
+                    return IdeaResource::collection(
+                        Idea::widgetMainItemsList($request)
+                    );
+                    break;
+
+
+                case "popular":
+                    return IdeaResource::collection(
+                        Idea::widgetMainItemsList($request)
+                    );
+                    break;
+
+                default:
+                    break;
+            }
+        }
         if($request->has('q')){
             switch ($request->q){
                 case 'not-moderated':
-                    return IdeaResource::collection(Idea::notModerated()->get()->loadMissing([
+                    return IdeaResource::collection(Idea::notModerated()->take($request->limit)->get()->loadMissing([
                         'ideaPrice',
                         'ideaPlaces',
                         'ideaDates',
@@ -39,12 +67,17 @@ class IdeaController extends Controller
                         'ideaCategories',
                         'ideaItineraries'
                     ]));
-                    break;
 
                 default:
                     break;
             }
         }
+        return IdeaResource::collection(
+            Idea::isActive()
+                ->IsApproved()
+                ->paginate()
+                ->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',', request()->include): [])
+        );
     }
 
     /**
@@ -91,14 +124,7 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        return new IdeaResource($idea->loadMissing([
-            'ideaPrice',
-            'ideaPlaces',
-            'ideaDates',
-            'ideaParentIdea',
-            'ideaCategories',
-            'ideaItineraries'
-        ]));
+        return new IdeaResource($idea->loadMissing(request()->has('include') && request()->input('include') !='' ? explode(',', request()->include): []));
     }
 
     /**

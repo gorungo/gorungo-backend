@@ -2,11 +2,13 @@
 
 namespace App\Http\Resources;
 
-use Auth;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class User extends JsonResource
+use App\Http\Resources\Currency as CurrencyResource;
+
+
+class Photo extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,21 +20,21 @@ class User extends JsonResource
     {
 
         return [
-            'type' => 'Users',
-            'id' => $this->id,
-            'locale' => LocaleMiddleware::getLocale(),
+            'type' => 'Photo',
+            'id' => $this->id ,
+            'locale' => LocaleMiddleware::getLocale() ,
 
             'attributes' => [
-                'name' => $this->name,
-                'email' => $this->email,
-                'displayName' => $this->displayName,
+                'order' => $this->order,
                 'imageUrl' => $this->imageUrl,
-                'superuser' => Auth::user() ? $this->when(Auth::user()->hasAnyRole(['admin', 'super-admin']), true):null,
+                'image_name' => $this->image_name,
+                'active' => $this->active,
             ],
 
             'relationships' => [
 
             ],
+
         ];
     }
 }

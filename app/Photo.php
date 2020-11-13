@@ -41,15 +41,15 @@ class Photo extends Model
     }
 
     public function getAbsoluteURLAttribute(){
-        return asset($this->StoragePath);
+        return asset($this->storagePath);
     }
 
     public function getRelativeURLAttribute(){
         return 'storage/images/' . mb_strtolower($this->item_type) . '/' . $this->item_id . '/' . $this->img_name;
     }
 
-    public function getUrlAttribute(){
-        return asset($this->StoragePath);
+    public function getImageUrlAttribute(){
+        return asset($this->storagePath);
     }
 
     /**

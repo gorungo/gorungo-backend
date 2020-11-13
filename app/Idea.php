@@ -30,9 +30,9 @@ class Idea extends Model
 
     protected $fillable = ['author_id', 'idea_id', 'parent_id', 'main_category_id', 'active', 'order', 'slug'];
 
-    protected $with = ['localisedIdeaDescription', 'ideaMainCategory', 'ideaPrice', 'tagged', 'ideaPlace'];
+    protected $with = ['localisedIdeaDescription', 'ideaMainCategory'];
 
-    public $defaultTmb = 'images/interface/placeholders/idea.png';
+    public $defaultTmb = null;
 
     protected $spatialFields = [
         'coordinates',
@@ -77,24 +77,6 @@ class Idea extends Model
 
     }
 
-    Public function getUrlAttribute()
-    {
-        if ($this->ideaMainCategory) {
-            return route('ideas.show', [$this->ideaMainCategory->pathToCategory(), $this]);
-        } else {
-            return '';
-        }
-    }
-
-    public function getEditUrlAttribute()
-    {
-        return route('ideas.edit', $this);
-    }
-
-    public function getFullUrlAttribute()
-    {
-        return $this->url . MainFilter::queryString();
-    }
 
     public function getHasIdeasAttribute()
     {
@@ -213,6 +195,18 @@ class Idea extends Model
             ]);
     }
 
+    public function price()
+    {
+        return $this->hasOne('App\IdeaPrice');
+    }
+
+    public function minimalFuturePrice()
+    {
+        return $this->ideaPrice()->whereHas('ideaDate', function($q){
+            return $q->InFuture();
+        })->orderBy('price', 'asc');
+    }
+
     public function ideaDescriptions()
     {
         return $this->hasMany('App\IdeaDescription', 'idea_id', 'id');
@@ -274,6 +268,11 @@ class Idea extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
+
     /**
      * Ideas main list
      *
@@ -314,13 +313,14 @@ class Idea extends Model
      */
     public static function widgetItemsList(Request $request, $placeId = null, $category = null, $itemsCount = 6)
     {
-        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($placeId, $category, $itemsCount) {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($request, $placeId, $category, $itemsCount) {
                 return self::whereCategory($category)
                     ->wherePlaceId($placeId)
                     ->joinDescription()
                     ->inFuture()
                     ->take($itemsCount)
-                    ->get();
+                    ->get()
+                    ->loadMissing($request->has('include') && $request->input('include') != '' ? explode(',', $request->include): []);
             });
     }
 
@@ -334,7 +334,7 @@ class Idea extends Model
      */
     public static function widgetMainItemsList(Request $request, $category = null, $itemsCount = 6)
     {
-        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($category, $itemsCount) {
+        return Cache::tags(['ideas'])->remember('ideas_widget_'.LocaleMiddleware::getLocale().'_category_'.$category.'_'.request()->getQueryString(), 0, function () use ($category, $itemsCount, $request) {
                 return self::whereCategory($category)
                     ->joinDescription()
                     ->main()
@@ -342,7 +342,8 @@ class Idea extends Model
                     ->take($itemsCount)
                     ->inRandomOrder()
                     ->hasImage()
-                    ->get();
+                    ->get()
+                    ->loadMissing($request->has('include') && $request->input('include') != '' ? explode(',', $request->include): []);
         });
     }
 
@@ -676,7 +677,7 @@ class Idea extends Model
      */
     public function scopeIsApproved($query)
     {
-        return $query->where('ideas.approved', 1);
+        return $query->where('ideas.is_approved', 1);
     }
 
     /**
