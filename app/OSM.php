@@ -10,15 +10,7 @@ use Illuminate\Http\Request;
 class OSM extends Model
 {
     private $method = 'get';
-    private $format = 'json';
-    private $lang = 'ru';
-
-    protected $table = 'place_osm';
-
-    public function place()
-    {
-        return $this->hasMany('App\Place');
-    }
+    protected $table = 'osms';
 
     private function execute($uri, $params = [])
     {
@@ -47,11 +39,16 @@ class OSM extends Model
 
     public function search(Request $request)
     {
+        // делаем запрос в осм
+        // сохраняем результат в нашу базу
+        // делам запрос в нашу базу
+        // отправляем результат
+
         if($request->has('q') && $request->q !== ''){
             $params = [
                 'q' => $request->q,
-                'format' => $this->format,
-                'accept-language' => $this->lang,
+                'format' => $request->get('format'),
+                'accept-language' => $request->get('accept-language'),
             ];
             return $this->execute('search.php', $params);
         }

@@ -20,4 +20,11 @@ class OSMController extends Controller
     {
         return response()->json($this->osm->search($request));
     }
+
+    public function store(StoreOSM $request)
+    {
+        $omsData = $request->input();
+        OSM::create($omsData);
+        return response()->json('Created', 201);
+    }
 }
