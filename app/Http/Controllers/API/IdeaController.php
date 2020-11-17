@@ -72,10 +72,9 @@ class IdeaController extends Controller
                     break;
             }
         }
+        // listing
         return IdeaResource::collection(
-            Idea::isActive()
-                ->IsApproved()
-                ->paginate()
+            Idea::itemsList($request)
                 ->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',', request()->include): [])
         );
     }

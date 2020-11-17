@@ -100,7 +100,7 @@ class Idea extends Model
 
     public function ideaPlace()
     {
-        return $this->belongsTo('App\Place', 'place_id', 'id');
+        return $this->belongsTo('App\OSM', 'place_id', 'place_id');
     }
 
     public function ideaItineraries()
@@ -109,10 +109,6 @@ class Idea extends Model
             ->orderBy('day_num', 'asc');
     }
 
-    public function ideaPlaces()
-    {
-        return $this->belongsToMany('App\Place', 'idea_place', 'idea_id', 'place_id');
-    }
 
     public function ideaDates()
     {
@@ -290,13 +286,14 @@ class Idea extends Model
 
         // получаем список активных идей с учетом города, страницы, локали
         return Cache::tags(['ideas'])->remember('ideas_'.LocaleMiddleware::getLocale().'_category_'.$activeCategoryId.'_'.request()->getQueryString(),
-            0, function () use ($activeCategory) {
+            0, function () use ($activeCategory, $request) {
                 return self::whereCategory($activeCategory)
-                    ->joinDescription()
                     ->joinPlace()
                     ->inFuture()
                     ->whereFilters()
                     ->sorting()
+                    ->distinct()
+                    ->select(['ideas.*', 'osms.coordinates'])
                     ->paginate();
             });
     }
@@ -757,9 +754,7 @@ class Idea extends Model
 
     public function scopeJoinPlace($query)
     {
-        return $query->join('places', function ($join) {
-            $join->on('ideas.place_id', '=', 'places.id');
-        })->select('ideas.*', 'coordinates');
+        return $query->join('osms', 'ideas.place_id', '=', 'osms.place_id');
     }
 
     public function scopeSorting($query)
@@ -816,11 +811,10 @@ class Idea extends Model
      */
     public function scopeWhereDates($query)
     {
-        if (request()->has('dates')) {
+        if (request()->has('checkin')) {
             return $query->whereHas('ideaDates', function ($query) {
-
-                [$dateFrom, $dateTo] = explode('to', request()->dates);
-
+                $dateFrom = request()->input('checkin');
+                $dateTo = request()->input('checkout');
                 $query
                     ->whereDate('start_date', '>=', date_format(date_create($dateFrom), 'Y-m-d'))
                     ->whereDate('start_date', '<=', date_format(date_create($dateTo), 'Y-m-d'));
@@ -863,11 +857,23 @@ class Idea extends Model
      */
     public function scopeWherePlace($query)
     {
-//        if (request()->has('pl')) {
+//        if (request()->has('place_id')) {
 //            return $query->whereHas('ideaPlace', function ($q) {
 //                $q->OrderByPlace();
 //            });
 //        }
+        if(request()->has('search_type')){
+            switch (request()->input('search_type')) {
+                case 'place_id':
+                    return $query->where('ideas.place_id', request()->input('place_id'));
+
+                case 'nearby':
+                    return $query->where('ideas.place_id', request()->input('place_id'));
+
+                default:
+                    return $query->where('ideas.place_id', request()->input('place_id'));
+            }
+        }
         return $query;
     }
 

@@ -84,6 +84,12 @@ Route::group(['prefix' => 'v1'], function() {
         Route::patch('/places/{place}', 'API\PlaceController@update')->name('api.places.update');
         Route::delete('/places/{place}', 'API\PlaceController@destroy')->name('api.places.destroy');
 
+        // OpenStreetMap
+        Route::get('/osm/{osm}/edit', 'API\OSMController@edit')->name('api.osm.edit');
+        Route::post('/osm', 'API\OSMController@store')->name('api.osm.store');
+        Route::patch('/osm/{place}', 'API\OSMController@update')->name('api.osm.update');
+        Route::delete('/osm/{place}', 'API\OSMController@destroy')->name('api.osm.destroy');
+
 
         // categories
         Route::get('/categories/create', 'API\CategoryController@create')->name('api.category.create');
@@ -277,8 +283,8 @@ Route::group(['prefix' => 'v1'], function() {
         ->name('api.currencies.active');
 
     // OpenStreetMap
-    Route::get('/osm/search', "API\OSMController@search")
-        ->name('api.osm.search');
+    Route::get('/osm/search', "API\OSMController@search")->name('api.osm.search');
+    Route::post('/osm/saveSelected', 'API\OSMController@saveSelected')->name('api.osm.store');
 
     // Ideas
 

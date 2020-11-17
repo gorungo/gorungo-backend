@@ -23,7 +23,7 @@ class LocaleMiddleware
     public static function getLocale()
     {
         $locale = Request()->input('locale');
-        if(Request()->wantsJson() && $locale){
+        if($locale){
             if(in_array($locale, config('app.languages'))){
                 // if we have get param locale
                 return $locale !== config('app.locale') ? $locale : null;

@@ -15,12 +15,13 @@ class CreateOsmsTable extends Migration
     {
         Schema::create('osms', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug', 255)->nullable()->index();
             $table->string('boundingbox', 255)->nullable();
-            $table->string('display_name', 255);
+            $table->point('coordinates');
             $table->string('icon', 255)->nullable();
             $table->float('importance')->nullable();
-            $table->string('lat', 10);
-            $table->string('lon', 10);
+            $table->string('lat', 20);
+            $table->string('lon', 20);
             $table->string('licence', 200)->nullable();
             $table->unsignedInteger('osm_id');
             $table->string('osm_type', 50);
