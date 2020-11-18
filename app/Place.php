@@ -112,13 +112,11 @@ class Place extends Model
 
     public static function placeMode()
     {
-        if (request()->has('pl') && request()->input('pl') !== '') {
-            if(strpos(request()->input('pl'), 'lat') === 0 && strpos(request()->input('pl'), 'lng') > 0){
-                return 'coordinates';
-            } else if(Place::findByHid(request()->input('pl')) !== null){
-                return 'place';
-            }
+        $defaultPlaceMode = 'nearby';
+        if (request()->has('search_type') && request()->input('search_type') !== ''){
+            return request()->input('search_type');
         }
+        return $defaultPlaceMode;
     }
 
     /**

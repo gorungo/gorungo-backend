@@ -15,6 +15,7 @@ use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
 use App\Traits\TagInfo;
 use App\Http\Requests\Idea\StoreIdea;
+use Illuminate\Support\Facades\Log;
 
 class Idea extends Model
 {
@@ -759,8 +760,12 @@ class Idea extends Model
 
     public function scopeSorting($query)
     {
-        return $query->distance('coordinates', MainFilter::searchPoint(), MainFilter::searchDistance())
-            ->orderByDistance('coordinates', MainFilter::searchPoint(), 'asc');
+        $searchPoint = MainFilter::searchPoint();
+        if($searchPoint){
+            return $query->distance('coordinates', $searchPoint, MainFilter::searchDistance())
+                ->orderByDistance('coordinates', $searchPoint, 'asc');
+        }
+        return $query;
     }
 
     public function scopeWhereTags($query, Array $tags)

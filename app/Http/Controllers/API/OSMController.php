@@ -5,10 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Requests\OSM\Store;
 use App\OSM;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
-use App\Http\Requests\Place\StoreOSM;
 
 class OSMController extends Controller
 {
@@ -24,12 +24,12 @@ class OSMController extends Controller
         return response()->json($this->osm->search($request));
     }
 
-    public function saveSelected(StoreOSM $request)
+    public function saveSelected(Store $request)
     {
-        if(!$request->id && OSM::createAndStore($request)){
+        if(!$request->id && !OSM::where('place_id', $request->place_id)->first() && OSM::createAndStore($request)){
             return response()->json('Created', 201);
         } else {
-            return response()->json('Already exist, not modified', 200);
+            return response()->json('Already exists, not modified', 200);
         }
     }
 }

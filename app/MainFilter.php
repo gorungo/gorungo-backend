@@ -108,9 +108,26 @@ class MainFilter extends Model
     public static function searchPoint()
     {
         $placeMode = Place::placeMode();
-        if($placeMode === 'place'){
-            $place = Place::activePlace();
-            if($place && $place->coordinates) return $place->coordinates;
+        switch($placeMode){
+            case 'place_position':
+                if(request()->has('place_id')){
+                    $osm = OSM::where('place_id', request()->place_id)->first();
+                    if($osm){
+                        return $osm->coordinates;
+                    }
+                }
+                break;
+
+            case 'place_id':
+                return null;
+
+            case 'nearby':
+                return User::currentPosition();
+        }
+
+        // if do not have search_type query parameter but have place_id
+        if(request()->has('place_id')){
+            return null;
         }
         return User::currentPosition();
 
