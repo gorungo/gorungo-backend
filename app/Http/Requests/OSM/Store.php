@@ -24,7 +24,6 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'class' => 'required|string',
             'display_name' => 'required|string',
             //'icon' => 'required|string',
             'importance' => 'required',

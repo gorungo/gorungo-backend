@@ -26,7 +26,7 @@ class OSM extends JsonResource
     public function toArray($request)
     {
         return [
-            'type' => 'oms',
+            'type' => $this->type,
             'id' => $this->id,
             'display_name' => $this->display_name,
             'title' => $this->title,
@@ -36,7 +36,8 @@ class OSM extends JsonResource
             'lat' => $this->lat,
             'lon' => $this->lon,
             'licence' => $this->licence,
-            'osm_id' => $this->osm_type,
+            'osm_id' => $this->osm_id,
+            'osm_type' => $this->osm_type,
         ];
     }
 }

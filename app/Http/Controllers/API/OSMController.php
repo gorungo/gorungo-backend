@@ -26,10 +26,20 @@ class OSMController extends Controller
 
     public function saveSelected(Store $request)
     {
-        if(!$request->id && !OSM::where('place_id', $request->place_id)->first() && OSM::createAndStore($request)){
+        // сохраняем новое место если нет
+        // обновляем описание места если нет в текущей локали
+        // ничего не делаем если не нужно ничего обновлять
+
+        if (!$request->id && !OSM::where('place_id', $request->place_id)->first() && OSM::createAndStore($request)){
             return response()->json('Created', 201);
         } else {
-            return response()->json('Already exists, not modified', 200);
+            $place = OSM::where('place_id', $request->place_id)->first();
+            if($place){
+                return response()->json('Modified', 200);
+            }else{
+                return response()->json('Already exists, not modified', 200);
+            }
+
         }
     }
 }

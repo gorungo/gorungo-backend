@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Http\Middleware\LocaleMiddleware;
-use App\Http\Requests\Place\StoreOSM;
+use App\Http\Requests\OSM\Store;
+use App\Http\Resources\OSM as OSMResource;
+use Exception;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use GuzzleHttp\Client;
@@ -12,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
+
 
 class OSM extends Model
 {
@@ -91,6 +95,9 @@ class OSM extends Model
 
     public function search(Request $request)
     {
+        $externalSearch = [];
+        $placeIds = [];
+        $result = [];
         // делаем запрос в осм
         // сохраняем результат в нашу базу
         // делам запрос в нашу базу
@@ -102,13 +109,37 @@ class OSM extends Model
                 'format' => $request->get('format'),
                 'accept-language' => $request->get('accept-language'),
             ];
-            return $this->execute('search.php', $params);
+            try {
+                $externalSearch = $this->execute('search.php', $params);
+            } catch (Exception $e) {
+                //
+            }
+
+            $result = OSMResource::collection(OSM::findByTitle($request->q, $params))->collection->toArray();
         }
 
-        return null;
+        foreach ($result as $res){
+            $placeIds[] = $res['place_id'];
+        }
+
+        foreach ($externalSearch as $search){
+            if(!in_array($search['place_id'], $placeIds)){
+                $result[] = $search;
+            }
+        }
+
+        return $result;
     }
 
-    public static function createAndStore(StoreOSM $request)
+    public static function findByTitle($q, $params)
+    {
+        return self::whereHas('descriptions', function($query) use ($q){
+            return $query->where('display_name', 'like', '%'.$q.'%')->orWhere('title', 'like', '%'.$q.'%');
+        })->orderBy('importance', 'desc')->get();
+
+    }
+
+    public static function createAndStore(Store $request)
     {
         $osm = DB::transaction(function () use ($request) {
             $omsData = $request->post();
@@ -125,6 +156,22 @@ class OSM extends Model
 
             return $osm;
 
+        });
+
+        return $osm;
+    }
+
+    public function updateAndStore(Store $request)
+    {
+        $osm = DB::transaction(function () use ($request) {
+            $omsData = $request->post();
+            $omsDescriptionData = [
+                'display_name' => $omsData['display_name'],
+                'locale_id' => LocaleMiddleware::getLocaleId()
+            ];
+
+            $this->localisedDescription()->create($omsDescriptionData);
+            return $this;
         });
 
         return $osm;

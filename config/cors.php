@@ -21,6 +21,7 @@ return [
 
         'allow_origins' => [
             'http://localhost:8080',
+            'http://192.168.31.175:8080',
         ],
 
         'allow_methods' => [
