@@ -816,10 +816,10 @@ class Idea extends Model
      */
     public function scopeWhereDates($query)
     {
-        if (request()->has('checkin')) {
+        if (request()->has('date_from')) {
             return $query->whereHas('ideaDates', function ($query) {
-                $dateFrom = request()->input('checkin');
-                $dateTo = request()->input('checkout');
+                $dateFrom = request()->input('date_from');
+                $dateTo = request()->input('date_to');
                 $query
                     ->whereDate('start_date', '>=', date_format(date_create($dateFrom), 'Y-m-d'))
                     ->whereDate('start_date', '<=', date_format(date_create($dateTo), 'Y-m-d'));

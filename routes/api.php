@@ -284,6 +284,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     // OpenStreetMap
     Route::get('/osm/search', "API\OSMController@search")->name('api.osm.search');
+    Route::get('/osm/{osm}', "API\OSMController@view")->name('api.osm.view');
     Route::post('/osm/saveSelected', 'API\OSMController@saveSelected')->name('api.osm.store');
 
     // Ideas

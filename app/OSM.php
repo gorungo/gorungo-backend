@@ -30,6 +30,11 @@ class OSM extends Model
         'coordinates',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'place_id';
+    }
+
     public function localisedDescription()
     {
         return $this
