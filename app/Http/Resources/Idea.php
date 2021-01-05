@@ -12,6 +12,7 @@ use App\Http\Resources\Place as PlaceResource;
 use App\Http\Resources\Photo as PhotoResource;
 use App\Http\Resources\IdeaPrice as IdeaPriceResource;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\OSM as OsmResource;
 use App\Http\Resources\Tagged as TaggedResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,7 +40,7 @@ class Idea extends JsonResource
                 'intro' => $this->id ? $this->intro : '',
                 'author_id' => $this->author_id,
                 'description' => $this->id ? $this->description : '',
-                'imageUrl' => $this->FullTmbImgPath,
+                'image_url' => $this->FullTmbImgPath,
                 'created_at' => $this->created_at ? (string)$this->created_at : null,
             ],
 
@@ -49,7 +50,8 @@ class Idea extends JsonResource
                 'categories' => $this->id ? CategoryResource::collection($this->whenLoaded('ideaCategories')) : [],
                 'author' => new UserResource($this->whenLoaded('author')),
                 'itineraries' => ItineraryResource::collection($this->whenLoaded('ideaItineraries')),
-                'places' => PlaceResource::collection($this->whenLoaded('ideaPlaces')),
+                'place' => new OsmResource($this->whenLoaded('ideaPlace')),
+                'places_to_visit' => new OsmResource($this->whenLoaded('ideaPlacesToVisit')),
                 'price' => $this->whenLoaded('price', function(){
                     return new IdeaPriceResource($this->minimalFuturePrice);
                 }),

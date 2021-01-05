@@ -153,14 +153,7 @@ class IdeaController extends Controller
      */
     public function update(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->updateAndSync($request)->loadMissing([
-            'ideaPrice',
-            'ideaPlaces',
-            'ideaDates',
-            'ideaParentIdea',
-            'ideaCategories',
-            'ideaItineraries'
-        ]));
+        return new IdeaResource($idea->updateAndSync($request)->loadMissing(request()->has('include') && request()->input('include') !='' ? explode(',', request()->include): []));
     }
 
     /**

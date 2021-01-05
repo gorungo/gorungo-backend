@@ -98,12 +98,6 @@ Route::group(['prefix' => 'v1'], function() {
         Route::patch('/categories/{category}', 'API\CategoryController@update')->name('api.category.update');
         Route::delete('/categories/{category}', 'API\CategoryController@destroy')->name('api.category.destroy');
 
-        Route::get('/categories', 'API\CategoryController@index')->name('api.category.index');
-        Route::get('/categories/children', 'API\CategoryController@lastChildren')->name('api.category.last_children');
-        Route::get('/categories/{category}', 'API\CategoryController@show')->name('api.category.show');
-        Route::get('/categories/{categoryId}/fullcategorieslisting', 'Api\CategoryController@fullCategoriesListing')->name('api.category.fullcategorieslisting');
-        Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
-
 
         // tags
         Route::get('/tags/allMain', 'API\TagController@allMainTagsCollection')->name('api.tags.all_main_tags_collection');
@@ -291,5 +285,12 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::get('/ideas', 'API\IdeaController@index')->name('api.ideas');
     Route::get('/ideas/{idea}', 'API\IdeaController@show')->name('api.ideas.show');
+
+    // Categories
+    Route::get('/categories', 'API\CategoryController@index')->name('api.category.index');
+    Route::get('/categories/children', 'API\CategoryController@lastChildren')->name('api.category.last_children');
+    Route::get('/categories/{category}', 'API\CategoryController@show')->name('api.category.show');
+    Route::get('/categories/{categoryId}/fullcategorieslisting', 'Api\CategoryController@fullCategoriesListing')->name('api.category.fullcategorieslisting');
+    Route::get('/categories/{categoryId}/child', 'API\CategoryController@child')->name('api.category.child');
 
 });

@@ -25,8 +25,8 @@ class User extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'email' => $this->email,
-                'displayName' => $this->displayName,
-                'imageUrl' => $this->imageUrl,
+                'display_name' => $this->displayName,
+                'image_url' => $this->imageUrl,
                 'superuser' => Auth::user() ? $this->when(Auth::user()->hasAnyRole(['admin', 'super-admin']), true):null,
             ],
 

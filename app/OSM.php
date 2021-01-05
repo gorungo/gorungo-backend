@@ -38,13 +38,13 @@ class OSM extends Model
     public function localisedDescription()
     {
         return $this
-            ->hasOne('App\OSMDescription', 'place_id', 'place_id')
+            ->hasOne('App\OSMDescription', 'place_id')
             ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
     public function descriptions()
     {
-        return $this->hasMany('App\OSMDescription', 'place_id', 'place_id');
+        return $this->hasMany('App\OSMDescription', 'place_id');
     }
 
     public function getTitleAttribute()
@@ -175,10 +175,36 @@ class OSM extends Model
                 'locale_id' => LocaleMiddleware::getLocaleId()
             ];
 
-            $this->localisedDescription()->create($omsDescriptionData);
+            if(!$this->localisedDescription){
+                $this->localisedDescription()->create($omsDescriptionData);
+            } else{
+                $this->localisedDescription()->update($omsDescriptionData);
+            }
+
             return $this;
         });
 
         return $osm;
+    }
+
+    public static function createFrom($data)
+    {
+        return DB::transaction(function () use ($data) {
+            $osm = self::where('place_id', $data['place_id'])->first();
+
+            if($data['place_id'] && !$osm){
+                $descriptionData = [
+                    'display_name' => $data['display_name'],
+                    'locale_id' => LocaleMiddleware::getLocaleId()
+                ];
+
+                $data['coordinates'] = new Point($data['lat'], $data['lon']);
+                $data['boundingbox'] = serialize($data['boundingbox']);
+
+                $osm = OSM::create($data);
+                $osm->localisedDescription()->create($descriptionData);
+            }
+            return $osm;
+        });
     }
 }
