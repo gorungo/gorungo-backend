@@ -26,13 +26,19 @@ class OSM extends Model
         'boundingbox', 'icon', 'importance', 'lat', 'lon', 'licence', 'osm_id',
         'osm_type', 'place_id', 'type', 'coordinates'
     ];
+
     protected $spatialFields = [
         'coordinates',
     ];
 
     public function getRouteKeyName()
     {
-        return 'place_id';
+        return 'id';
+    }
+
+    public function ideas()
+    {
+        return $this->belongsToMany('App\Idea', 'idea_place', 'place_id', 'idea_id');
     }
 
     public function localisedDescription()
@@ -150,7 +156,8 @@ class OSM extends Model
             $omsData = $request->post();
             $omsDescriptionData = [
                 'display_name' => $omsData['display_name'],
-                'locale_id' => LocaleMiddleware::getLocaleId()
+                'locale_id' => LocaleMiddleware::getLocaleId(),
+                'place_id' => $omsData['place_id'],
             ];
 
             $omsData['coordinates'] = new Point($omsData['lat'], $omsData['lon']);
@@ -195,13 +202,14 @@ class OSM extends Model
             if($data['place_id'] && !$osm){
                 $descriptionData = [
                     'display_name' => $data['display_name'],
-                    'locale_id' => LocaleMiddleware::getLocaleId()
+                    'locale_id' => LocaleMiddleware::getLocaleId(),
+                    'place_id' => $data['place_id'],
                 ];
 
                 $data['coordinates'] = new Point($data['lat'], $data['lon']);
                 $data['boundingbox'] = serialize($data['boundingbox']);
 
-                $osm = OSM::create($data);
+                $osm = self::create($data);
                 $osm->localisedDescription()->create($descriptionData);
             }
             return $osm;

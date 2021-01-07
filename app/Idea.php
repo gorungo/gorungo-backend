@@ -12,9 +12,11 @@ use DB;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use function MongoDB\BSON\toJSON;
 
 class Idea extends Model
 {
@@ -252,7 +254,12 @@ class Idea extends Model
 
     public function ideaPlace() : BelongsTo
     {
-        return $this->belongsTo('App\OSM', 'place_id', 'place_id');
+        return $this->belongsTo('App\OSM', 'place_id', 'id');
+    }
+
+    public function ideaPlacesToVisit() : BelongsToMany
+    {
+        return $this->belongsToMany('App\OSM', 'idea_place', 'idea_id', 'place_id');
     }
 
     public function ideaItinerary()
@@ -471,6 +478,7 @@ class Idea extends Model
         $this->savePlace($request);
         $this->savePlacesToVisit($request);
         $this->saveDates($request);
+        $this->saveOptions($request);
         //$this->savePrice($request);
 
     }
@@ -596,15 +604,29 @@ class Idea extends Model
 
     }
 
+    private function saveOptions(StoreIdea $request) : void
+    {
+        if($request->has('attributes.options')){
+            $this->options = json_encode($request->input('attributes.options'));
+            $this->save();
+        }
+    }
+
     private function savePlace(StoreIdea $request): void
     {
         $newPlace = null;
         $place = $request->input('relationships.place');
-        if (!isset($place['id'])) {
-            $newPlace = OSM::createFrom($place);
+        if($place){
+            if (!isset($place['id'])) {
+                $newPlace = OSM::createFrom($place);
+                $this->place_id = $newPlace->id;
+            } else {
+                $this->place_id = $place['place_id'];
+            }
+
+            $this->save();
         }
-        $this->place_id = $place['place_id'];
-        $this->save();
+
 
     }
 

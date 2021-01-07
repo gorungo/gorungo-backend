@@ -41,6 +41,7 @@ class Idea extends JsonResource
                 'author_id' => $this->author_id,
                 'description' => $this->id ? $this->description : '',
                 'image_url' => $this->FullTmbImgPath,
+                'options' => json_decode($this->options),
                 'created_at' => $this->created_at ? (string)$this->created_at : null,
             ],
 
@@ -51,7 +52,7 @@ class Idea extends JsonResource
                 'author' => new UserResource($this->whenLoaded('author')),
                 'itineraries' => ItineraryResource::collection($this->whenLoaded('ideaItineraries')),
                 'place' => new OsmResource($this->whenLoaded('ideaPlace')),
-                'places_to_visit' => new OsmResource($this->whenLoaded('ideaPlacesToVisit')),
+                'places_to_visit' => OsmResource::collection($this->whenLoaded('ideaPlacesToVisit')),
                 'price' => $this->whenLoaded('price', function(){
                     return new IdeaPriceResource($this->minimalFuturePrice);
                 }),
