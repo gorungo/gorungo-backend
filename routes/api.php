@@ -175,24 +175,24 @@ Route::group(['prefix' => 'v1'], function() {
          */
 
         //Get listing of photos
-        Route::get('/ideas/{idea}/itineraries/{itinerary}/photos', "API\Photo\IdeaItineraryController@index")
-            ->name('api.ideas.photos_index');
+        Route::get('/itineraries/{itinerary}/photos', "API\Photo\ItineraryController@index")
+            ->name('api.itineraries.photos_index');
 
         //Upload photo
-        Route::post('/ideas/{idea}/itineraries/{itinerary}/photos', 'API\Photo\IdeaItineraryController@upload')
-            ->name('api.ideas.photos_upload');
+        Route::post('/itineraries/{itinerary}/photos', 'API\Photo\ItineraryController@upload')
+            ->name('api.itineraries.photos_upload');
 
         //Upload and set main photo
-        Route::post('/ideas/{idea}/itineraries/{itinerary}/photo', 'API\Photo\IdeaItineraryController@uploadMain')
-            ->name('api.ideas.photos_upload');
+        Route::post('/itineraries/{itinerary}/photo', 'API\Photo\ItineraryController@uploadMain')
+            ->name('api.itineraries.photos_upload');
 
         //Set item main photos
-        Route::patch('/ideas/{idea}/itineraries/{itinerary}/photos/{photo}/set_main', 'API\Photo\IdeaItineraryController@setMain')
-            ->name('api.ideas.photos_set_main');
+        Route::patch('/itineraries/{itinerary}/photos/{photo}/set_main', 'API\Photo\ItineraryController@setMain')
+            ->name('api.itineraries.photos_set_main');
 
         //Delete item main photos
-        Route::delete('/ideas/{idea}/itineraries/{itinerary}/photos/{photo}', 'API\Photo\IdeaItineraryController@destroy')
-            ->name('api.ideas.photos_destroy');
+        Route::delete('/itineraries/{itinerary}/photos/{photo}', 'API\Photo\ItineraryController@destroy')
+            ->name('api.itineraries.photos_destroy');
 
         /*
          * -------------------------------------------------------------------------

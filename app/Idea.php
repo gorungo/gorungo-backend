@@ -13,10 +13,10 @@ use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use function MongoDB\BSON\toJSON;
 
 class Idea extends Model
 {
@@ -247,17 +247,23 @@ class Idea extends Model
         return $this->active == 0;
     }
 
-    public function getCanBeOrderedAttribute() : Bool
+    public function getCanBeOrderedAttribute(): bool
     {
         return $this->ideaPrice->default == false;
     }
 
-    public function ideaPlace() : BelongsTo
+    public function ideaPlace(): BelongsTo
     {
         return $this->belongsTo('App\OSM', 'place_id', 'id');
     }
 
-    public function ideaPlacesToVisit() : BelongsToMany
+    public function ideaItineraries(): HasMany
+    {
+        return $this->hasMany('App\Itinerary')
+            ->orderBy('day_num', 'asc');
+    }
+
+    public function ideaPlacesToVisit(): BelongsToMany
     {
         return $this->belongsToMany('App\OSM', 'idea_place', 'idea_id', 'place_id');
     }
@@ -287,7 +293,7 @@ class Idea extends Model
      * @return BelongsTo
      */
 
-    public function ideaParentIdea() : BelongsTo
+    public function ideaParentIdea(): BelongsTo
     {
         return $this->belongsTo('App\Idea', 'idea_id')->isActive();
     }
@@ -470,6 +476,13 @@ class Idea extends Model
             ->where('locale_id', LocaleMiddleware::getLocaleId());
     }
 
+    public function ideaCategories(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany('App\Category', 'idea_category')
+            ->using('App\Pivots\Category');
+    }
+
     private function updateRelationships(StoreIdea $request): void
     {
         $this->saveCategories($request);
@@ -518,16 +531,10 @@ class Idea extends Model
             }
         }*/
 
-    public function ideaCategories()
-    {
-        return $this
-            ->belongsToMany('App\Category', 'idea_category')
-            ->using('App\Pivots\Category');
-    }
-
     private function saveItineraries(StoreIdea $request): void
     {
         $itineraries = $request->input('relationships.itineraries');
+        $usedItinerariesIds = [];
 
         if ($itineraries) {
             foreach ($itineraries as $itinerary) {
@@ -558,9 +565,7 @@ class Idea extends Model
                     }
 
                     //$itineraryObj->localisedItineraryDescription()->updateOrCreate($descriptionStoreData);
-
                     $itineraryObj->save();
-
 
                 } else {
 
@@ -573,15 +578,12 @@ class Idea extends Model
 
                     $itineraryObj->localisedItineraryDescription()->create($descriptionStoreData);
                 }
+                $usedItinerariesIds[] = $itineraryObj->id;
             }
 
         }
-    }
 
-    public function ideaItineraries()
-    {
-        return $this->hasMany('App\Itinerary')
-            ->orderBy('day_num', 'asc');
+        $this->ideaItineraries()->whereNotIn('id', $usedItinerariesIds)->delete();
     }
 
     private function saveTags(StoreIdea $request): void
@@ -604,53 +606,45 @@ class Idea extends Model
 
     }
 
-    private function saveOptions(StoreIdea $request) : void
-    {
-        if($request->has('attributes.options')){
-            $this->options = json_encode($request->input('attributes.options'));
-            $this->save();
-        }
-    }
-
     private function savePlace(StoreIdea $request): void
     {
         $newPlace = null;
         $place = $request->input('relationships.place');
-        if($place){
-            if (!isset($place['id'])) {
+        if ($place) {
+            if (isset($place['id'])) {
+                $this->place_id = $place['id'];
+            } else {
                 $newPlace = OSM::createFrom($place);
                 $this->place_id = $newPlace->id;
-            } else {
-                $this->place_id = $place['place_id'];
             }
-
             $this->save();
         }
-
-
     }
-
-
-    // scopes
 
     private function savePlacesToVisit(StoreIdea $request): void
     {
-        $places = $request->input('relationships.places');
         $placeIds = [];
+        $places = $request->input('relationships.places_to_visit');
 
         if ($places && count($places)) {
             foreach ($places as $place) {
-                if ($place['id'] != '') {
+                if (isset($place['id'])) {
                     $placeIds[] = $place['id'];
+                } else {
+                    $newPlace = OSM::createFrom($place);
+                    $placeIds[] = $newPlace->id;
                 }
             }
 
             if (count($placeIds)) {
-                $this->ideaPlaces()->syncWithoutDetaching($placeIds);
+                $this->ideaPlacesToVisit()->sync($placeIds);
             }
 
         }
     }
+
+
+    // scopes
 
     private function saveDates(StoreIdea $request): void
     {
@@ -705,6 +699,14 @@ class Idea extends Model
         // remove not used dates from database
         $this->ideaDates()->whereNotIn('id', $usedDateIds)->forceDelete();
 
+    }
+
+    private function saveOptions(StoreIdea $request): void
+    {
+        if ($request->has('attributes.options')) {
+            $this->options = json_encode($request->input('attributes.options'));
+            $this->save();
+        }
     }
 
     public function scopeIsActive($query)

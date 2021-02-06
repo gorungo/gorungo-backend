@@ -8,29 +8,26 @@ use App\Photo;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Requests\Photo\DestroyPhoto;
 use App\Http\Requests\Photo\SetMainPhoto;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class IdeaItineraryController extends Controller
+class ItineraryController extends Controller
 {
-
-    protected $idea;
     protected $itinerary;
 
-    public function __construct(Idea $idea, Itinerary $itinerary)
+    public function __construct(Itinerary $itinerary)
     {
-        $this->idea = $idea;
         $this->itinerary = $itinerary;
     }
 
     /**
      * Get photos list
-     * @param Idea $idea
      * @param Itinerary $itinerary
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function index(Idea $idea, Itinerary $itinerary)
+    public function index(Itinerary $itinerary) : JsonResponse
     {
         return response()->json(['files' => $itinerary->photos()->get()]);
     }
@@ -38,12 +35,11 @@ class IdeaItineraryController extends Controller
     /**
      * Upload new photo
      * @param UploadPhoto $request
-     * @param Idea $idea
      * @param Itinerary $itinerary
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function uploadMain(UploadPhoto $request, Idea $idea, Itinerary $itinerary)
+    public function uploadMain(UploadPhoto $request, Itinerary $itinerary) : JsonResponse
     {
         return response()->json(['file' => $itinerary->uploadPhoto($request)]);
     }
@@ -51,12 +47,11 @@ class IdeaItineraryController extends Controller
     /**
      * Upload new photo
      * @param UploadPhoto $request
-     * @param Idea $idea
      * @param Itinerary $itinerary
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function upload(UploadPhoto $request, Idea $idea, Itinerary $itinerary)
+    public function upload(UploadPhoto $request, Itinerary $itinerary) : JsonResponse
     {
         return response()->json(['file' => $itinerary->uploadPhoto($request)]);
     }
@@ -64,13 +59,12 @@ class IdeaItineraryController extends Controller
     /**
      * Set image as main
      * @param SetMainPhoto $request
-     * @param Idea $idea
      * @param Itinerary $itinerary
      * @param Photo $photo
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function setMain(SetMainPhoto $request, Idea $idea, Itinerary $itinerary, Photo $photo)
+    public function setMain(SetMainPhoto $request, Itinerary $itinerary, Photo $photo) : JsonResponse
     {
         return response()->json($photo->setMain());
     }
@@ -81,18 +75,18 @@ class IdeaItineraryController extends Controller
      * @param Itinerary $itinerary
      * @param Photo $photo
      * @throws \Exception
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function destroy(DestroyPhoto $request, Idea $idea, Itinerary $itinerary, Photo $photo)
+    public function destroy(DestroyPhoto $request, Itinerary $itinerary, Photo $photo) : JsonResponse
     {
 
         if ($photo->deletePhoto()) {
             $photo->delete();
-            return response()->json(['type' => 'ok']);
+            return response()->json(['message' => 'ok']);
         }
 
-        return response()->json(['type' => 'error']);
+        return response()->json(['message' => 'error']);
 
     }
 

@@ -33,7 +33,7 @@ class Itinerary extends JsonResource
                 'description' => $this->description,
                 'whatIncluded' => $this->whatIncluded,
                 'willVisit' => $this->willVisit,
-                'fullTmbImgPath' => $this->fullTmbImgPath,
+                'image_url' => $this->fullTmbImgPath,
             ],
 
             'relationships' => [
