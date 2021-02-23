@@ -21,19 +21,20 @@ class Itinerary extends JsonResource
     {
 
         return [
-            'type' => 'Itinerary',
+            'type' => 'itineraries',
             'id' => $this->id ,
-            'locale' => LocaleMiddleware::getLocale() ,
+            'locale' => $this->locale ? $this->locale->slug : null,
 
             'attributes' => [
                 'title' => $this->title,
-                'dayNum' => $this->day_num,
-                'dayOrder' => $this->day_order,
-                'startTime' => $this->start_time,
+                'day_num' => $this->day_num,
+                'day_order' => $this->day_order,
+                'start_time' => $this->start_time,
                 'description' => $this->description,
-                'whatIncluded' => $this->whatIncluded,
-                'willVisit' => $this->willVisit,
+                'what_included' => $this->whatIncluded,
+                'will_visit' => $this->willVisit,
                 'image_url' => $this->fullTmbImgPath,
+                'locale_id' => $this->locale ? $this->locale->id : null,
             ],
 
             'relationships' => [

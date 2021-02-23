@@ -18,7 +18,7 @@ class User extends JsonResource
     {
 
         return [
-            'type' => 'Users',
+            'type' => 'users',
             'id' => $this->id,
             'locale' => LocaleMiddleware::getLocale(),
 

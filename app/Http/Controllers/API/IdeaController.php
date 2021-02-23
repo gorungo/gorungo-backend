@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Idea;
 use App\Http\Resources\Idea as IdeaResource;
 use App\Place;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Requests\Photo\UploadPhoto;
@@ -157,6 +158,20 @@ class IdeaController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  StoreIdea  $request
+     * @param  Idea  $idea
+     * @param string $relationship
+     * @return JsonResponse
+     */
+    public function updateRelationship(StoreIdea $request, Idea $idea, string $relationship): JsonResponse
+    {
+        $idea->updateRelationship($request, $relationship);
+        return response()->json($relationship . ' relationship updated', 201);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -170,7 +185,7 @@ class IdeaController extends Controller
 
     /**
      * Return list of items photo
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getPhotosListJson()
     {
@@ -181,7 +196,7 @@ class IdeaController extends Controller
      * Return list of items photo
      * @param  UploadPhoto  $request
      * @param $itemId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function uploadPhoto(UploadPhoto $request, $itemId)
     {

@@ -32,6 +32,6 @@ class IdeaPrice extends Model
 
     public function getFormattedPriceAttribute()
     {
-        return $this->price ? number_format($this->price, 2, '.', '') : number_format(0, 2, '.', '');
+        return $this->price ? number_format($this->price / 100, 2, '.', '') : number_format(0, 2, '.', '');
     }
 }

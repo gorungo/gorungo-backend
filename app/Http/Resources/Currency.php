@@ -20,7 +20,7 @@ class Currency extends JsonResource
     {
 
         return [
-            'type' => 'currency',
+            'type' => 'currencies',
             'id' => $this->id ,
             'locale' => LocaleMiddleware::getLocale(),
 

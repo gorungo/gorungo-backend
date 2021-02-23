@@ -19,4 +19,9 @@ class ItineraryDescription extends Model
         return $this->belongsTo('App\Itinerary', 'itinerary_id');
     }
 
+    public function locale()
+    {
+        return $this->belongsTo('App\Locale');
+    }
+
 }

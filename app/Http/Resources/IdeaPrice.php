@@ -20,7 +20,7 @@ class IdeaPrice extends JsonResource
     {
 
         return [
-            'type' => 'IdeaPrice',
+            'type' => 'idea_prices',
             'id' => $this->id ,
             'locale' => LocaleMiddleware::getLocale() ,
 

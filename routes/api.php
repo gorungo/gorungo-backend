@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -56,23 +57,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/users/{user}/ideas', "API\UserController@ideas")
             ->name('api.user.ideas');
 
-        // posts
-        Route::get('/posts/create', 'API\PostController@create')->name('api.posts.create');
-        Route::get('/posts/{post}/edit', 'API\PostController@edit')->name('api.posts.edit');
-        Route::post('/posts', 'API\PostController@store')->name('api.posts.store');
-        Route::patch('/posts/{post}', 'API\PostController@update')->name('api.posts.update');
-        Route::delete('/posts/{post}', 'API\PostController@destroy')->name('api.posts.destroy');
-
-        // actions
-        Route::get('/actions/create', 'API\ActionController@create')->name('api.actions.create');
-        Route::get('/actions/{action}/edit', 'API\ActionController@edit')->name('api.actions.edit');
-        Route::post('/actions', 'API\ActionController@store')->name('api.actions.store');
-        Route::patch('/actions/{action}', 'API\ActionController@update')->name('api.actions.update');
-        Route::delete('/actions/{action}', 'API\ActionController@destroy')->name('api.actions.destroy');
-
         // ideas
         Route::get('/ideas/{idea}/edit', 'API\IdeaController@edit')->name('api.ideas.edit');
         Route::post('/ideas', 'API\IdeaController@store')->name('api.ideas.store');
+        Route::patch('/ideas/{idea}/relationships/{relationship}', 'API\IdeaController@updateRelationship')->name('api.ideas.update_relationship');
 
         Route::patch('/ideas/{idea}', 'API\IdeaController@update')->name('api.ideas.update');
         Route::delete('/ideas/{idea}', 'API\IdeaController@destroy')->name('api.ideas.destroy');
@@ -273,8 +261,8 @@ Route::group(['prefix' => 'v1'], function() {
         ->name('api.filters.active_items');
 
     // currencies
-    Route::get('/currencies', "API\CurrencyController@active")
-        ->name('api.currencies.active');
+    Route::get('/currencies', "API\CurrencyController@index")
+        ->name('api.currencies.index');
 
     // OpenStreetMap
     Route::get('/osm/search', "API\OSMController@search")->name('api.osm.search');
@@ -285,6 +273,9 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::get('/ideas', 'API\IdeaController@index')->name('api.ideas');
     Route::get('/ideas/{idea}', 'API\IdeaController@show')->name('api.ideas.show');
+
+    // Ideas itinerary
+    Route::resource('ideas.itineraries', 'API\IdeaItineraryController');
 
     // Categories
     Route::get('/categories', 'API\CategoryController@index')->name('api.category.index');

@@ -12,9 +12,9 @@ use App\Http\Resources\Currency as CurrencyResource;
 
 class CurrencyController extends Controller
 {
-    public function active(Request $request)
+    public function index(Request $request)
     {
-        return response(CurrencyResource::collection(Currency::all()));
+        return response()->json(['data' => CurrencyResource::collection(Currency::all())]);
     }
 
 }

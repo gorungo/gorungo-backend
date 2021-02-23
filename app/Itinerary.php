@@ -102,6 +102,11 @@ class Itinerary extends Model
 
     }
 
+    public function getLocaleAttribute()
+    {
+        return $this->localisedItineraryDescription ? $this->localisedItineraryDescription->locale : null;
+    }
+
     public function uploadPhoto(UploadPhoto $request)
     {
         $newPhoto = null;

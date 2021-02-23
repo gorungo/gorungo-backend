@@ -18,7 +18,7 @@ class Date extends JsonResource
     {
 
         return [
-            'type' => 'Dates',
+            'type' => 'dates',
             'id' => $this->id ,
             'locale' => LocaleMiddleware::getLocale() ,
 
@@ -29,7 +29,6 @@ class Date extends JsonResource
             ],
 
             'relationships' => [
-                //'ideaPrices' => IdeaPriceResource::collection($this->whenLoaded('ideaPrices')),
                 'ideaPrice' => new IdeaPriceResource($this->whenLoaded('ideaPrice')),
             ]
         ];

@@ -483,23 +483,46 @@ class Idea extends Model
             ->using('App\Pivots\Category');
     }
 
-    private function updateRelationships(StoreIdea $request): void
+    private function updateRelationships(Request $request): void
     {
-        $this->saveCategories($request);
-        $this->saveItineraries($request);
-        $this->saveTags($request);
-        $this->savePlace($request);
-        $this->savePlacesToVisit($request);
-        $this->saveDates($request);
-        $this->saveOptions($request);
-        //$this->savePrice($request);
+        $r = $request->input('relationships');
 
+        $this->saveCategories($r['categories']);
+        $this->saveItineraries($r['itineraries']);
+        $this->saveTags($r['tags']);
+        $this->savePlace($r['place']);
+        $this->savePlacesToVisit($r['places_to_visit']);
+        $this->saveDates($r['dates']);
+
+        $this->saveOptions($request->input('attributes.options'));
     }
 
-    private function saveCategories(StoreIdea $request): void
+    public function updateRelationship(Request $request, string $type): void
     {
-        $categories = $request->input('relationships.categories');
+        switch ($type) {
+            case 'categories' :
+                $this->saveCategories($request->input('data'));
+                break;
+            case 'itineraries' :
+                $this->saveItineraries($request->input('data'));
+                break;
 
+            case 'place' :
+                $this->savePlace($request->input('data'));
+                break;
+
+            case 'places_to_visit' :
+                $this->savePlacesToVisit($request->input('data'));
+                break;
+
+            case 'dates' :
+                $this->saveDates($request->input('data'));
+                break;
+        }
+    }
+
+    private function saveCategories($categories): void
+    {
         $categoriesIds = [];
 
         if ($categories) {
@@ -531,9 +554,8 @@ class Idea extends Model
             }
         }*/
 
-    private function saveItineraries(StoreIdea $request): void
+    private function saveItineraries($itineraries): void
     {
-        $itineraries = $request->input('relationships.itineraries');
         $usedItinerariesIds = [];
 
         if ($itineraries) {
@@ -541,8 +563,8 @@ class Idea extends Model
                 $descriptionStoreData = [
                     'title' => $itinerary['attributes']['title'],
                     'description' => $itinerary['attributes']['description'],
-                    'what_included' => $itinerary['attributes']['whatIncluded'],
-                    'will_visit' => $itinerary['attributes']['willVisit'],
+                    'what_included' => $itinerary['attributes']['what_included'],
+                    'will_visit' => $itinerary['attributes']['will_visit'],
                     'locale_id' => LocaleMiddleware::getLocaleId(),
                 ];
 
@@ -554,9 +576,9 @@ class Idea extends Model
 
                     // update existed
                     $itineraryObj = Itinerary::find($itinerary['id']);
-                    $itineraryObj->start_time = $itinerary['attributes']['startTime'];
-                    $itineraryObj->day_num = $itinerary['attributes']['dayNum'];
-                    $itineraryObj->day_order = $itinerary['attributes']['dayOrder'];
+                    $itineraryObj->start_time = $itinerary['attributes']['start_time'];
+                    $itineraryObj->day_num = $itinerary['attributes']['day_num'];
+                    $itineraryObj->day_order = $itinerary['attributes']['day_order'];
 
                     if ($itineraryObj->localisedItineraryDescription) {
                         $itineraryObj->localisedItineraryDescription()->update($descriptionStoreData);
@@ -572,8 +594,8 @@ class Idea extends Model
                     // create new
                     $itineraryObj = $this->ideaItineraries()->create([
                         'idea_id' => $request->input('id'),
-                        'start_time' => $itinerary['attributes']['startTime'],
-                        'day_num' => $itinerary['attributes']['dayNum'],
+                        'start_time' => $itinerary['attributes']['start_time'],
+                        'day_num' => $itinerary['attributes']['day_num'],
                     ]);
 
                     $itineraryObj->localisedItineraryDescription()->create($descriptionStoreData);
@@ -586,14 +608,13 @@ class Idea extends Model
         $this->ideaItineraries()->whereNotIn('id', $usedItinerariesIds)->delete();
     }
 
-    private function saveTags(StoreIdea $request): void
+    private function saveTags($tags): void
     {
-        $tagsArray = $request->input('relationships.tags');
         $validTags = [];
 
         // Составляем массив из тэгов, потом сохряняем
-        if ($tagsArray && count($tagsArray)) {
-            foreach ($tagsArray as $tag) {
+        if ($tags && count($tags)) {
+            foreach ($tags as $tag) {
                 if ($tag['attributes']['name'] !== '') {
                     $validTags[] = trim($tag['attributes']['name']);
                 }
@@ -606,10 +627,9 @@ class Idea extends Model
 
     }
 
-    private function savePlace(StoreIdea $request): void
+    private function savePlace($place): void
     {
         $newPlace = null;
-        $place = $request->input('relationships.place');
         if ($place) {
             if (isset($place['id'])) {
                 $this->place_id = $place['id'];
@@ -621,10 +641,9 @@ class Idea extends Model
         }
     }
 
-    private function savePlacesToVisit(StoreIdea $request): void
+    private function savePlacesToVisit($places): void
     {
         $placeIds = [];
-        $places = $request->input('relationships.places_to_visit');
 
         if ($places && count($places)) {
             foreach ($places as $place) {
@@ -646,13 +665,12 @@ class Idea extends Model
 
     // scopes
 
-    private function saveDates(StoreIdea $request): void
+    private function saveDates($dates): void
     {
-        $datesArray = $request->input('relationships.dates');
         $usedDateIds = [];
 
-        if ($datesArray) {
-            foreach ($datesArray as $date) {
+        if ($dates) {
+            foreach ($dates as $date) {
 
                 $ideaDate = null;
                 $ideaPriceArray = $date['relationships']['ideaPrice'];
@@ -701,10 +719,10 @@ class Idea extends Model
 
     }
 
-    private function saveOptions(StoreIdea $request): void
+    private function saveOptions($options): void
     {
-        if ($request->has('attributes.options')) {
-            $this->options = json_encode($request->input('attributes.options'));
+        if ($options) {
+            $this->options = json_encode($options);
             $this->save();
         }
     }

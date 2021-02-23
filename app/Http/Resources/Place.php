@@ -21,7 +21,7 @@ class Place extends JsonResource
     {
 
         return [
-            'type' => 'Places',
+            'type' => 'places',
             'id' => $this->id ,
             'hid' => $this->hid,
             'locale' => LocaleMiddleware::getLocale() ,
