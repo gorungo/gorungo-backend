@@ -662,9 +662,6 @@ class Idea extends Model
         }
     }
 
-
-    // scopes
-
     private function saveDates($dates): void
     {
         $usedDateIds = [];
@@ -698,7 +695,7 @@ class Idea extends Model
                         'idea_date_id' => $ideaDate->id,
                         'idea_price_type_id' => 1,
                         'age_group_id' => 1,
-                        'price' => (int) $ideaPriceArray['attributes']['price'],
+                        'price' => (int) $ideaPriceArray['attributes']['price'] * 100,
                         'currency_id' => $ideaPriceArray['relationships']['currency']['id'],
                     ]);
                 } else {
@@ -706,7 +703,7 @@ class Idea extends Model
                         'idea_date_id' => $ideaDate->id,
                         'idea_price_type_id' => 1,
                         'age_group_id' => 1,
-                        'price' => (int) $ideaPriceArray['attributes']['price'],
+                        'price' => (int) $ideaPriceArray['attributes']['price'] * 100,
                         'currency_id' => $ideaPriceArray['relationships']['currency']['id'],
                     ]);
                 }

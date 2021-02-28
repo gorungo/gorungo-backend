@@ -274,8 +274,11 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/ideas', 'API\IdeaController@index')->name('api.ideas');
     Route::get('/ideas/{idea}', 'API\IdeaController@show')->name('api.ideas.show');
 
-    // Ideas itinerary
+    // Idea itinerary
     Route::resource('ideas.itineraries', 'API\IdeaItineraryController');
+
+    // Idea date
+    Route::resource('ideas.dates', 'API\IdeaDateController');
 
     // Categories
     Route::get('/categories', 'API\CategoryController@index')->name('api.category.index');
