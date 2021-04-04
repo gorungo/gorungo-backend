@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\Hashable;
 use DB;
 use App\Photo;
 use Image;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 class Profile extends Model
 {
 
+    use Hashable;
+    const hidLength = 20;
     protected $table = 'profiles';
     protected $fillable = ['name', 'site', 'sex', 'description', 'phone'];
 

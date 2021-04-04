@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-
-use App\Idea;
-use App\Http\Resources\Idea as IdeaResource;
-use App\Place;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\Idea\PublishIdea;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Http\Requests\Photo\UploadPhoto;
-use App\Http\Middleware\LocaleMiddleware;
-use Illuminate\Support\Facades\DB;
+use App\Http\Resources\Idea as IdeaResource;
+use App\Idea;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use App;
 
 class IdeaController extends Controller
 {
@@ -31,8 +29,8 @@ class IdeaController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('sectionName')){
-            switch ($request->sectionName){
+        if ($request->has('sectionName')) {
+            switch ($request->sectionName) {
                 case "nearby":
                     return IdeaResource::collection(
                         Idea::widgetMainItemsList($request)
@@ -57,8 +55,8 @@ class IdeaController extends Controller
                     break;
             }
         }
-        if($request->has('q')){
-            switch ($request->q){
+        if ($request->has('q')) {
+            switch ($request->q) {
                 case 'not-moderated':
                     return IdeaResource::collection(Idea::notModerated()->take($request->limit)->get()->loadMissing([
                         'ideaPrice',
@@ -76,7 +74,8 @@ class IdeaController extends Controller
         // listing
         return IdeaResource::collection(
             Idea::itemsList($request)
-                ->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',', request()->include): [])
+                ->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',',
+                    request()->include) : [])
         );
     }
 
@@ -124,7 +123,8 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        return new IdeaResource($idea->loadMissing(request()->has('include') && request()->input('include') !='' ? explode(',', request()->include): []));
+        return new IdeaResource($idea->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',',
+            request()->include) : []));
     }
 
     /**
@@ -154,7 +154,8 @@ class IdeaController extends Controller
      */
     public function update(StoreIdea $request, Idea $idea)
     {
-        return new IdeaResource($idea->updateAndSync($request)->loadMissing(request()->has('include') && request()->input('include') !='' ? explode(',', request()->include): []));
+        return new IdeaResource($idea->updateAndSync($request)
+            ->loadMissing(request()->has('include') && request()->input('include') != '' ? explode(',', request()->include) : []));
     }
 
     /**
@@ -162,13 +163,13 @@ class IdeaController extends Controller
      *
      * @param  StoreIdea  $request
      * @param  Idea  $idea
-     * @param string $relationship
+     * @param  string  $relationship
      * @return JsonResponse
      */
     public function updateRelationship(StoreIdea $request, Idea $idea, string $relationship): JsonResponse
     {
         $idea->updateRelationship($request, $relationship);
-        return response()->json($relationship . ' relationship updated', 201);
+        return response()->json($relationship.' relationship updated', 201);
     }
 
     /**
@@ -214,11 +215,18 @@ class IdeaController extends Controller
         return new IdeaResource(Idea::randomIdea());
     }
 
-    public function getByTitle(Request $request){
+    public function getByTitle(Request $request)
+    {
         return IdeaResource::collection(Idea::getByTitle($request->title));
     }
 
-    public function getMain(Request $request){
+    public function getMain(Request $request)
+    {
         return IdeaResource::collection(Idea::getMain($request->title));
+    }
+
+    public function validateIdea(PublishIdea $request, Idea $idea)
+    {
+        return response()->json(['message' => 'ok'], 200);
     }
 }

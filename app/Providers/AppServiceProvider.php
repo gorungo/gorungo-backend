@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
             'Photo' => 'App\Photo',
             'Action' => 'App\Action',
             'Place' => 'App\Place',
+            'Profile' => 'App\Profile',
+            'User' => 'App\User',
             'Helper' => 'App\Helper',
 
             // 'как-храним' => 'класс',

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Requests\User\SetNewPassword;
+use App\Traits\Hashable;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
@@ -18,7 +19,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable  implements JWTSubject
 {
-    use HasApiTokens, Notifiable, HasRoles;
+    use HasApiTokens, Notifiable, HasRoles, Hashable;
+
+    const hidLength = 10;
 
     /**
      * The attributes that are mass assignable.

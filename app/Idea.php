@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Requests\Idea\PublishIdea;
 use App\Http\Requests\Idea\StoreIdea;
 use App\Traits\Hashable;
 use App\Traits\Imageble;
@@ -22,7 +23,7 @@ class Idea extends Model
 {
     use SoftDeletes, Taggable, TagInfo, Imageble, Hashable, SpatialTrait;
 
-    const hidLength = 10;
+    const hidLength = 20;
     public $defaultTmb = null;
     protected $table = 'ideas';
     protected $perPage = 60;
@@ -240,6 +241,11 @@ class Idea extends Model
     public function getIsPublishedAttribute()
     {
         return $this->active == 1;
+    }
+
+    public function getEditUrlAttribute()
+    {
+
     }
 
     public function getIsBlockedAttribute()
@@ -483,13 +489,35 @@ class Idea extends Model
             ->using('App\Pivots\Category');
     }
 
+    public function approve()
+    {
+        $this->approved_at = now();
+        $this->save();
+    }
+
+    public function publish()
+    {
+        if(!$this->approved_at && config('app.auto_idea_approve')){
+            $this->approve();
+        }
+
+        $this->active = 1;
+        $this->save();
+    }
+
+    public function unPublish()
+    {
+        $this->active = 0;
+        $this->save();
+    }
+
     private function updateRelationships(Request $request): void
     {
         $r = $request->input('relationships');
 
         $this->saveCategories($r['categories']);
         $this->saveItineraries($r['itineraries']);
-        $this->saveTags($r['tags']);
+        //$this->saveTags($r['tags']);
         $this->savePlace($r['place']);
         $this->savePlacesToVisit($r['places_to_visit']);
         $this->saveDates($r['dates']);
@@ -606,6 +634,11 @@ class Idea extends Model
         }
 
         $this->ideaItineraries()->whereNotIn('id', $usedItinerariesIds)->delete();
+    }
+
+    public function validate(PublishIdea $request)
+    {
+
     }
 
     private function saveTags($tags): void
@@ -736,7 +769,7 @@ class Idea extends Model
      */
     public function scopeIsApproved($query)
     {
-        return $query->where('ideas.is_approved', 1);
+        return $query->whereNotNull('ideas.approved_at');
     }
 
     /**
@@ -746,7 +779,7 @@ class Idea extends Model
      */
     public function scopeIsPublished($query)
     {
-        return $query->where('ideas.published', 1);
+        return $query->where('ideas.active', 1)->isApproved();
     }
 
     public function scopeWhereCategory($query, Category $activeCategory = null)

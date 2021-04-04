@@ -25,9 +25,9 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, User $user)
     {
-
+        return response()->json(ProfileResource($user->profile));
     }
 
     /**
@@ -60,7 +60,7 @@ class ProfileController extends Controller
      */
     public function show(Profile $profile)
     {
-        return new ProfileResource($profile->load('user'));
+        return new ProfileResource($profile);
     }
 
     /**

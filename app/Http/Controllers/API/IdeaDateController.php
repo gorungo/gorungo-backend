@@ -59,7 +59,7 @@ class IdeaDateController extends Controller
                 return $date;
             });
 
-            return response()->json(new DateResource($date->refresh()));
+            return response()->json(['data'=>new DateResource($date->refresh()->load(['ideaPrice']))]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

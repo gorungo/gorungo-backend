@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -63,6 +64,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::patch('/ideas/{idea}/relationships/{relationship}', 'API\IdeaController@updateRelationship')->name('api.ideas.update_relationship');
 
         Route::patch('/ideas/{idea}', 'API\IdeaController@update')->name('api.ideas.update');
+        Route::patch('/ideas/{idea}/validate', 'API\IdeaController@validateIdea')->name('api.ideas.validate');
         Route::delete('/ideas/{idea}', 'API\IdeaController@destroy')->name('api.ideas.destroy');
 
         // places
@@ -156,6 +158,8 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/ideas/{idea}/photos/{photo}', 'API\Photo\IdeaController@destroy')
             ->name('api.ideas.photos_destroy');
 
+        Route::resource('users.ideas', 'API\UserIdeaController');
+
         /*
          * -------------------------------------------------------------------------
          * IDEA ITINERARY PHOTOS ROUTING
@@ -227,7 +231,8 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/profiles/{profile}/photos/{photo}', 'API\Photo\ProfileController@destroy')
             ->name('api.profiles.photos_destroy');
 
-
+        // Idea date
+        Route::resource('profiles', 'API\ProfileController');
 
     });
 

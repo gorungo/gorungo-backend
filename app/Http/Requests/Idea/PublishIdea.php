@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Idea;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
 class PublishIdea extends FormRequest
@@ -70,6 +72,13 @@ class PublishIdea extends FormRequest
         return [
             'relationships.categories.required' => __('category.relationships.categories.required'),
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException( response()->json([
+            'errors' => $validator->errors()
+        ], 200));
     }
 
 }

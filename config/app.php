@@ -124,8 +124,6 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-
-
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
@@ -135,6 +133,8 @@ return [
     'reserved_words' => [],
 
     'controllers' => ['categories', 'ideas', 'photos', 'places', 'actions'],
+
+    'auto_idea_approve' => env('AUTO_IDEA_APPROVE', false),
 
     /*
     |--------------------------------------------------------------------------

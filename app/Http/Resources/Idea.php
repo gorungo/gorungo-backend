@@ -28,7 +28,6 @@ class Idea extends JsonResource
     {
         return [
             'type' => 'ideas',
-            'id' => $this->id,
             'hid' => $this->hid,
             'locale' => LocaleMiddleware::getLocale(),
 
