@@ -28,7 +28,7 @@ class SetNewPassword extends FormRequest
     {
         return [
             //'password.old' => 'required',
-            'password.new'     => 'required|min:6|confirmed',
+            'password.new' => 'required|min:6|confirmed',
         ];
     }
 

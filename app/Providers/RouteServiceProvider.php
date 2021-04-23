@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Idea;
 use App\Place;
 use App\Profile;
+use App\User;
 use \Hashids\Hashids;
 
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('profile', function($value, $route)
         {
             return Profile::findByHid($value);
+        });
+
+        Route::bind('user', function($value, $route)
+        {
+            return User::findByHid($value);
         });
 
         parent::boot();

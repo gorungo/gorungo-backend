@@ -25,8 +25,8 @@ class Profile extends JsonResource
 
             'attributes' => [
                 'url' => $this->url,
-                'editUrl' => $this->editUrl,
-                'imageUrl' => $this->imageUrl,
+                'edit_url' => $this->editUrl,
+                'image_url' => $this->imageUrl,
                 'name' => $this->name ?? '',
                 'description' => $this->description ?? '',
                 'phone' => $this->phone ?? '',

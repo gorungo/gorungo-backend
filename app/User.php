@@ -3,8 +3,10 @@
 namespace App;
 
 use App\Http\Requests\User\SetNewPassword;
+use App\Http\Requests\User\Store;
 use App\Traits\Hashable;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -21,7 +23,7 @@ class User extends Authenticatable  implements JWTSubject
 {
     use HasApiTokens, Notifiable, HasRoles, Hashable;
 
-    const hidLength = 10;
+    const hidLength = 20;
 
     /**
      * The attributes that are mass assignable.
@@ -29,7 +31,7 @@ class User extends Authenticatable  implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email',
     ];
 
     /**
@@ -169,6 +171,12 @@ class User extends Authenticatable  implements JWTSubject
 
 
         return new Point($coordinates['lng'], $coordinates['lat']);
+    }
+
+    public function updateAndSync(Store $request)
+    {
+        $this->update($request->input('data.attributes'));
+        return $this;
     }
 
 

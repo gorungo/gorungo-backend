@@ -231,7 +231,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('/profiles/{profile}/photos/{photo}', 'API\Photo\ProfileController@destroy')
             ->name('api.profiles.photos_destroy');
 
-        // Idea date
+        // User
+        Route::resource('users', 'API\UserController');
+
+        // Profile
         Route::resource('profiles', 'API\ProfileController');
 
     });

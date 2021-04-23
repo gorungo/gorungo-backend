@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\User\Store;
 use App\User;
 use App\Http\Requests\User\SetNewPassword;
-use App\Profile;
-use App\Http\Resources\Profile as ProfileResource;
+use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Idea as IdeaResource;
 use Illuminate\Http\Request;
-use App\Http\Requests\Profile\StoreProfile;
-use App\Http\Requests\Photo\UploadPhoto;
-use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
@@ -31,6 +28,18 @@ class UserController extends Controller
     public function index(Request $request)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Store  $request
+     * @param  User  $user
+     * @return UserResource
+     */
+    public function update(Store $request, User $user) : UserResource
+    {
+        return new UserResource($user->updateAndSync($request));
     }
 
 

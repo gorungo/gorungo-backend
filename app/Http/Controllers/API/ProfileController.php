@@ -7,7 +7,7 @@ use App\User;
 use App\Profile;
 use App\Http\Resources\Profile as ProfileResource;
 use Illuminate\Http\Request;
-use App\Http\Requests\Profile\StoreProfile;
+use App\Http\Requests\Profile\Store;
 use App\Http\Requests\Photo\UploadPhoto;
 use App\Http\Middleware\LocaleMiddleware;
 use Illuminate\Support\Facades\DB;
@@ -43,11 +43,11 @@ class ProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreProfile $request
+     * @param  Store $request
      * @param  Profile $profile
      * @return ProfileResource
      */
-    public function store(StoreProfile $request, Profile $profile)
+    public function store(Store $request, Profile $profile)
     {
         return new ProfileResource($profile->createAndSync($request));
     }
@@ -77,11 +77,11 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  StoreProfile $request
+     * @param  Store $request
      * @param  Profile $profile
      * @return ProfileResource
      */
-    public function update(StoreProfile $request, Profile $profile)
+    public function update(Store $request, Profile $profile)
     {
         return new ProfileResource($profile->updateAndSync($request));
     }

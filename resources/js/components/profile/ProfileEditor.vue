@@ -184,7 +184,6 @@
         },
 
         methods: {
-
             fetchRequestParams(){
                 return {
                     locale: this.locale,
@@ -192,24 +191,17 @@
                 }
             },
             async fileInputChange(){
-
                 let files = Array.from(event.target.files);
-
                 this.filesOrder = files.slice();
-
                 files.forEach(file => this.addImage(file));
-
                 for( let file of files){
                     await this.uploadFile(file);
                 }
-
             },
-
             async uploadFile(file){
 
                 let form = new FormData();
                 form.append('image', file);
-
                 this.loading = true;
 
                 await axios.post(this.getFilesRequestUrl(), form, {
