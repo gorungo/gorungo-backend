@@ -21,6 +21,10 @@ return [
 
         'allow_origins' => [
             '*',
+            'http://localhost:8080',
+            'http://localhost:1234',
+            'http://localhost:8081',
+            'http://192.168.31.175:8080',
         ],
 
         'allow_methods' => [
@@ -33,6 +37,7 @@ return [
         ],
 
         'allow_headers' => [
+            'Access-Control-Allow-Origin',
             'Content-Type',
             'X-Auth-Token',
             'Origin',

@@ -279,7 +279,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     // Ideas
 
-    Route::get('/ideas', 'API\IdeaController@index')->name('api.ideas');
+    Route::get('ideas', 'API\IdeaController@index')->name('api.ideas');
     Route::get('/ideas/{idea}', 'API\IdeaController@show')->name('api.ideas.show');
 
     // Idea itinerary
